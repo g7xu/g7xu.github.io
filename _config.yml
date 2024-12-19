@@ -60,23 +60,18 @@ plugins:
 author:
   name   : "Guoxuan Xu"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "Emmm. I am still working on this website~~"
+  bio    : "An undergraduate data science student passionate about leveraging 
+  practical applications to solve real-world problems and drive impactful insights."
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
+      url: "https://github.com/g7xu"
   
 footer:
   links:
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+      url: "https://github.com/g7xu"
 
 defaults:
   # _posts
