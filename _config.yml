@@ -73,6 +73,11 @@ footer:
       icon: "fab fa-fw fa-github"
       url: "https://github.com/g7xu"
 
+main:
+  - title: "Categories"
+    url: /categories/
+
+
 defaults:
   # _posts
   - scope:
