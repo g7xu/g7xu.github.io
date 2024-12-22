@@ -1,9 +1,15 @@
 main:
-  - title: "Posts"
-    url: /posts/
-  - title: "Categories"
-    url: /categories/
-  - title: "Tags"
-    url: /tags/
-  - title: "About"
-    url: /about/
+  # - title: "Home"
+  #   url: /
+  # - title: "Posts"
+  #   url: /posts/
+  # - title: "Categories"
+  #   url: /categories/
+  # - title: "Tags"
+  #   url: /tags/
+  - title: "Learning Wiki"
+    url: /learning-wiki/
+  - title: "Projects & Research"
+    url: /Project&Research/
+  - title: "Beyond Tech"
+    url: /Beyond-Tech/
