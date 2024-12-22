@@ -6,10 +6,10 @@ Here’s a curated list of links that can help you customize your Jekyll website
 
 ## Extra Resources
 Official Documentation
-	1.	Minimal Mistakes Documentation
+- Minimal Mistakes Documentation
 Comprehensive documentation for the theme, including layout, navigation, customization, and more:
 https://mmistakes.github.io/minimal-mistakes/docs/
-	2.	Jekyll Official Documentation
+- Jekyll Official Documentation
 Learn the basics of Jekyll, including site structure, front matter, and Liquid templating:
 https://jekyllrb.com/docs/
 
