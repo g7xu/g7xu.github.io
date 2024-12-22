@@ -23,7 +23,7 @@ search: true
 
 # Build settings
 markdown: kramdown
-remote_theme: mmistakes/minimal-mistakes
+remote_theme: mmistakes/minimal-mistakes@4.26.2
 github: [metadata]
 # Outputting
 permalink: /:categories/:title/
@@ -55,11 +55,21 @@ plugins:
   - jemoji
   - jekyll-include-cache
 
+# mimic GitHub Pages with --safe
+whitelist:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+  - jemoji
+
 author:
   name   : "Guoxuan Xu"
   avatar : "/assets/images/bio-photo.jpg"
   bio    : "An undergraduate data science student passionate about leveraging 
   practical applications to solve real-world problems and drive impactful insights."
+  location: "San Diego, CA"
+  email: g7xu@ucsd.edu
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
@@ -76,6 +86,11 @@ footer:
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin"
       url: "https://www.linkedin.com/in/guoxuan-xu-30a572269/"
+
+# allow people to leave comments on the website
+# TODO: still need to fix
+comments:
+  provider: disqus
 
 main:
   - title: "Learning Wiki"
