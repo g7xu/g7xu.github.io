@@ -74,6 +74,10 @@ footer:
       url: "https://github.com/g7xu"
 
 main:
+  - title: "Learning Wiki"
+    url: /learning-wiki/
+  - title: "Beyond-Tech"
+    url: /Beyond-Tech/
   - title: "Categories"
     url: /categories/
 
