@@ -2,7 +2,7 @@
 title: "learning-wiki"
 # layout: categories
 permalink: /learning-wiki/
-# author_profile: true
+author_profile: false
 ---
 
 A place where I can share my what I have learned.
