@@ -13,7 +13,7 @@
 # in the templates via {{ site.myvariable }}.
 title: Hi, I am Guoxuan
 email: g7xu@ucsd.edu
-description: #>- # this means to ignore newlines until "baseurl:"
+description: >- # this means to ignore newlines until "baseurl:"
   An Undergraduate student at University of California San Diego
 github_username: g7xu
 minimal_mistakes_skin: default
@@ -64,8 +64,7 @@ whitelist:
 author:
   name   : "Guoxuan Xu"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "An undergraduate data science student passionate about leveraging 
-  practical applications to solve real-world problems and drive impactful insights."
+  bio    : "An Undergraduate student at University of California San Diego"
   location: "San Diego, CA"
   email: g7xu@ucsd.edu
   links:
@@ -106,7 +105,7 @@ defaults:
       type: posts
     values:
       layout: single
-      author_profile: true
+      author_profile: false 
       read_time: true
       comments: true
       share: true
@@ -117,7 +116,7 @@ defaults:
       type: pages
     values:
       layout: single
-      author_profile: true
+      author_profile: false
 
 category_archive:
   type: liquid
