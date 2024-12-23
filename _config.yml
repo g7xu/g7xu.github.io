@@ -22,6 +22,9 @@ search: true
 # Build settings
 markdown: kramdown
 remote_theme: mmistakes/minimal-mistakes@4.26.2
+sass:
+  sass_dir: _sass
+  style: compressed
 github: [metadata]
 # Outputting
 permalink: /:categories/:title/

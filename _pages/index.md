@@ -8,16 +8,18 @@ comments: true
 <!-- Remove this: -->
 
 # About me
-
+---
 Content for the about section...
 
 # Skills Stack
-
+---
 Content for the skills section...
 
-# News
 
+# News
+---
 Content for the news section...
+
 
 comments:
   provider: disqus

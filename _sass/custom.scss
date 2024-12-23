@@ -1,0 +1,6 @@
+// Custom global styles for <hr>
+hr {
+    border: none; /* Remove default styles */
+    border-top: 3px solid #999; /* Thick black line */
+    margin: 20px 0; /* Add space above and below */
+  }
