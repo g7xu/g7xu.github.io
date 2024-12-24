@@ -4,3 +4,52 @@ hr {
     border-top: 3px solid #999; /* Thick black line */
     margin: 20px 0; /* Add space above and below */
   }
+
+// Customize News section
+.latest-news-section {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  padding: 15px;
+  background-color: #f9f9f9; /* Light background */
+  border: 1px solid #ddd;   /* Optional border */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 5px;       /* Rounded corners */
+}
+
+.latest-news-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.latest-news-section ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.latest-news-section ul li {
+  margin-bottom: 10px;
+}
+
+.latest-news-section ul li a {
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+
+.latest-news-section ul li a:hover {
+  text-decoration: underline;
+}
+
+.latest-news-section ul li small {
+  display: block;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.latest-news-section ul li p {
+  color: #777;
+  font-size: 0.9rem;
+}
