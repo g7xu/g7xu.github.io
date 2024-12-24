@@ -103,6 +103,8 @@ footer:
 # TODO: still need to fix
 comments:
   provider: disqus
+  disqus:
+    shortname: "guoxuan"
 
 main:
   - title: "Learning Wiki"
@@ -139,4 +141,3 @@ category_archive:
 tag_archive:
   type: liquid
   path: /tags/
-  

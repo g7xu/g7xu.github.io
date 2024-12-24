@@ -46,11 +46,3 @@ Content for the about section...
 # Skills Stack 🧑‍💻
 ---
 Content for the skills section...
-
-
-
-
-<!-- comments:
-  provider: disqus
-  disqus:
-    shortname: "your-disqus-shortname" -->
