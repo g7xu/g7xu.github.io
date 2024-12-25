@@ -43,6 +43,23 @@ comments: true
 ---
 Hi, I am Guoxuan(徐国轩), or you can call me Jason. I am currently major in Data Science in UCSD.
 
+interest:
+- bio-tech
+- data analytic, data science machine learning
+
+
+
+past work
+- Student Research assistant in DSTL lab mentoring under Sam Lau
+- tutor 500+ students in DSC 10 and DSC 80
+- Data Analytic Intern at Tong Consulting Inc.
+
+Currently working:
+- tutor for DSC 40A
+- Student research intern at Scripps Research in the Wu Lab
+- Data Science intern at startup firm LLM-strategy working with... developing ... for Ecommerce
+- working with Andrew Yang developing...
+
 # Skills Stack 🧑‍💻
 ---
 Content for the skills section...
