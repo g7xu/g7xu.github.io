@@ -41,7 +41,7 @@ comments: true
 
 # About me 👋
 ---
-Content for the about section...
+Hi, I am Guoxuan(徐国轩), or you can call me Jason. I am currently major in Data Science in UCSD.
 
 # Skills Stack 🧑‍💻
 ---
