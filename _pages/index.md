@@ -39,27 +39,25 @@ comments: true
 </div>
 
 
+<!-- For me, data science is the [sexiest](https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century)
+job not only because of its applicability in various subject but also due to process process of navigating through complex
+data types and find the right answer. -->
+
 # About me 👋
 ---
-Hi, I am Guoxuan(徐国轩), or you can call me Jason. I am currently major in Data Science in UCSD.
+Hi, I am Guoxuan(徐国轩), or you can call me Jason. I am currently a third-year undergraduate student studying Data Science 
+at University of California San Diego (UCSD). While I am exploring specific domain to focus on for long term, my interest
+lie in bioinformatic and machine learning. These fields offer a rich combination challenges, transferable skills, and
+impactful applications that resonate deeply with me.
 
-interest:
-- bio-tech
-- data analytic, data science machine learning
+Reflecting on my past career, I've worked as tutor for two different data science courses, tutoring 500+ first year students
+using Python libraries like Pandas and NumPy for data manipulation and analysis. I was also privileged to be among the first
+cohort of students working in [DSTL Lab](https://dstl.ucsd.edu/), supervised by [Sam Lau](https://lau.ucsd.edu/). In the lab,
+I spent part of time contributing to the Pandas Tutor codebase, enhancing its capability to handle large datasets. Additionally,
+I conduct a research study to explore effective strategies used by professional data scientists to understand complex data science
+notebooks. Most recently, I just finished my first industrial internship at Tong Consulting Inc. Under the mentorship of Tom Dai,
+I analyzed an encrpted flight dataset for a client. I propose five most profitable round-trip routes in the U.S. domestric market.
 
-
-
-past work
-- Student Research assistant in DSTL lab mentoring under Sam Lau
-- tutor 500+ students in DSC 10 and DSC 80
-- Data Analytic Intern at Tong Consulting Inc.
-
-Currently working:
-- tutor for DSC 40A
-- Student research intern at Scripps Research in the Wu Lab
-- Data Science intern at startup firm LLM-strategy working with... developing ... for Ecommerce
-- working with Andrew Yang developing...
-
-# Skills Stack 🧑‍💻
----
-Content for the skills section...
+I am currently tutoring DSC 40A under Kyle. I also worked as a research intern at Scripps Research as a part of [the Wu Lab](https://wulab.io/).
+In the lab, I'm working on integrating data resouces into the API system for [mygene.info](https://mygene.info/). Additionaly,
+I am gaining industry experience as a data science intern at [LLM-strategy](https://www.llmstrategies.com/), under the mentorship of [Serge De Coster](https://www.llmstrategies.com/team/).

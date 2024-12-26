@@ -10,3 +10,7 @@ This includes:
 - data science
 - bio tech
 - tech stack
+
+
+
+- one post about the coding style
