@@ -52,12 +52,12 @@ impactful applications that resonate deeply with me.
 
 Reflecting on my past career, I've worked as tutor for two different data science courses, tutoring 500+ first year students
 using Python libraries like Pandas and NumPy for data manipulation and analysis. I was also privileged to be among the first
-cohort of students working in [DSTL Lab](https://dstl.ucsd.edu/), supervised by [Sam Lau](https://lau.ucsd.edu/). In the lab,
+cohort of students working in [DSTL Lab](https://dstl.ucsd.edu/), supervised by [Samuel Lau](https://lau.ucsd.edu/). In the lab,
 I spent part of time contributing to the Pandas Tutor codebase, enhancing its capability to handle large datasets. Additionally,
 I conduct a research study to explore effective strategies used by professional data scientists to understand complex data science
 notebooks. Most recently, I just finished my first industrial internship at Tong Consulting Inc. Under the mentorship of Tom Dai,
 I analyzed an encrpted flight dataset for a client. I propose five most profitable round-trip routes in the U.S. domestric market.
 
-I am currently tutoring DSC 40A under Kyle. I also worked as a research intern at Scripps Research as a part of [the Wu Lab](https://wulab.io/).
+I am currently tutoring DSC 40A taught by [Kyle Shannon](https://www.kmshannon.com/about/). I also worked as a research intern at Scripps Research as a part of [the Wu Lab](https://wulab.io/).
 In the lab, I'm working on integrating data resouces into the API system for [mygene.info](https://mygene.info/). Additionaly,
-I am gaining industry experience as a data science intern at [LLM-strategy](https://www.llmstrategies.com/), under the mentorship of [Serge De Coster](https://www.llmstrategies.com/team/).
+I am gaining industry experience as a data science intern at [LLM-strategy](https://www.llmstrategies.com/), under the mentorship of [Serge De Coster](https://www.linkedin.com/in/serge-de-coster-1370b22/?originalSubdomain=uk).

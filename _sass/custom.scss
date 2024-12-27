@@ -5,6 +5,11 @@ hr {
     margin: 20px 0; /* Add space above and below */
   }
 
+// Reduce font size in the index page
+body {
+  font-size: 17px; /* Adjust this value as needed */
+}
+
 // Customize News section
 .latest-news-section {
   position: fixed;
