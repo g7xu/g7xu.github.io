@@ -9,7 +9,7 @@ My Learning Ethic
 >  
 > *— Kazuo Inamori*
 
-**Under Construction**
+<strong>Currently under construction</strong>
 
 
 A place where I can share my what I have learned.
