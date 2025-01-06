@@ -79,11 +79,13 @@ author:
       url: "https://www.linkedin.com/in/guoxuan-xu-30a572269/"
     - label: "Resume"
       icon: "fas fa-fw fa-file"
-      url: "https://drive.google.com/file/d/1-oVa5gqUFUzMBka8b9seSEbbPpVPAvSE/view?usp=sharing"
+      url: "../assets/files/Guoxuan_Data_Science_resume.pdf"
     - label: "CV"
       icon: "fas fa-fw fa-file"
       url: "assets/cv.pdf/"
   
+#url: "https://drive.google.com/file/d/1-oVa5gqUFUzMBka8b9seSEbbPpVPAvSE/view?usp=sharing"
+
 footer:
   links:
     - label: "GitHub"
