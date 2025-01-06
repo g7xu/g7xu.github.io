@@ -4,6 +4,7 @@ title: "learning-wiki"
 permalink: /learning-wiki/
 author_profile: false
 ---
+My Learning Ethic
 > Gaining success without becoming arrogant, facing setbacks without becoming disheartened, and working diligently every single day—this is more important than anything else.  
 >  
 > *— Kazuo Inamori*

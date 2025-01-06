@@ -17,7 +17,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   An Undergraduate student at University of California San Diego
 github_username: g7xu
 minimal_mistakes_skin: default
-search: true
+search: false
 
 # Build settings
 markdown: kramdown
@@ -83,8 +83,6 @@ author:
     - label: "CV"
       icon: "fas fa-fw fa-file"
       url: "assets/cv.pdf/"
-  
-#url: "https://drive.google.com/file/d/1-oVa5gqUFUzMBka8b9seSEbbPpVPAvSE/view?usp=sharing"
 
 footer:
   links:
