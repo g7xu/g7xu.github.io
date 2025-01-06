@@ -11,6 +11,20 @@ A quote will be put up here
 ---
 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
   <div style="width: 48%;">
+    <a href="/projects/scripps-research-data-integration/">
+      <img src="path_to_integration_image" alt="Scripps Data Integration Image" style="width: 100%; height: auto;">
+    </a>
+    <a href="/projects/scripps-research-data-integration/">
+      <h3>Scripps Research: Data Integration</h3>
+    </a>
+    <p><strong>Description:</strong> Research on integrating large-scale biological datasets for analysis.</p>
+    <p><strong>Tag:</strong> Data Science, Bioinformatics</p>
+  </div>
+</div>
+
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+  <div style="width: 48%;">
     <a href="/projects/recommendation-system/">
       <img src="path_to_recommendation_image" alt="Recommendation System Project Image" style="width: 100%; height: auto;">
     </a>
@@ -66,6 +80,24 @@ A quote will be put up here
 ---
 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
   <div style="width: 48%;">
+    <a href="/projects_research/da-strategies-research/">
+      <img src="../assets/images/dstl_project_pic.png" alt="dstl_project_pic" style="width: 100%; height: auto;">
+    </a>
+    <a href="/projects_research/da-strategies-research/">
+      <h3>DSTL Lab: investiagtion on effective data analytical strategies</h3>
+    </a>
+    <p style="font-size: 0.9em; line-height: 1.2em; margin: 5px 0;">
+      <a href="../assets/files/2025_sigcse_experts_vs_novices_SIGCSE.pdf" style="text-decoration: none; font-weight: bold;">paper</a> | 
+      <a href="https://github.com/dstl-lab/Code-Comprehension-User-Study" style="text-decoration: none; font-weight: bold;">study material</a>
+    </p>
+    <p>In this paper, we conducted a user speak-aloud study to explore effective practices
+    that novices data scientists can do understand data science workbooks. In the paper, we propose three key
+    methodologies: <strong>understanding the data schema</strong>, <strong>guess-and-check</strong>, and 
+    <strong>goal-oriented exploration</strong></p>
+    <p><strong>Tag:</strong> Data Science, Education, Exploratory data analysis</p>
+  </div>
+
+  <div style="width: 48%;">
     <a href="/projects/scripps-research-data-imputation/">
       <img src="path_to_imputation_image" alt="Scripps Data Imputation Image" style="width: 100%; height: auto;">
     </a>
@@ -75,27 +107,6 @@ A quote will be put up here
     <p><strong>Description:</strong> Research focused on imputing missing data in microbiome datasets.</p>
     <p><strong>Tag:</strong> Data Science, Biostatistics</p>
   </div>
-
-  <div style="width: 48%;">
-    <a href="/projects/scripps-research-data-integration/">
-      <img src="path_to_integration_image" alt="Scripps Data Integration Image" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects/scripps-research-data-integration/">
-      <h3>Scripps Research: Data Integration</h3>
-    </a>
-    <p><strong>Description:</strong> Research on integrating large-scale biological datasets for analysis.</p>
-    <p><strong>Tag:</strong> Data Science, Bioinformatics</p>
-  </div>
 </div>
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-  <div style="width: 48%;">
-    <a href="/projects/scripps-research-data-imputation/">
-      <img src="path_to_imputation_image" alt="Scripps Data Imputation Image" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects/scripps-research-data-imputation/">
-      <h3>DSTL Lab: investiagtion on effective data analytical strategies</h3>
-    </a>
-    <p><strong>Description:</strong> Research focused on imputing missing data in microbiome datasets.</p>
-    <p><strong>Tag:</strong> Data Science, Biostatistics</p>
-  </div>
+
