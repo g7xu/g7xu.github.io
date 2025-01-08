@@ -1,7 +1,7 @@
 ---
 layout: single
 permalink: /Project&Research/
-title: "Project&Research"
+title: "Project & Research"
 classes: wide
 ---
 This is a page dedicated to projects and researches I have done alongside talented individuals from UCSD and other programs. It has been both fulfilling and rewarding to transform what I have learned to tangible things that made a little impact to the world around me.
