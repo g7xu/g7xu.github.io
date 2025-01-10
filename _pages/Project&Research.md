@@ -4,7 +4,10 @@ permalink: /Project&Research/
 title: "Project & Research"
 classes: wide
 ---
-This is a page dedicated to projects and researches I have done alongside talented individuals from UCSD and other programs. It has been both fulfilling and rewarding to transform what I have learned to tangible things that made a little impact to the world around me.
+I care about application! I believe that a key aspect of learning is understanding how to apply knowledge to real-life 
+scenarios. This page is dedicated to showcasing the projects and research I've done with other talented individuals, 
+documenting journey of applying what I've learned. It serves as both a demonstration of my work and a space of 
+self-reflection.
 
 
 # Projects
