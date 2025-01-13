@@ -10,11 +10,15 @@ author_profile: false
 
 I might be slow to learn but I will never stop learning.
 
+<p class="note">
+Page under construction!
+</p>
+
 # Courses
 ---
 <div style="display: flex; align-items: center; gap: 20px;">
     <a href="">
-        <img src="" alt="Image on data visualization" style="width: 150px; height: auto;">
+        <img src="📊" alt="Image on data visualization" style="width: 150px; height: auto;">
     </a>
     <div>
         <a href="">

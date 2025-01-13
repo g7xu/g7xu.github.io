@@ -23,3 +23,15 @@ Welcome to Beyond Tech! Explore the following sections:
 # Study & Grind Lifeline
 ---
 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0JDgZWY1t3XCNE1J6Mnclg?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+# Favourite Chinese Poem
+---
+
+<div style="text-align: center;">
+    <strong>《不第后赋菊》</strong><br>
+    <em>作者：黄巢</em><br><br>
+    待到秋来九月八，<br>
+    我花开后百花杀。<br>
+    冲天香阵透长安，<br>
+    满城尽带黄金甲。
+</div>
