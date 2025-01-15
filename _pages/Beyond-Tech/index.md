@@ -29,9 +29,7 @@ Welcome to Beyond Tech! Explore the following sections:
 
 <div style="text-align: center;">
     <strong>《不第后赋菊》</strong><br>
-    <em>作者：黄巢</em><br><br>
-    待到秋来九月八，<br>
-    我花开后百花杀。<br>
-    冲天香阵透长安，<br>
-    满城尽带黄金甲。
+    <em>Author: 黄巢</em><br><br>
+    待到秋来九月八，我花开后百花杀。
+    冲天香阵透长安，满城尽带黄金甲。
 </div>
