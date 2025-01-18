@@ -12,77 +12,72 @@ self-reflection.
 
 # Projects
 ---
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-  <div style="width: 48%;">
+<div class = "projects-grid">
+  <div class = "project-item">
     <a href="/projects/scripps-research-data-integration/">
-      <img src="path_to_integration_image" alt="Scripps Data Integration Image" style="width: 100%; height: auto;">
+      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Scripps Data Integration Image" style="width: 100%; height: auto;">
     </a>
     <a href="/projects/scripps-research-data-integration/">
       <h3>Scripps Research: Data Integration</h3>
     </a>
-    <p><strong>Description:</strong> Research on integrating large-scale biological datasets for analysis.</p>
-    <p><strong>Tag:</strong> Data Science, Bioinformatics</p>
+    <p class = "description"><strong>Description:</strong> Research on integrating large-scale biological datasets for analysis.</p>
+    <p class = "description"><strong>Tag:</strong> Data Science, Bioinformatics</p>
   </div>
-</div>
 
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-  <div style="width: 48%;">
+  <div class = "project-item">
     <a href="/projects/recommendation-system/">
-      <img src="path_to_recommendation_image" alt="Recommendation System Project Image" style="width: 100%; height: auto;">
+      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Recommendation System Project Image" style="width: 100%; height: auto;">
     </a>
     <a href="/projects/recommendation-system/">
       <h3>Recommendation System Project</h3>
     </a>
-    <p><strong>Description:</strong> Built a recommendation system using collaborative filtering techniques.</p>
-    <p><strong>Tag:</strong> Machine Learning, Python</p>
+    <p class = "description"><strong>Description:</strong> Built a recommendation system using collaborative filtering techniques.</p>
+    <p class = "description"><strong>Tag:</strong> Machine Learning, Python</p>
   </div>
-</div>
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-  <div style="width: 48%;">
+  <div class = "project-item">
     <a href="/projects/flight-analysis/">
-      <img src="path_to_flight_analysis_image" alt="Flight Analysis Project Image" style="width: 100%; height: auto;">
+      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Flight Analysis Project Image" style="width: 100%; height: auto;">
     </a>
     <a href="/projects/flight-analysis/">
       <h3>Flight Analysis Project</h3>
     </a>
-    <p><strong>Description:</strong> Analyzed flight datasets to identify profitable round-trip routes.</p>
-    <p><strong>Tag:</strong> Data Analysis, Pandas</p>
+    <p class = "description"><strong>Description:</strong> Analyzed flight datasets to identify profitable round-trip routes.</p>
+    <p class = "description"><strong>Tag:</strong> Data Analysis, Pandas</p>
   </div>
-</div>
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-  <div style="width: 48%;">
+  <div class = "project-item">
     <a href="/projects/dsc80-project/">
-      <img src="path_to_dsc80_image" alt="DSC 80 Project Image" style="width: 100%; height: auto;">
+      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="DSC 80 Project Image" style="width: 100%; height: auto;">
     </a>
     <a href="/projects/dsc80-project/">
       <h3>DSC 80 Project</h3>
     </a>
-    <p><strong>Description:</strong> A data science project exploring advanced techniques in data cleaning and analysis.</p>
-    <p><strong>Tag:</strong> Data Science, Python</p>
+    <p class = "description"><strong>Description:</strong> A data science project exploring advanced techniques in data cleaning and analysis.</p>
+    <p class = "description"><strong>Tag:</strong> Data Science, Python</p>
   </div>
-</div>
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-  <div style="width: 48%;">
+  <div class = "project-item">
     <a href="/projects/covidwalk-research/">
-      <img src="path_to_covidwalk_image" alt="COVID Walk Research Image" style="width: 100%; height: auto;">
+      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="COVID Walk Research Image" style="width: 100%; height: auto;">
     </a>
     <a href="/projects/covidwalk-research/">
       <h3>COVID Walk Research</h3>
     </a>
-    <p><strong>Description:</strong> Explored human mobility patterns during the COVID-19 pandemic.</p>
-    <p><strong>Tag:</strong> Visualization, Data Analysis</p>
+    <p class = "description"><strong>Description:</strong> Explored human mobility patterns during the COVID-19 pandemic.</p>
+    <p class = "description"><strong>Tag:</strong> Visualization, Data Analysis</p>
   </div>
 </div>
 
 
+
+
+
 # Research
 ---
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-  <div style="width: 48%;">
+<div class = "research-grid">
+  <div class="research-item">
     <a href="/projects_research/da-strategies-research/">
       <img src="../assets/images/dstl_project_pic.png" alt="dstl_project_pic" style="width: 100%; height: auto;">
     </a>
@@ -93,23 +88,21 @@ self-reflection.
       <a href="../assets/files/2025_sigcse_experts_vs_novices_SIGCSE.pdf" style="text-decoration: none; font-weight: bold;">paper</a> | 
       <a href="https://github.com/dstl-lab/Code-Comprehension-User-Study" style="text-decoration: none; font-weight: bold;">study material</a>
     </p>
-    <p>In this paper, we conducted a user speak-aloud study to explore effective practices
+    <p class = "description">In this paper, we conducted a user speak-aloud study to explore effective practices
     that novices data scientists can do understand data science workbooks. In the paper, we propose three key
     methodologies: <strong>understanding the data schema</strong>, <strong>guess-and-check</strong>, and 
     <strong>goal-oriented exploration</strong></p>
-    <p><strong>Tag:</strong> Data Science, Education, Exploratory data analysis</p>
+    <p class = "description"><strong>Tag:</strong> Data Science, Education, Exploratory data analysis</p>
   </div>
 
-  <div style="width: 48%;">
+  <div class="research-item">
     <a href="/projects/scripps-research-data-imputation/">
-      <img src="path_to_imputation_image" alt="Scripps Data Imputation Image" style="width: 100%; height: auto;">
+      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Scripps Data Imputation Image" style="width: 100%; height: auto;">
     </a>
     <a href="/projects/scripps-research-data-imputation/">
       <h3>Scripps Research: Data Imputation</h3>
     </a>
-    <p><strong>Description:</strong> Research focused on imputing missing data in microbiome datasets.</p>
-    <p><strong>Tag:</strong> Data Science, Biostatistics</p>
+    <p class = "description"><strong>Description:</strong> Research focused on imputing missing data in microbiome datasets.</p>
+    <p class = "description"><strong>Tag:</strong> Data Science, Biostatistics</p>
   </div>
 </div>
-
-

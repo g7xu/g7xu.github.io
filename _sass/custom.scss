@@ -58,3 +58,44 @@ body {
   color: #777;
   font-size: 0.9rem;
 }
+
+// Custom selectors for Project & Research page
+
+.projects-grid, .research-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.project-item, .research-item {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  p.description {
+    font-size: 0.8em;
+  }
+}
+
+.project-item img, .research-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.project-item h3, .research-item h3 {
+  margin-top: 10px;
+  font-size: 1.2em;
+  
+}
+
+.project-item p, .research-item p {
+  margin: 10px 0;
+}
+
+.project-item:hover , .research-item:hover{
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
