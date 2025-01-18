@@ -63,7 +63,7 @@ body {
 
 .projects-grid, .research-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
   gap: 20px;
 }
 
@@ -100,15 +100,43 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+// Custom selectors for Learning wiki
+.course-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+.course-item {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 150px; /* Adjust as needed */
+    height: auto;
+    margin-right: 20px; /* Space between image and text */
+    border-radius: 8px;
+  }
+
+  .course-content {
+    flex: 1;
+
+    h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    p {
+      margin: 5px 0 0;
+      font-size: 0.9em;
+    }
+  }
+}
+}
+
+// for special page layout
 .full_wide {
   .page, .page__related {
     width: 100%;
-    // @include breakpoint($large) {
-    //   padding-inline-end: 0;
-    // }
-
-    // @include breakpoint($x-large) {
-    //   padding-inline-end: 0;
-    // }
+    padding-inline-end: 0;
   }
 }

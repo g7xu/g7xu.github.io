@@ -77,19 +77,15 @@ self-reflection.
 # Research
 ---
 <div class = "research-grid">
-  <div class="research-item">
-    <a href="/projects_research/da-strategies-research/">
-      <img src="../assets/images/dstl_project_pic.png" alt="dstl_project_pic" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects_research/da-strategies-research/">
-      <h3>DSTL Lab: investiagtion on effective data analytical strategies</h3>
-    </a>
+  <div class="research-item" onclick="location.href='/projects_research/da-strategies-research/'" style="cursor: pointer;">
+    <img src="../assets/images/dstl_project_pic.png" alt="dstl_project_pic" style="width: 100%; height: auto;">
+    <h3>DSTL Lab: investiagtion on effective data analytical strategies</h3>
     <p style="font-size: 0.9em; line-height: 1.2em; margin: 5px 0;">
       <a href="../assets/files/2025_sigcse_experts_vs_novices_SIGCSE.pdf" style="text-decoration: none; font-weight: bold;">paper</a> | 
       <a href="https://github.com/dstl-lab/Code-Comprehension-User-Study" style="text-decoration: none; font-weight: bold;">study material</a>
     </p>
     <p class = "description">In this paper, we conducted a user speak-aloud study to explore effective practices
-    that novices data scientists can do understand data science workbooks. In the paper, we propose three key
+    that novices data scientists can do to understand data science workbooks. In the paper, we propose three key
     methodologies: <strong>understanding the data schema</strong>, <strong>guess-and-check</strong>, and 
     <strong>goal-oriented exploration</strong></p>
     <p class = "description"><strong>Tag:</strong> Data Science, Education, Exploratory data analysis</p>

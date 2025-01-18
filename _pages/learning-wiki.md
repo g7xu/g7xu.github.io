@@ -8,22 +8,17 @@ author_profile: false
 >  
 > *— Kazuo Inamori*
 
-I might be slow to learn but I will never stop learning.
-
-<p class="note">
-Page under construction!
-</p>
-
 # Courses
 ---
-<div style="display: flex; align-items: center; gap: 20px;">
-    <a href="">
-        <img src="📊" alt="Image on data visualization" style="width: 150px; height: auto;">
-    </a>
-    <div>
-        <a href="">
-            <h3>DSC 106: Data Visualization</h3>
-        </a>
-        <p><strong>Description:</strong> Data visualization taught by Sam Lau in UCSD</p>
+<div class = "course-flex">
+    <div class = "course-item">
+        <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Image on data visualization">
+        <div class = "course-content">
+            <a href="">
+                <h3>DSC 106: Data Visualization</h3>
+            </a>
+            <p><strong>Description:</strong> Data visualization taught by Sam Lau in UCSD</p>
+        </div>
     </div>
 </div>
+
