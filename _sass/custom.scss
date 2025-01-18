@@ -63,7 +63,7 @@ body {
 
 .projects-grid, .research-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
   gap: 20px;
 }
 
@@ -98,4 +98,17 @@ body {
 .project-item:hover , .research-item:hover{
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.full_wide {
+  .page, .page__related {
+    width: 100%;
+    // @include breakpoint($large) {
+    //   padding-inline-end: 0;
+    // }
+
+    // @include breakpoint($x-large) {
+    //   padding-inline-end: 0;
+    // }
+  }
 }

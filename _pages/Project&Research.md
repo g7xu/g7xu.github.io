@@ -2,7 +2,7 @@
 layout: single
 permalink: /Project&Research/
 title: "Project & Research"
-classes: wide
+classes: full_wide
 ---
 I care about application! I believe that a key aspect of learning is understanding how to apply knowledge to real-life 
 scenarios. This page is dedicated to showcasing the projects and research I've done with other talented individuals, 
