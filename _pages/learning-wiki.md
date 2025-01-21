@@ -11,7 +11,7 @@ author_profile: false
 # Courses
 ---
 <div class = "course-flex">
-    <div class = "course-item">
+    <div class = "course-item" onclick="location.href='/learning_wiki/data_visualization/'" style="cursor: pointer;">
         <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Image on data visualization">
         <div class = "course-content">
             <a href="">
