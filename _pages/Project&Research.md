@@ -9,10 +9,16 @@ scenarios. This page is dedicated to showcasing the projects and research I've d
 documenting journey of applying what I've learned. It serves as both a demonstration of my work and a space of 
 self-reflection.
 
-
 # Projects
 ---
 <div class = "projects-grid">
+  <div class = "project-item" onclick="window.open('https://g7xu.github.io/secret-life-of-blood-glucose/', '_blank')" style="cursor: pointer;">
+    <img src="../assets/images/SLOBG_cover_pic.png" alt="Secret Life of Blood Glucose Cover Image" style="width: 100%; height: auto;">
+    <h3>Secret Life of Blood Glucose</h3>
+    <p class = "description">An interactive vis about blood glucose and diabetes</p>
+    <p class = "description"><strong>Tag:</strong> Data Science, Data Visualization</p>
+  </div>
+
   <div class = "project-item">
     <a href="/projects/scripps-research-data-integration/">
       <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Scripps Data Integration Image" style="width: 100%; height: auto;">
@@ -68,16 +74,15 @@ self-reflection.
     <p class = "description"><strong>Description:</strong> Explored human mobility patterns during the COVID-19 pandemic.</p>
     <p class = "description"><strong>Tag:</strong> Visualization, Data Analysis</p>
   </div>
+
+
 </div>
-
-
-
 
 
 # Research
 ---
 <div class="research-grid">
-  <div class="research-item" onclick="location.href='https://dstl.ucsd.edu/Code-Comprehension-User-Study/'" style="cursor: pointer;">
+  <div class="research-item" onclick="window.open('https://dstl.ucsd.edu/Code-Comprehension-User-Study/', '_blank')" style="cursor: pointer;">
     <img src="../assets/images/dstl_project_pic.png" alt="dstl_project_pic" style="width: 100%; height: auto;">
     <h3>DSTL Lab: Investigation on Effective Data Analytical Strategies</h3>
     <p style="font-size: 0.9em; line-height: 1.2em; margin: 5px 0;">
