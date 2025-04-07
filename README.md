@@ -4,6 +4,9 @@ template can be find [here](https://mmistakes.github.io/minimal-mistakes/)
 
 Here’s a curated list of links that can help you customize your Jekyll website using the Minimal Mistakes theme. These resources cover a wide range of topics, from navigation to advanced styling and plugin integration.
 
+<!-- bundle built -->
+<!-- bundle exec jekyll serve -->
+
 ## Extra Resources
 Official Documentation
 - Minimal Mistakes Documentation

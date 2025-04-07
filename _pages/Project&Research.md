@@ -19,6 +19,13 @@ self-reflection.
     <p class = "description"><strong>Tag:</strong> Data Science, Data Visualization</p>
   </div>
 
+  <div class = "project-item" onclick="window.open('https://g7xu.github.io/Trend_Bubble/', '_blank')" style="cursor: pointer;">
+    <img src="../assets/images/trend_bubble_cover_pic.png" alt="Trend Bubble Cover Image" style="width: 100%; height: auto;">
+    <h3>Trend Bubble 🫧🫧🫧</h3>
+    <p class = "description">A Real-time dashboard of trending datasets from Kaggle</p>
+    <p class = "description"><strong>Tag:</strong> Data Science, Data Visualization, data pipeline</p>
+  </div>
+
   <div class = "project-item">
     <a href="/projects/scripps-research-data-integration/">
       <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Scripps Data Integration Image" style="width: 100%; height: auto;">
