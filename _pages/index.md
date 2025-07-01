@@ -45,7 +45,13 @@ data types and find the right answer. -->
 
 # About me 👋
 ---
-Hi, I am Guoxuan(徐国轩), or you can call me Jason. I am currently a third-year undergraduate student studying Data Science 
+Hi, I am Guoxuan (pronounced as Gwo-shwan), or you can go by Jason. As I am about to graduate from US San Diego with a B.S. in Data Science, I have gain experience spans academic research, industrial software development, and teaching. I have co-authored a published research paper on data science education at ACM SIGCSE. I designed automated pipelines and 8-table database for millions of weekly patent and trademark records. I have applied data analysis to large scale microbiome and airline datasets. I have taught over 500 students in the Data Science courses of my department, receiving perfect evaluations from all participants. 
+
+Currently, I am enhancing the data pipeline I developed, expanding its capabilities to integrate complex, pre-existing datasets like copyright and patent images from legal cases. To bridge my technical skills with market expertise, I am also immersing myself in finance-related coursework, strategically preparing for a career at the intersection of data engineering and financial technology.
+
+Starting in July, I am excited to join Cadre.AI, a San Diego-based AI consulting startup, as an AI Engineer Intern, where I will contribute to AI integrations and strategy development. This experience, combined with my pursuit of a Finance minor, is the next deliberate step toward my ultimate goal of becoming a Quantitative Developer, where I can leverage my passion for complex data systems to solve challenges in the financial markets.
+
+<!-- Hi, I am Guoxuan(徐国轩), or you can call me Jason. I am currently a third-year undergraduate student studying Data Science 
 at University of California San Diego (UCSD). While I am exploring specific domain to focus on for long term, my interest
 lie in bioinformatic and machine learning. These fields offer a rich combination challenges, transferable skills, and
 impactful applications that resonate deeply with me.
@@ -60,4 +66,4 @@ I analyzed an encrpted flight dataset for a client. I propose five most profitab
 
 I am currently tutoring DSC 40A taught by [Kyle Shannon](https://www.kmshannon.com/about/). I also worked as a research intern at Scripps Research as a part of [the Wu Lab](https://wulab.io/).
 In the lab, I'm working on integrating data resouces into the API system for [mygene.info](https://mygene.info/). Additionaly,
-I am gaining industry experience as a data science intern at [LLM-strategy](https://www.llmstrategies.com/), under the mentorship of [Serge De Coster](https://www.linkedin.com/in/serge-de-coster-1370b22/?originalSubdomain=uk).
+I am gaining industry experience as a data science intern at [LLM-strategy](https://www.llmstrategies.com/), under the mentorship of [Serge De Coster](https://www.linkedin.com/in/serge-de-coster-1370b22/?originalSubdomain=uk). -->
