@@ -36,6 +36,13 @@ comments: true
       <p style="margin: 5px 0; color: #333; font-size: 0.6rem;">Launching of my personal website!</p>
     </li>
   </ul>
+  <ul id="news-list" style="display: none; list-style-type: none; padding: 8px; margin: 0;">
+    <li style="margin-bottom: 8px;">
+      <a style="color: black; font-weight: bold; font-size: 0.8rem;">AI Engineer Intern</a>
+      <small style="color: #555; font-size: 0.6rem;">Jul 14, 2025</small>
+      <p style="margin: 5px 0; color: #333; font-size: 0.6rem;">Starting my role as an AI Engineer Intern at Cadre.AI, a consulting firm.</p>
+    </li>
+  </ul>
 </div>
 
 
