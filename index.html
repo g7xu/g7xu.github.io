@@ -5,3 +5,61 @@
 layout: home
 author_profile: true
 ---
+
+{% if page.url == "/" %}
+<title>Jason (Guoxuan) Xu</title>
+<meta property="og:title" content="Jason (Guoxuan) Xu">
+<meta property="og:site_name" content="Jason (Guoxuan) Xu">
+{% else %}
+<title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}{% if site.title %} - {{ site.title }}{% endif %}</title>
+<meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+<meta property="og:site_name" content="{{ site.title }}">
+{% endif %}
+
+<meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+
+{% if site.author %}
+  <meta name="author" content="{{ site.author.name }}">
+{% endif %}
+
+{% if page.date %}
+  <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+{% endif %}
+
+{% if page.last_modified_at %}
+  <meta property="article:modified_time" content="{{ page.last_modified_at | date_to_xmlschema }}">
+{% endif %}
+
+{% if page.type %}
+  <meta property="og:type" content="{{ page.type }}">
+{% else %}
+  <meta property="og:type" content="website">
+{% endif %}
+
+{% if page.description %}
+  <meta property="og:description" content="{{ page.description }}">
+{% else %}
+  <meta property="og:description" content="{{ site.description }}">
+{% endif %}
+
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+
+{% if page.image %}
+  <meta property="og:image" content="{{ page.image | absolute_url }}">
+{% elsif site.image %}
+  <meta property="og:image" content="{{ site.image | absolute_url }}">
+{% endif %}
+
+{% if page.categories %}
+  {% for category in page.categories limit:1 %}
+  <meta property="article:section" content="{{ category }}">
+  {% endfor %}
+{% endif %}
+
+{% if page.tags %}
+  {% for tag in page.tags %}
+  <meta property="article:tag" content="{{ tag }}">
+  {% endfor %}
+{% endif %}
+
+<link rel="canonical" href="{{ page.url | absolute_url }}">
