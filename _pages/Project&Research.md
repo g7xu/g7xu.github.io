@@ -11,106 +11,30 @@ self-reflection.
 
 # Projects
 ---
-<div class = "projects-grid">
-  <div class = "project-item" onclick="window.open('https://g7xu.github.io/secret-life-of-blood-glucose/', '_blank')" style="cursor: pointer;">
-    <img src="../assets/images/SLOBG_cover_pic.png" alt="Secret Life of Blood Glucose Cover Image" style="width: 100%; height: auto;">
-    <h3>Secret Life of Blood Glucose</h3>
-    <p class = "description">An interactive vis about blood glucose and diabetes</p>
-    <p class = "description"><strong>Tag:</strong> Data Science, Data Visualization</p>
-  </div>
-
-  <div class = "project-item" onclick="window.open('https://g7xu.github.io/Trend_Bubble/', '_blank')" style="cursor: pointer;">
-    <img src="../assets/images/trend_bubble_cover_pic.png" alt="Trend Bubble Cover Image" style="width: 100%; height: auto;">
-    <h3>Trend Bubble 🫧🫧🫧</h3>
-    <p class = "description">A Real-time dashboard of trending datasets from Kaggle</p>
-    <p class = "description"><strong>Tag:</strong> Data Science, Data Visualization, data pipeline</p>
-  </div>
-
-  <div class = "project-item">
-    <a href="/projects/scripps-research-data-integration/">
-      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Scripps Data Integration Image" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects/scripps-research-data-integration/">
-      <h3>Scripps Research: Data Integration</h3>
-    </a>
-    <p class = "description"><strong>Description:</strong> Research on integrating large-scale biological datasets for analysis.</p>
-    <p class = "description"><strong>Tag:</strong> Data Science, Bioinformatics</p>
-  </div>
-
-
-  <div class = "project-item">
-    <a href="/projects/recommendation-system/">
-      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Recommendation System Project Image" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects/recommendation-system/">
-      <h3>Recommendation System Project</h3>
-    </a>
-    <p class = "description"><strong>Description:</strong> Built a recommendation system using collaborative filtering techniques.</p>
-    <p class = "description"><strong>Tag:</strong> Machine Learning, Python</p>
-  </div>
-
-  <div class = "project-item">
-    <a href="/projects/flight-analysis/">
-      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Flight Analysis Project Image" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects/flight-analysis/">
-      <h3>Flight Analysis Project</h3>
-    </a>
-    <p class = "description"><strong>Description:</strong> Analyzed flight datasets to identify profitable round-trip routes.</p>
-    <p class = "description"><strong>Tag:</strong> Data Analysis, Pandas</p>
-  </div>
-
-  <div class = "project-item">
-    <a href="/projects/dsc80-project/">
-      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="DSC 80 Project Image" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects/dsc80-project/">
-      <h3>DSC 80 Project</h3>
-    </a>
-    <p class = "description"><strong>Description:</strong> A data science project exploring advanced techniques in data cleaning and analysis.</p>
-    <p class = "description"><strong>Tag:</strong> Data Science, Python</p>
-  </div>
-
-  <div class = "project-item">
-    <a href="/projects/covidwalk-research/">
-      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="COVID Walk Research Image" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects/covidwalk-research/">
-      <h3>COVID Walk Research</h3>
-    </a>
-    <p class = "description"><strong>Description:</strong> Explored human mobility patterns during the COVID-19 pandemic.</p>
-    <p class = "description"><strong>Tag:</strong> Visualization, Data Analysis</p>
-  </div>
-
-
+<div class="projects-grid">
+  {% for project in site.data.projects.featured_projects %}
+    <div class="project-item" {% if project.external %}onclick="window.open('{{ project.url }}', '_blank')"{% endif %} style="cursor: pointer;">
+      <img src="{{ project.image }}" alt="{{ project.title }}" style="width: 100%; height: auto;">
+      <h3>{{ project.title }}</h3>
+      <p class="description">{{ project.description }}</p>
+      <p class="description"><strong>Tags:</strong> {{ project.tags | join: ", " }}</p>
+    </div>
+  {% endfor %}
 </div>
-
 
 # Research
 ---
 <div class="research-grid">
-  <div class="research-item" onclick="window.open('https://dstl.ucsd.edu/Code-Comprehension-User-Study/', '_blank')" style="cursor: pointer;">
-    <img src="../assets/images/dstl_project_pic.png" alt="dstl_project_pic" style="width: 100%; height: auto;">
-    <h3>DSTL Lab: Investigation on Effective Data Analytical Strategies</h3>
-    <p style="font-size: 0.9em; line-height: 1.2em; margin: 5px 0;">
-      <a href="../assets/files/2025_sigcse_experts_vs_novices_SIGCSE.pdf" style="text-decoration: none; font-weight: bold;">Paper</a> | 
-      <a href="https://github.com/dstl-lab/Code-Comprehension-User-Study" style="text-decoration: none; font-weight: bold;">Study Material</a>
-    </p>
-    <p class="description">In this paper, we conducted a user speak-aloud study to explore effective practices
-    that novice data scientists can do to understand data science workbooks. In the paper, we propose three key
-    methodologies: <strong>understanding the data schema</strong>, <strong>guess-and-check</strong>, and 
-    <strong>goal-oriented exploration</strong>.</p>
-    <p class="description"><strong>Tag:</strong> Data Science, Education, Exploratory Data Analysis</p>
-  </div>
-  
-  <div class="research-item">
-    <a href="/projects/scripps-research-data-imputation/">
-      <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="Scripps Data Imputation Image" style="width: 100%; height: auto;">
-    </a>
-    <a href="/projects/scripps-research-data-imputation/">
-      <h3>Scripps Research: Data Imputation</h3>
-    </a>
-    <p class = "description"><strong>Description:</strong> Research focused on imputing missing data in microbiome datasets.</p>
-    <p class = "description"><strong>Tag:</strong> Data Science, Biostatistics</p>
-  </div>
+  {% for research in site.data.projects.research_projects %}
+    <div class="research-item" onclick="window.open('{{ research.study_url }}', '_blank')" style="cursor: pointer;">
+      <img src="{{ research.image }}" alt="{{ research.title }}" style="width: 100%; height: auto;">
+      <h3>{{ research.title }}</h3>
+      <p style="font-size: 0.9em; line-height: 1.2em; margin: 5px 0;">
+        <a href="{{ research.paper_url }}" style="text-decoration: none; font-weight: bold;">Paper</a> | 
+        <a href="{{ research.study_url }}" style="text-decoration: none; font-weight: bold;">Study Material</a>
+      </p>
+      <p class="description">{{ research.description }}</p>
+      <p class="description"><strong>Tags:</strong> {{ research.tags | join: ", " }}</p>
+    </div>
+  {% endfor %}
 </div>
