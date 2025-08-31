@@ -5,52 +5,82 @@ author_profile: true # Show your bio
 classes: wide
 comments: true
 ---
-<!-- Add JavaScript function for toggling visibility -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const toggleButton = document.querySelector('.toggle-news');
-    const newsList = document.getElementById('news-list');
 
-    toggleButton.addEventListener('click', function () {
-      if (newsList.style.display === 'none' || newsList.style.display === '') {
-        newsList.style.display = 'block'; // Show the list
-        toggleButton.textContent = 'Hide'; // Change button text
+<!-- Enhanced JavaScript for inline dropdown news widget -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const newsToggle = document.querySelector('.news-toggle');
+  const newsDropdown = document.querySelector('.news-dropdown');
+  const toggleIcon = document.querySelector('.toggle-icon');
+  
+  if (newsToggle && newsDropdown) {
+    newsToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      
+      // Toggle aria attributes
+      this.setAttribute('aria-expanded', !isExpanded);
+      newsDropdown.setAttribute('aria-hidden', isExpanded);
+      
+      // Toggle dropdown visibility
+      if (isExpanded) {
+        newsDropdown.classList.remove('news-dropdown-active');
+        toggleIcon.textContent = '▼';
       } else {
-        newsList.style.display = 'none'; // Hide the list
-        toggleButton.textContent = 'Recent News 📢'; // Change button text
+        newsDropdown.classList.add('news-dropdown-active');
+        toggleIcon.textContent = '▲';
       }
     });
-  });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!newsToggle.contains(e.target) && !newsDropdown.contains(e.target)) {
+        newsDropdown.classList.remove('news-dropdown-active');
+        newsToggle.setAttribute('aria-expanded', 'false');
+        newsDropdown.setAttribute('aria-hidden', 'true');
+        toggleIcon.textContent = '▼';
+      }
+    });
+    
+    // Keyboard accessibility
+    newsToggle.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
+    });
+  }
+});
 </script>
 
-<!-- Latest News Section -->
-<div class="latest-news-section" 
-     style="position: relative; margin: 10px; max-width: 250px; padding: 4px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
-  <h3 style="margin: 0 0 8px; font-size: 1.2rem; text-align: center;">
-    <button class="toggle-news" style="background: none; border: none; cursor: pointer; color: #007acc; font-size: 0.9rem;">Recent News 📢</button>
-  </h3>
-  <ul id="news-list" style="display: none; list-style-type: none; padding: 8px; margin: 0;">
-    <li style="margin-bottom: 8px;">
-      <a style="color: black; font-weight: bold; font-size: 0.8rem;">Launching the Website</a>
-      <small style="color: #555; font-size: 0.6rem;">Dec 23, 2024</small>
-      <p style="margin: 5px 0; color: #333; font-size: 0.6rem;">Launching of my personal website!</p>
-    </li>
-  </ul>
-  <ul id="news-list" style="display: none; list-style-type: none; padding: 8px; margin: 0;">
-    <li style="margin-bottom: 8px;">
-      <a style="color: black; font-weight: bold; font-size: 0.8rem;">AI Engineer Intern</a>
-      <small style="color: #555; font-size: 0.6rem;">Jul 14, 2025</small>
-      <p style="margin: 5px 0; color: #333; font-size: 0.6rem;">Starting my role as an AI Engineer Intern at Cadre.AI, a consulting firm.</p>
-    </li>
-  </ul>
+<!-- Inline News Toggle Button and Dropdown -->
+<div class="about-section-header">
+  <h1>About me 👋</h1>
+  <div class="news-toggle-container">
+    <button class="news-toggle" aria-expanded="false" aria-controls="news-dropdown">
+      <span class="news-icon">📢</span>
+      <span class="news-title">Recent News</span>
+      <span class="toggle-icon">▼</span>
+    </button>
+    <!-- Inline News Dropdown -->
+    <div class="news-dropdown" id="news-dropdown" aria-hidden="true">
+      <div class="news-dropdown-content">
+        <div class="news-dropdown-list">
+          {% for news_item in site.data.news.recent_news %}
+          <article class="news-dropdown-item">
+            <div class="news-dropdown-meta">
+              <time datetime="{{ news_item.date }}" class="news-dropdown-date">{{ news_item.display_date }}</time>
+              <h4 class="news-dropdown-title">{{ news_item.title }}</h4>
+            </div>
+            <p class="news-dropdown-excerpt">{{ news_item.excerpt }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-
-<!-- For me, data science is the [sexiest](https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century)
-job not only because of its applicability in various subject but also due to process process of navigating through complex
-data types and find the right answer. -->
-
-# About me 👋
 ---
 Hi, I am Guoxuan (pronounced as Gwo-shwan), or you can go by Jason. As I am about to graduate from UC San Diego with a B.S. in Data Science, my experience spans academic research, industrial software development, and teaching. I have co-authored a published research paper on data science education at ACM SIGCSE. I designed automated pipelines and an 8-table database for millions of weekly patent and trademark records. I have applied data analysis to large-scale microbiome and airline datasets. I have taught over 500 students in the Data Science courses of my department, receiving perfect evaluations from all participants. 
 
