@@ -16,7 +16,7 @@ baseurl: ""
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Home
+title: "Jason (Guoxuan) Xu"
 email: g7xu@ucsd.edu
 description: >- # this means to ignore newlines until "baseurl:"
   An Undergraduate student at University of California San Diego
