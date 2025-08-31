@@ -1,0 +1,40 @@
+<!-- Structured Data for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ site.author.name }}",
+  "url": "{{ site.url }}",
+  "image": "{{ site.author.avatar | absolute_url }}",
+  "description": "{{ site.description }}",
+  "email": "{{ site.author.email }}",
+  "jobTitle": "Data Science Student",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "University of California San Diego"
+  },
+  "alumniOf": {
+    "@type": "Organization",
+    "name": "University of California San Diego"
+  },
+  "sameAs": [
+    "{{ site.author.links[0].url }}",
+    "{{ site.author.links[1].url }}"
+  ]
+}
+</script>
+
+<!-- Website structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ site.title }}",
+  "url": "{{ site.url }}",
+  "description": "{{ site.description }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ site.author.name }}"
+  }
+}
+</script>

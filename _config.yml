@@ -6,6 +6,11 @@
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # 'bundle exec jekyll serve'. If you change this file, please restart the server process.
 
+# Repository information for GitHub Pages
+repository: g7xu/g7xu.github.io
+url: "https://g7xu.github.io"
+baseurl: ""
+
 # Site settings
 # These are used to personalize your new site. If you look in the HTML files,
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
@@ -26,6 +31,24 @@ sass:
   sass_dir: _sass
   style: compressed
 github: [metadata]
+
+# Performance optimizations
+incremental: true
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  profile: false
+  blanklines: false
+
+# SEO improvements
+seo:
+  title: "Guoxuan Xu - Data Science Student & Researcher"
+  description: "Personal website of Guoxuan Xu, Data Science student at UC San Diego. Projects, research, and learning resources."
+  author: "Guoxuan Xu"
+  image: "/assets/images/bio-photo.jpg"
+  url: "https://g7xu.github.io"
+
 # Outputting
 permalink: /:categories/:title/
 paginate: 5 # amount of posts to show
@@ -82,7 +105,7 @@ author:
       url: "../assets/files/Guoxuan_Data_Science_resume.pdf"
     - label: "CV"
       icon: "fas fa-fw fa-file"
-      url: "assets/cv.pdf/"
+      url: "assets/cv.pdf"
 
 footer:
   links:
@@ -97,7 +120,7 @@ footer:
       url: "https://drive.google.com/file/d/1-oVa5gqUFUzMBka8b9seSEbbPpVPAvSE/view?usp=sharing"
     - label: "CV"
       icon: "fas fa-fw fa-file"
-      url: "assets/cv.pdf/"
+      url: "assets/cv.pdf"
 
 # allow people to leave comments on the website
 # TODO: still need to fix
@@ -134,7 +157,7 @@ defaults:
     values:
       layout: single
       author_profile: false
-      include: ["scripts"]
+      include: ["scripts", "structured-data"]
 
 category_archive:
   type: liquid
