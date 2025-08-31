@@ -67,8 +67,7 @@ whitelist:
 author:
   name   : "Guoxuan Xu"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "Every data to me is a record of unique individuals' demand. It is my duty to harness their inputs and 
-  implement the changes accordingly in the most effective yet efficient way."
+  bio    : "Every data to me is a record of unique individuals' demand. It is my duty to harness their inputs and implement the changes accordingly in the most effective yet efficient way."
   location: "San Diego, CA"
   email: g7xu@ucsd.edu
   links:
@@ -135,6 +134,7 @@ defaults:
     values:
       layout: single
       author_profile: false
+      include: ["scripts"]
 
 category_archive:
   type: liquid
