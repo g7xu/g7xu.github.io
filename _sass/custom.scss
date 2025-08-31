@@ -1,3 +1,11 @@
+// Custom color variables
+$primary-color: #007acc;
+$secondary-color: #6c757d;
+$accent-color: #28a745;
+$text-color: #333;
+$light-bg: #f8f9fa;
+$border-color: #e9ecef;
+
 // Custom global styles for <hr>
 hr {
     border: none; /* Remove default styles */
@@ -5,9 +13,18 @@ hr {
     margin: 20px 0; /* Add space above and below */
   }
 
-// Reduce font size in the index page
+// Enhanced typography
 body {
-  font-size: 17px; /* Adjust this value as needed */
+  font-size: 17px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: $text-color;
+}
+
+// Enhanced headings
+h1, h2, h3, h4, h5, h6 {
+  color: $primary-color;
+  font-weight: 600;
 }
 
 // Customize News section
@@ -68,14 +85,30 @@ body {
 }
 
 .project-item, .research-item {
-  background: #fff;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 25px;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  h3 {
+    margin: 15px 0 10px;
+    font-size: 1.3em;
+    color: $primary-color;
+  }
 
   p.description {
-    font-size: 0.8em;
+    font-size: 0.9em;
+    line-height: 1.5;
+    color: $text-color;
   }
 }
 
@@ -95,10 +128,7 @@ body {
   margin: 10px 0;
 }
 
-.project-item:hover , .research-item:hover{
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+
 
 // Custom selectors for Learning wiki
 .course-flex {

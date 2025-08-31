@@ -2,6 +2,12 @@ source "https://rubygems.org"
 
 gem "github-pages", group: :jekyll_plugins
 
+# Add these gems to fix the warnings
+gem "csv"
+gem "bigdecimal"
+gem "mutex_m"
+gem "faraday-retry"
+
 gem "tzinfo-data"
 gem "wdm", "~> 0.1.0" if Gem.win_platform?
 
