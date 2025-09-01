@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 ---
-Hi, I am Guoxuan (pronounced as Gwo-shwan), or you can go by Jason. As I am about to graduate from UC San Diego with a B.S. in Data Science, my experience spans academic research, industrial software development, and teaching. I have co-authored a published research paper on data science education at ACM SIGCSE. I designed automated pipelines and an 8-table database for millions of weekly patent and trademark records. I have applied data analysis to large-scale microbiome and airline datasets. I have taught over 500 students in the Data Science courses of my department, receiving perfect evaluations from all participants. 
+As I am about to graduate from UC San Diego with a B.S. in Data Science, my experience spans academic research, industrial software development, and teaching. I have co-authored a published research paper on data science education at ACM SIGCSE. I designed automated pipelines and an 8-table database for millions of weekly patent and trademark records. I have applied data analysis to large-scale microbiome and airline datasets. I have taught over 500 students in the Data Science courses of my department, receiving perfect evaluations from all participants. 
 
 Currently, I am enhancing the data pipeline I developed, expanding its capabilities to integrate complex, pre-existing datasets like copyright and patent images from legal cases. To bridge my technical skills with market expertise, I am also immersing myself in finance-related coursework, strategically preparing for a career at the intersection of data engineering and financial technology.
 
