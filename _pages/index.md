@@ -3,7 +3,7 @@ layout: single
 permalink: /
 author_profile: true # Show your bio
 classes: wide
-comments: true
+comments: false
 ---
 
 <!-- Enhanced JavaScript for inline dropdown news widget -->
