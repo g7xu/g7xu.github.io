@@ -130,10 +130,10 @@ comments:
     shortname: "guoxuan"
 
 main:
-  - title: "Learning Wiki"
-    url: /learning-wiki/
-  - title: "Beyond-Tech"
-    url: /Beyond-Tech/
+  # - title: "Learning Wiki"
+  #   url: /learning-wiki/
+  # - title: "Beyond-Tech"
+  #   url: /Beyond-Tech/
   - title: "Categories"
     url: /categories/
 

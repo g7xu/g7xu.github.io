@@ -7,9 +7,9 @@ main:
   #   url: /categories/
   # - title: "Tags"
   #   url: /tags/
-  - title: "Learning Wiki"
-    url: /learning-wiki/
+  # - title: "Learning Wiki"
+  #   url: /learning-wiki/
   - title: "Projects & Research"
     url: /Project&Research/
-  - title: "Beyond Tech"
-    url: /Beyond-Tech/
+  # - title: "Beyond Tech"
+  #   url: /Beyond-Tech/
