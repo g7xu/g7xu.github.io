@@ -1,0 +1,75 @@
+---
+import { randomUUID } from 'node:crypto';
+import type { NewsItem } from '@data/news';
+
+type Props = {
+  items: NewsItem[];
+};
+
+const { items }: Props = Astro.props;
+const dropdownId = `news-dropdown-${randomUUID()}`;
+---
+
+<div class="news-toggle-container">
+  <button
+    class="news-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls={dropdownId}
+  >
+    <span class="news-icon" aria-hidden="true">📢</span>
+    <span class="news-title">Recent News</span>
+    <span class="toggle-icon" data-icon>▼</span>
+  </button>
+  <div class="news-dropdown" id={dropdownId} aria-hidden="true">
+    <div class="news-dropdown-content">
+      <div class="news-dropdown-list">
+        {items.map((newsItem) => (
+          <article class="news-dropdown-item">
+            <div class="news-dropdown-meta">
+              <time datetime={newsItem.date} class="news-dropdown-date">
+                {newsItem.displayDate}
+              </time>
+              <h4 class="news-dropdown-title">{newsItem.title}</h4>
+            </div>
+            <p class="news-dropdown-excerpt">{newsItem.excerpt}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const container = document.currentScript?.previousElementSibling;
+  const toggle = container?.querySelector('.news-toggle');
+  const dropdown = container?.querySelector('.news-dropdown');
+  const icon = container?.querySelector('[data-icon]');
+
+  if (toggle && dropdown && icon) {
+    toggle.addEventListener('click', (event) => {
+      event.preventDefault();
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', (!expanded).toString());
+      dropdown.setAttribute('aria-hidden', expanded.toString());
+      dropdown.classList.toggle('news-dropdown-active', !expanded);
+      icon.textContent = expanded ? '▼' : '▲';
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!toggle.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('news-dropdown-active');
+        toggle.setAttribute('aria-expanded', 'false');
+        dropdown.setAttribute('aria-hidden', 'true');
+        icon.textContent = '▼';
+      }
+    });
+
+    toggle.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggle.click();
+      }
+    });
+  }
+</script>

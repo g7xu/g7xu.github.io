@@ -1,0 +1,204 @@
+---
+import '../styles/global.scss';
+import { mainNav } from '@data/navigation';
+
+type Props = {
+  title?: string;
+  description?: string;
+  image?: string;
+};
+
+const {
+  title,
+  description,
+  image = '/assets/images/bio-photo.png',
+}: Props = Astro.props;
+
+const siteTitle = 'Jason (Guoxuan) Xu';
+const siteDescription =
+  'Personal website of Guoxuan Xu, Data Science student at UC San Diego. Projects, research, and learning resources.';
+const siteUrl = 'https://g7xu.github.io';
+const authorName = 'Guoxuan Xu';
+const authorEmail = 'g7xu@ucsd.edu';
+const computedTitle = title ? `${title} · ${siteTitle}` : siteTitle;
+const computedDescription = description ?? siteDescription;
+const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
+
+const personStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: authorName,
+  url: siteUrl,
+  image: ogImage,
+  description: siteDescription,
+  email: authorEmail,
+  jobTitle: 'Data Science Student',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'University of California San Diego',
+  },
+  alumniOf: {
+    '@type': 'Organization',
+    name: 'University of California San Diego',
+  },
+  sameAs: [
+    'https://github.com/g7xu',
+    'https://www.linkedin.com/in/guoxuan-xu-30a572269/',
+  ],
+};
+
+const siteStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteTitle,
+  url: siteUrl,
+  description: siteDescription,
+  author: {
+    '@type': 'Person',
+    name: authorName,
+  },
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{computedTitle}</title>
+    <meta name="description" content={computedDescription} />
+    <meta name="author" content={authorName} />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title ?? siteTitle} />
+    <meta property="og:description" content={computedDescription} />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title ?? siteTitle} />
+    <meta name="twitter:description" content={computedDescription} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" type="image/png" href="/assets/images/goat.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/images/goat.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/images/goat.png"
+    />
+    <link rel="apple-touch-icon" href="/assets/images/goat.png" />
+    <link rel="canonical" href={Astro.url.href} />
+
+    <script type="application/ld+json">
+      {JSON.stringify(personStructuredData)}
+    </script>
+    <script type="application/ld+json">
+      {JSON.stringify(siteStructuredData)}
+    </script>
+  </head>
+  <body class="site-shell">
+    <header class="site-header">
+      <nav>
+        <a class="brand" href="/">Jason (Guoxuan) Xu</a>
+        <div class="nav-links" role="navigation" aria-label="Main navigation">
+          {mainNav.map((link) => (
+            <a href={link.url}>{link.title}</a>
+          ))}
+        </div>
+      </nav>
+    </header>
+    <main class="site-main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <ul class="footer-links">
+          <li>
+            <a href="https://github.com/g7xu" rel="noreferrer noopener">
+              <span aria-hidden="true">🐙</span> GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.linkedin.com/in/guoxuan-xu-30a572269/"
+              rel="noreferrer noopener"
+            >
+              <span aria-hidden="true">🔗</span> LinkedIn
+            </a>
+          </li>
+          <li>
+            <a href="/assets/files/Jason Xu Resume - SDE track.pdf">
+              <span aria-hidden="true">📄</span> Resume
+            </a>
+          </li>
+          <li>
+            <a href="/assets/files/2025_sigcse_experts_vs_novices_SIGCSE.pdf">
+              <span aria-hidden="true">📚</span> Research Paper
+            </a>
+          </li>
+          <li>
+            <a href="/assets/files/Guoxuan_Data_Science_resume.pdf">
+              <span aria-hidden="true">🧮</span> Data Science Resume
+            </a>
+          </li>
+        </ul>
+        <p>
+          &copy; {new Date().getFullYear()} {siteTitle}. Powered by Astro.
+          Goat icons by
+          <a
+            href="https://www.flaticon.com/free-icons/goat"
+            target="_blank"
+            rel="noopener"
+          >
+            Freepik
+          </a
+          >.
+        </p>
+      </div>
+    </footer>
+    <script>
+      const accentItems = document.querySelectorAll(
+        '.project-item, .research-item',
+      );
+
+      accentItems.forEach((item) => {
+        item.addEventListener('mouseenter', () => {
+          item.style.transform = 'translateY(-5px)';
+          item.style.transition = 'transform 0.3s ease';
+        });
+
+        item.addEventListener('mouseleave', () => {
+          item.style.transform = 'translateY(0)';
+        });
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' },
+      );
+
+      accentItems.forEach((item) => {
+        item.style.opacity = '0.8';
+        item.style.transform = 'translateY(10px)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(item);
+      });
+    </script>
+  </body>
+</html>

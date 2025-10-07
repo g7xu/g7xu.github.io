@@ -1,0 +1,54 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Learning Wiki">
+  <section>
+    <h1>Learning Wiki</h1>
+    <blockquote>
+      <p>
+        Gaining success without becoming arrogant, facing setbacks without becoming disheartened,
+        and working diligently every single day—this is more important than anything else.
+      </p>
+      <footer>— Kazuo Inamori</footer>
+    </blockquote>
+    <h2>Courses</h2>
+    <hr />
+    <div class="course-flex">
+      <div
+        class="course-item"
+        role="link"
+        tabindex="0"
+        data-href="/learning-wiki/data_visualization/"
+      >
+        <img
+          src="https://vis-society.github.io/labs/2/images/empty.svg"
+          alt="Data visualization course illustration"
+        />
+        <div class="course-content">
+          <h3>DSC 106: Data Visualization</h3>
+          <p>
+            <strong>Description:</strong> Data visualization taught by Sam Lau at UCSD
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-href]').forEach((card) => {
+      card.addEventListener('click', () => {
+        const target = card.getAttribute('data-href');
+        if (target) window.location.href = target;
+      });
+
+      card.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          const target = card.getAttribute('data-href');
+          if (target) window.location.href = target;
+        }
+      });
+    });
+  </script>
+</BaseLayout>

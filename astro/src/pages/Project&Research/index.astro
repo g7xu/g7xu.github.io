@@ -1,0 +1,34 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import ResearchCard from '@components/ResearchCard.astro';
+import { featuredProjects, researchProjects } from '@data/projects';
+---
+
+<BaseLayout title="Projects & Research">
+  <section>
+    <h1>Projects &amp; Research</h1>
+    <p>
+      I care about application! I believe that a key aspect of learning is
+      understanding how to apply knowledge to real-life scenarios. This page is
+      dedicated to showcasing the projects and research I've done with other
+      talented individuals, documenting the journey of applying what I've
+      learned. It serves as both a demonstration of my work and a space for
+      self-reflection.
+    </p>
+    <h2>Projects</h2>
+    <hr />
+    <div class="projects-grid">
+      {featuredProjects.map((project) => (
+        <ProjectCard item={project} />
+      ))}
+    </div>
+    <h2>Research</h2>
+    <hr />
+    <div class="research-grid">
+      {researchProjects.map((item) => (
+        <ResearchCard item={item} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

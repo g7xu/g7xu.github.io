@@ -1,0 +1,36 @@
+---
+import type { TaggedItem } from '@data/projects';
+
+type Props = {
+  item: TaggedItem;
+  linkLabel?: string;
+};
+
+const { item, linkLabel = 'View Project' }: Props = Astro.props;
+const href = item.url ?? item.studyUrl ?? item.paperUrl ?? '#';
+const isExternal = item.external ?? href.startsWith('http');
+---
+
+<article class={item.tags ? 'project-item fade-in' : 'project-item'}>
+  {item.image && (
+    <img src={item.image} alt={item.title} loading="lazy" />
+  )}
+  <h3>{item.title}</h3>
+  <p class="description">{item.description}</p>
+  {item.tags?.length ? (
+    <p class="description">
+      <strong>Tags:</strong> {item.tags.join(', ')}
+    </p>
+  ) : null}
+  {href !== '#' && (
+    <p>
+      <a
+        href={href}
+        target={isExternal ? '_blank' : undefined}
+        rel={isExternal ? 'noreferrer noopener' : undefined}
+      >
+        {linkLabel}
+      </a>
+    </p>
+  )}
+</article>

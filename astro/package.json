@@ -1,0 +1,20 @@
+{
+  "name": "astro-site",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^4.15.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.8.1",
+    "sass": "^1.77.8",
+    "typescript": "^5.5.4"
+  }
+}

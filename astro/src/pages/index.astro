@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NewsDropdown from '@components/NewsDropdown.astro';
+import { recentNews } from '@data/news';
+---
+
+<BaseLayout title="Home">
+  <section>
+    <div class="about-section-header">
+      <h1>About me 👋</h1>
+      <NewsDropdown items={recentNews} />
+    </div>
+    <hr />
+    <p>
+      As I am about to graduate from UC San Diego with a B.S. in Data Science,
+      my experience spans academic research, industrial software development,
+      and teaching. I have co-authored a published research paper on data science
+      education at ACM SIGCSE. I designed automated pipelines and an eight-table
+      database for millions of weekly patent and trademark records. I have applied
+      data analysis to large-scale microbiome and airline datasets. I have taught
+      over 500 students in the Data Science courses of my department, receiving
+      perfect evaluations from all participants.
+    </p>
+    <p>
+      Currently, I am enhancing the data pipeline I developed, expanding its
+      capabilities to integrate complex, pre-existing datasets like copyright
+      and patent images from legal cases. To bridge my technical skills with
+      market expertise, I am immersing myself in finance-related coursework,
+      preparing for a career at the intersection of data engineering and
+      financial technology.
+    </p>
+    <p>
+      Starting in July, I am excited to join Cadre.AI, a San Diego-based AI
+      consulting startup, as an AI Engineer Intern, where I will contribute to AI
+      integrations and strategy development. This experience, combined with my
+      pursuit of a Finance minor, is the next deliberate step toward my ultimate
+      goal of becoming a Quantitative Developer, where I can leverage my passion
+      for complex data systems to solve challenges in the financial markets.
+    </p>
+  </section>
+</BaseLayout>

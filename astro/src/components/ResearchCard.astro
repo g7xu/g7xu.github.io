@@ -1,0 +1,42 @@
+---
+import type { TaggedItem } from '@data/projects';
+
+type Props = {
+  item: TaggedItem;
+};
+
+const { item }: Props = Astro.props;
+---
+
+<article class="research-item fade-in">
+  {item.image && (
+    <img src={item.image} alt={item.title} loading="lazy" />
+  )}
+  <h3>{item.title}</h3>
+  <p style="font-size: 0.9em; line-height: 1.2em; margin: 5px 0;">
+    {item.paperUrl && (
+      <>
+        <a href={item.paperUrl} style="text-decoration: none; font-weight: bold;">
+          Paper
+        </a>
+        {item.studyUrl && ' | '}
+      </>
+    )}
+    {item.studyUrl && (
+      <a
+        href={item.studyUrl}
+        style="text-decoration: none; font-weight: bold;"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        Study Material
+      </a>
+    )}
+  </p>
+  <p class="description">{item.description}</p>
+  {item.tags?.length ? (
+    <p class="description">
+      <strong>Tags:</strong> {item.tags.join(', ')}
+    </p>
+  ) : null}
+</article>
