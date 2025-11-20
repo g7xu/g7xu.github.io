@@ -6,7 +6,6 @@
       {
         "id": "abac79e247b9c193",
         "type": "tabs",
-        "dimension": 82.27739726027397,
         "children": [
           {
             "id": "9a8a5cddc5adee16",
@@ -14,32 +13,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "public/Software Development Lifecycle & System Design.md",
+                "file": "public/React Programming Language.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Software Development Lifecycle & System Design"
+              "title": "React Programming Language"
             }
-          }
-        ]
-      },
-      {
-        "id": "f166cc540cf24ee5",
-        "type": "tabs",
-        "dimension": 17.722602739726025,
-        "children": [
+          },
           {
-            "id": "8a57c8b60d4fd1f4",
+            "id": "193d7350ddaeebde",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "public/React Programming Language.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "React Programming Language"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -112,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "public/Software Development Lifecycle & System Design.md",
+                "file": "public/Git — Version Control Overview.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +119,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Software Development Lifecycle & System Design"
+              "title": "Backlinks for Git — Version Control Overview"
             }
           },
           {
@@ -131,12 +128,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "public/Software Development Lifecycle & System Design.md",
+                "file": "public/Git — Version Control Overview.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Software Development Lifecycle & System Design"
+              "title": "Outgoing links from Git — Version Control Overview"
             }
           },
           {
@@ -160,13 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "public/Software Development Lifecycle & System Design.md",
+                "file": "public/Git — Version Control Overview.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Software Development Lifecycle & System Design"
+              "title": "Outline of Git — Version Control Overview"
             }
           }
         ]
@@ -187,12 +184,17 @@
       "bases:Create new base": false
     }
   },
-  "active": "6ad4c4ee1f5c7738",
+  "active": "193d7350ddaeebde",
   "lastOpenFiles": [
-    "public",
-    "public/Git — Version Control Overview.md",
-    "public/Software Development Lifecycle & System Design.md",
+    "public/Untitled.md",
     "public/React Programming Language.md",
+    "public/Software Development Lifecycle & System Design.md",
+    "public/Git — Version Control Overview.md",
+    "inbox/Algorithm.md",
+    "inbox/Docker.md",
+    "inbox",
+    "private",
+    "public",
     "Welcome.md"
   ]
 }

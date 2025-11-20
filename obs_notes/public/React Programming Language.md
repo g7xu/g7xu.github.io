@@ -1,3 +1,4 @@
+
 # Why React?
 
 In a **Single-Page Application (SPA)** — a web application that runs on a single HTML page — a **Component-Based Architecture** is essential for organizing different sections and layouts efficiently.
@@ -13,11 +14,11 @@ React enables this by providing a **declarative, reusable, and scalable** compon
 - **Node.js** → JavaScript runtime outside the browser  
 - **npm** → Node package manager for dependencies and scripts  
 
-> [!info] npm Commands  
-> `npm init` — initialize a new Node.js project  
-> `npm i` — install dependencies  
-> `npm i <package>` — install a specific package  
-> `npm run <script>` — run a script from package.json  
+> [!info] **npm Commands**  
+> - `npm init` — initialize a new Node.js project  
+> - `npm i` — install dependencies  
+> - `npm i <package>` — install a specific package  
+> - `npm run <script>` — run a script from package.json  
 
 ---
 
@@ -33,16 +34,16 @@ React enables this by providing a **declarative, reusable, and scalable** compon
 
 ### Key Files
 
-| **File** | **Purpose** |
-| --- | --- |
-| index.html | The single HTML page of your SPA |
-| package.json | Project metadata, dependencies, and scripts |
-| vite.config.js | Optional Vite build configuration |
-| /src | Main source folder for React code |
-| main.jsx | Entry point, connects React to HTML |
-| App.jsx | Root React component |
-| App.css | CSS specific to App.jsx |
-| index.css | Global CSS for the entire app |
+| **File**        | **Purpose**                                |
+|-----------------|---------------------------------------------|
+| index.html      | Single HTML page of the SPA                 |
+| package.json    | Project metadata, dependencies, and scripts |
+| vite.config.js  | Vite build configuration                    |
+| /src            | Main source folder for React code           |
+| main.jsx        | Entry point, connects React to HTML         |
+| App.jsx         | Root React component                        |
+| App.css         | CSS specific to App.jsx                     |
+| index.css       | Global CSS for the entire app               |
 
 ```
 index.html  
@@ -64,32 +65,34 @@ index.css → global styles
   - `<> </>` fragments for grouping  
   - `{}` for dynamic expressions  
   - camelCase attributes → `className`, `onClick`, `onChange`
-- **Build tools**: Babel + Webpack (CRA) / ESBuild + Rollup (Vite)
+- **Build tools:**  
+  - CRA: Babel + Webpack  
+  - Vite: ESBuild + Rollup  
 
 ---
 
 ## Built-In Optimization
 
-React uses a **Virtual DOM** and a process called **Reconciliation**.
+React uses a **Virtual DOM** and **Reconciliation**.
 
 ### Steps
 
 1. React generates a **new Virtual DOM** after state/props update  
-2. It compares it to the **previous Virtual DOM**  
-3. Only the **necessary changes** are applied to the real DOM  
+2. It compares it with the **previous Virtual DOM**  
+3. Updates only the **necessary changes** in the real DOM  
 
 ### Optimization Tips
 
 - React compares list children in order  
 - Inserting at the beginning is expensive  
-- Use **unique key props** for list items  
-- Avoid using the array index as a key  
+- Use **unique key props** for lists  
+- Avoid using array index as a key  
 
 ---
 
 # React Components — Class Components
 
-> [!info] Features  
+> [!info] **Features**  
 > - Must include a `render()` method  
 > - Can maintain **state**  
 > - Can receive **props**  
@@ -113,65 +116,221 @@ class MyComponent extends React.Component {
 
 ## Props
 
-Props are data passed from a parent component to a child component.
+Props are data passed from a parent to a child component.
 
-- Immutable in the child  
+- Immutable  
 - Changing props triggers re-renders  
 - Access via `this.props.propName`  
-- In constructor components:  
-  - Receive `props` as argument  
+- In constructors:  
+  - Accept `props` as argument  
   - Call `super(props)`  
-- Destructuring: `const { name, age } = this.props;`
 
 ### Passing Functions
 
-| **Method** | **Example** | **Notes** |
-| --- | --- | --- |
-| Constructor binding | `this.handleClick = this.handleClick.bind(this)` | Best performance |
-| Arrow method | `handleClick = () => {...}` | Easiest to write |
-| Inline arrow | `onClick={() => this.handleClick()}` | Acceptable for small cases |
+When dealing with `this`, the binding context matters.
+
+| **Method**             | **Example**                                       | **Notes**                |
+|------------------------|---------------------------------------------------|---------------------------|
+| Constructor binding    | `this.handleClick = this.handleClick.bind(this)`  | Best performance          |
+| Arrow class property   | `handleClick = () => {...}`                       | Easiest to write          |
+| Inline arrow           | `onClick={() => this.handleClick()}`              | OK for small use cases    |
+
+---
 
 ## State
 
-State stores component-specific data that changes over time.
-
 - Private to the component  
-- Updates trigger re-renders  
+- Updates trigger re-render  
 - Never mutate directly  
 
 ### Syntax
 
 ```jsx
-this.state = { value: 0 };            // initialization
-this.setState({ value: 1 });          // update
-this.setState(prev => ({ value: prev.value + 1 })); // functional update
+this.state = { value: 0 };
+this.setState({ value: 1 });
+this.setState(prev => ({ value: prev.value + 1 }));
 ```
 
 ---
 
-Still in Production
-
-
-
 ## Lifecycle Methods
 
-React class components move through three major phases:
+React class components follow this flow:
 
 `constructor()` → `render()` → `componentDidMount()` →  
 `componentDidUpdate()` → `componentWillUnmount()`
 
-### Mounting Phase (component appears)
+### Mounting
 
-- **constructor()** → initialize state, bind methods  
-- **render()** → returns JSX  
-- **componentDidMount()** → side effects (fetching, subscriptions…)
+- `constructor()` → initialize state, bind methods  
+- `render()` → return JSX  
+- `componentDidMount()` → run side effects  
 
-### Updating Phase (state/props changes)
+### Updating
 
-- **shouldComponentUpdate()** → control re-rendering  
-- **render()** → updated JSX  
-- **componentDidUpdate()** → runs after re-render  
+- `shouldComponentUpdate()` → control re-render  
+- `render()`  
+- `componentDidUpdate()`  
 
-### Unmounting Phase (component removed)
+### Unmounting
 
-- **componentWillUnmount()** → cleanup logic (remove listeners, cancel timers…) 
+- `componentWillUnmount()` → cleanup  
+
+---
+
+# React Components — Functional Components
+
+Functional components are simple JavaScript functions that:
+> [!info] **Features**  
+> - Start with a **capitalized name**
+> - Return JSX
+> - Are **simpler** than class components
+> - Use **Hooks** for state & side effects
+
+Example code:
+```jsx
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+```
+
+---
+
+## Hooks Overview
+
+Hooks enable: **State**, **Side effects**, **Context**, **Reusable logic** (custom hooks)
+
+---
+## useState()
+
+```jsx
+const [state, setState] = useState(initialValue);
+```
+
+- Runs only on first render  
+- Can have multiple state variables  
+
+### Updating State
+
+```jsx
+setState(prev => prev + 1);
+setUser(prev => ({ ...prev, name: "Jason" }));
+```
+
+---
+## useEffect()
+
+Manages side effects: fetching, subscriptions, logging.
+
+| **Dependency** | **Behavior**                |
+|----------------|-----------------------------|
+| none           | Runs after **every** render |
+| `[]`           | Runs **once** on mount      |
+| `[value]`      | Runs when **value** changes |
+
+ **Cleanup**: Executed before re-running the effect:
+1. Check for cleanup  
+2. Run cleanup  
+3. Run new effect  
+---
+
+## useReducer()
+
+```jsx
+const [state, dispatch] = useReducer(reducer, initialState);
+```
+
+### Reducer
+
+```jsx
+function reducer(state, action) {
+  return newState;
+}
+```
+
+Rules:
+
+- Pure  
+- No mutation  
+- Must return a new object/array  
+
+### Actions
+
+```jsx
+{ type: "increment" }
+{ type: "add_todo", payload: "Buy milk" }
+```
+
+---
+
+## useRef()
+
+- Stores mutable values  
+- Stores DOM elements  
+- Persists across renders  
+
+```jsx
+const countRef = useRef(0);
+countRef.current++;
+```
+
+---
+
+# React Optimization
+
+## useMemo()
+
+```jsx
+const sortedList = useMemo(() => sort(list), [list]);
+```
+
+## useCallback()
+
+```jsx
+const handleClick = useCallback(() => setCount(c => c + 1), []);
+```
+
+## React.memo()
+
+```jsx
+const Child = React.memo(function Child({ value }) {
+  return <div>{value}</div>;
+});
+```
+
+---
+
+## Lazy Loading
+
+```jsx
+const About = React.lazy(() => import('./About'));
+```
+
+```jsx
+<Suspense fallback={<p>Loading...</p>}>
+  <About />
+</Suspense>
+```
+
+---
+
+# Controlled vs. Uncontrolled Inputs
+
+## Uncontrolled
+
+- DOM controls the value  
+- Use refs  
+ 
+```jsx
+<input ref={inputRef} />
+```
+
+## Controlled
+
+- React state controls the value  
+- Rerenders on every change  
+
+```jsx
+<input value={email} onChange={e => setEmail(e.target.value)} />
+```
+
