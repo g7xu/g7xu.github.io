@@ -235,6 +235,7 @@ Manages side effects: fetching, subscriptions, logging.
 ---
 
 ## useReducer()
+...
 
 ```jsx
 const [state, dispatch] = useReducer(reducer, initialState);
