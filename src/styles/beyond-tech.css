@@ -1,0 +1,26 @@
+.beyond-tech-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.beyond-tech-page p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.beyond-tech-page ul {
+  margin-bottom: 1.5rem;
+}
+
+.beyond-tech-page ul li {
+  margin-bottom: 0.4rem;
+}
+
+.beyond-tech-page blockquote {
+  border-left: 4px solid var(--primary-color, #007acc);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--secondary-color, #6c757d);
+  margin: 1.5rem 0;
+}
