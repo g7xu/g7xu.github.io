@@ -13,6 +13,9 @@ npm-debug.log*
 # OS
 .DS_Store
 
+# Obsidian notes
+obs_notes/
+
 # Legacy Jekyll (no longer used)
 _site/
 .sass-cache/
