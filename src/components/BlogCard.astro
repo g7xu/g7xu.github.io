@@ -1,0 +1,48 @@
+---
+interface Props {
+  title: string;
+  excerpt: string;
+  date: string;
+  category: string;
+  coverImage?: string;
+  slug: string;
+  author: { name: string; avatar: string };
+}
+
+const { title, excerpt, date, category, coverImage, slug, author } = Astro.props;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<a href={`/blog/${slug}/`} class="blog-card" data-category={category}>
+  {coverImage && (
+    <div class="blog-card__cover">
+      <img src={coverImage} alt={title} loading="lazy" />
+    </div>
+  )}
+  {!coverImage && (
+    <div class="blog-card__cover blog-card__cover--placeholder">
+    </div>
+  )}
+  <div class="blog-card__body">
+    <span class="blog-card__category">{category}</span>
+    <h2 class="blog-card__title">{title}</h2>
+    <p class="blog-card__excerpt">{excerpt}</p>
+    <div class="blog-card__meta">
+      <img src={author.avatar} alt={author.name} class="blog-card__avatar" />
+      <span class="blog-card__author">{author.name}</span>
+      <time datetime={date} class="blog-card__date">{formattedDate}</time>
+    </div>
+  </div>
+</a>
+
+<style>
+  .blog-card__cover--placeholder {
+    height: 180px;
+    background: linear-gradient(135deg, #f6f5f4 0%, #dfdcd9 100%);
+  }
+</style>

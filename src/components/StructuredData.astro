@@ -1,0 +1,43 @@
+---
+import { author } from '../data/author';
+
+const siteUrl = 'https://g7xu.github.io';
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": author.name,
+  "url": siteUrl,
+  "image": `${siteUrl}${author.avatar}`,
+  "description": author.siteDescription,
+  "email": author.email,
+  "jobTitle": "Data Science Student",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "University of California San Diego"
+  },
+  "alumniOf": {
+    "@type": "Organization",
+    "name": "University of California San Diego"
+  },
+  "sameAs": [
+    "https://github.com/g7xu",
+    "https://www.linkedin.com/in/guoxuan-xu-30a572269/"
+  ]
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": author.siteTitle,
+  "url": siteUrl,
+  "description": author.siteDescription,
+  "author": {
+    "@type": "Person",
+    "name": author.name
+  }
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
