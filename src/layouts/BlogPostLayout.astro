@@ -1,0 +1,44 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import '../styles/blog.css';
+
+interface Props {
+  title: string;
+  excerpt: string;
+  date: string;
+  category: string;
+  coverImage?: string;
+  author: { name: string; avatar: string };
+}
+
+const { title, excerpt, date, category, coverImage, author } = Astro.props;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={title} description={excerpt} image={coverImage}>
+  <article class="blog-post-container">
+    {coverImage && (
+      <div class="blog-post-cover">
+        <img src={coverImage} alt={title} />
+      </div>
+    )}
+    <header class="blog-post-header">
+      <span class="blog-post-category">{category}</span>
+      <h1 class="blog-post-title">{title}</h1>
+      <p class="blog-post-excerpt">{excerpt}</p>
+      <div class="blog-post-meta">
+        <img src={author.avatar} alt={author.name} class="blog-post-avatar" />
+        <span>{author.name}</span>
+        <time datetime={date}>{formattedDate}</time>
+      </div>
+    </header>
+    <div class="blog-post-body">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
