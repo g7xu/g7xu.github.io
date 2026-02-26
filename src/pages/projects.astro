@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ResearchCard from '../components/ResearchCard.astro';
+import { featuredProjects, researchProjects } from '../data/projects';
+import '../styles/projects.css';
+---
+
+<BaseLayout title="Projects & Research">
+  <main class="projects-page">
+    <h2>Projects</h2>
+    <hr />
+    <div class="projects-grid">
+      {featuredProjects.map(project => <ProjectCard project={project} />)}
+    </div>
+
+    <h2>Research</h2>
+    <hr />
+    <div class="research-grid">
+      {researchProjects.map(research => <ResearchCard research={research} />)}
+    </div>
+  </main>
+</BaseLayout>

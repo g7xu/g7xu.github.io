@@ -1,5 +1,22 @@
-_site
-.sass-cache
-.jekyll-metadata
-Gemfile.lock
+# Astro build output
+dist/
+.astro/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# OS
 .DS_Store
+
+# Obsidian notes
+obs_notes/
+
+# Legacy Jekyll (no longer used)
+_site/
+.sass-cache/
+.jekyll-metadata/

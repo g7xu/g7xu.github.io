@@ -1,0 +1,32 @@
+---
+interface Props {
+  categories: string[];
+  activeCategory: string | null;
+}
+
+const { categories, activeCategory } = Astro.props;
+---
+
+<aside class="blog-sidebar">
+  <h3 class="blog-sidebar__heading">Categories</h3>
+  <ul class="blog-sidebar__list">
+    <li>
+      <a
+        href="/blog/"
+        class={`blog-sidebar__item${!activeCategory ? ' blog-sidebar__item--active' : ''}`}
+      >
+        All Posts
+      </a>
+    </li>
+    {categories.map(cat => (
+      <li>
+        <a
+          href={`/blog/?category=${encodeURIComponent(cat)}`}
+          class={`blog-sidebar__item${activeCategory === cat ? ' blog-sidebar__item--active' : ''}`}
+        >
+          {cat}
+        </a>
+      </li>
+    ))}
+  </ul>
+</aside>

@@ -1,0 +1,80 @@
+---
+import { author } from '../data/author';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import StructuredData from '../components/StructuredData.astro';
+import '../styles/global.css';
+import '../styles/navbar.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = author.siteTitle,
+  description = author.siteDescription,
+  image = '/images/bio-photo.png',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const pageTitle = Astro.url.pathname === '/'
+  ? author.siteTitle
+  : `${title} - ${author.siteTitle}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={author.name} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href={author.favicon} />
+    <link rel="apple-touch-icon" href={author.favicon} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={author.siteTitle} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.site)} />
+
+    <StructuredData />
+  </head>
+  <body>
+    <Navbar />
+    <slot />
+    <Footer />
+    <script>
+      import '../scripts/custom.ts';
+
+      document.addEventListener('click', async (e) => {
+        const link = (e.target as Element).closest('.copy-email');
+        if (!link) return;
+        e.preventDefault();
+        const email = (link as HTMLElement).dataset.email;
+        if (!email) return;
+        await navigator.clipboard.writeText(email);
+        const tooltip = document.createElement('span');
+        tooltip.textContent = 'Copied!';
+        tooltip.className = 'copy-tooltip';
+        link.appendChild(tooltip);
+        setTimeout(() => tooltip.remove(), 1500);
+      });
+    </script>
+  </body>
+</html>

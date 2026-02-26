@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import BlogSidebar from '../../components/BlogSidebar.astro';
+import { getCollection } from 'astro:content';
+import '../../styles/blog.css';
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const categories = [...new Set(allPosts.map(p => p.data.category))];
+---
+
+<BaseLayout title="Blog" description="Writing on tools, engineering, and data.">
+  <div class="blog-page">
+    <BlogSidebar categories={categories} activeCategory={null} />
+    <div class="blog-main">
+      <h1 class="blog-page__title">Blog</h1>
+      <div class="blog-grid" id="blog-grid">
+        {allPosts.map(post => (
+          <BlogCard
+            title={post.data.title}
+            excerpt={post.data.excerpt}
+            date={post.data.date}
+            category={post.data.category}
+            coverImage={post.data.coverImage}
+            slug={post.slug}
+            author={post.data.author}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Client-side category filter: reads ?category= param and shows/hides cards
+  const params = new URLSearchParams(window.location.search);
+  const active = params.get('category');
+
+  if (active) {
+    const grid = document.getElementById('blog-grid');
+    grid?.querySelectorAll('.blog-card').forEach(card => {
+      const cat = (card as HTMLElement).dataset.category;
+      (card as HTMLElement).style.display = cat === active ? '' : 'none';
+    });
+
+    // Mark active sidebar item
+    document.querySelectorAll('.blog-sidebar__item').forEach(item => {
+      const href = (item as HTMLAnchorElement).getAttribute('href') ?? '';
+      item.classList.toggle(
+        'blog-sidebar__item--active',
+        href.includes(`category=${encodeURIComponent(active)}`)
+      );
+    });
+  }
+</script>

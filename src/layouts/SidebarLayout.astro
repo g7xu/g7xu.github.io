@@ -1,0 +1,50 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import '../styles/sidebar.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="layout-with-sidebar">
+    <aside class="author-sidebar">
+      <Sidebar />
+    </aside>
+    <main class="main-content">
+      <slot />
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .layout-with-sidebar {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    align-items: start;
+  }
+
+  .main-content {
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .layout-with-sidebar {
+      grid-template-columns: 1fr;
+      padding: 1.5rem 1rem;
+    }
+
+    .author-sidebar {
+      order: -1;
+    }
+  }
+</style>
