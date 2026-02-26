@@ -9,6 +9,6 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "astro": "^4.16.0"
+    "astro": "^5.18.0"
   }
 }
