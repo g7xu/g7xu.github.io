@@ -45,37 +45,6 @@ img {
   max-width: 100%;
 }
 
-/* ============================================
-   Learning Wiki — course flex layout
-   ============================================ */
-.course-flex {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.course-item {
-  display: flex;
-  align-items: center;
-}
-
-.course-item img {
-  width: 150px;
-  height: auto;
-  margin-right: 20px;
-  border-radius: 8px;
-}
-
-.course-content h3 {
-  margin: 0;
-  font-size: 1.2em;
-}
-
-.course-content p {
-  margin: 5px 0 0;
-  font-size: 0.9em;
-}
-
 
 /* ============================================
    Copy-to-clipboard tooltip
