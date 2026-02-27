@@ -9,7 +9,8 @@ interface Props {
   author: { name: string; avatar: string };
 }
 
-const { title, excerpt, date, category, coverImage, slug, author } = Astro.props;
+const { title, excerpt, date, category, coverImage, slug, author } =
+  Astro.props;
 
 const formattedDate = new Date(date).toLocaleDateString('en-US', {
   year: 'numeric',
@@ -19,15 +20,18 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
 ---
 
 <a href={`/blog/${slug}/`} class="blog-card" data-category={category}>
-  {coverImage && (
-    <div class="blog-card__cover">
-      <img src={coverImage} alt={title} loading="lazy" />
-    </div>
-  )}
-  {!coverImage && (
-    <div class="blog-card__cover blog-card__cover--placeholder">
-    </div>
-  )}
+  {
+    coverImage && (
+      <div class="blog-card__cover">
+        <img src={coverImage} alt={title} loading="lazy" />
+      </div>
+    )
+  }
+  {
+    !coverImage && (
+      <div class="blog-card__cover blog-card__cover--placeholder" />
+    )
+  }
   <div class="blog-card__body">
     <span class="blog-card__category">{category}</span>
     <h2 class="blog-card__title">{title}</h2>

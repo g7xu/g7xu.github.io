@@ -1,11 +1,11 @@
 ---
-title: "From Jupyter Notebook to Production: What Nobody Tells You"
+title: 'From Jupyter Notebook to Production: What Nobody Tells You'
 excerpt: "The journey from a working notebook to a deployed data product involves more than wrapping code in a function. Here's what I learned the hard way."
-date: "2026-01-28"
-category: "Engineering"
+date: '2026-01-28'
+category: 'Engineering'
 author:
-  name: "Jason Xu"
-  avatar: "/images/bio-photo.png"
+  name: 'Jason Xu'
+  avatar: '/images/bio-photo.png'
 draft: false
 ---
 
@@ -15,7 +15,7 @@ A Jupyter notebook is optimized for exploration — cell-by-cell execution, inli
 
 ### Step 1: Untangle State
 
-Notebooks encourage running cells out of order. Production code cannot. The first task is always: *restart kernel, run all cells, verify it still works*.
+Notebooks encourage running cells out of order. Production code cannot. The first task is always: _restart kernel, run all cells, verify it still works_.
 
 ### Step 2: Extract Business Logic
 

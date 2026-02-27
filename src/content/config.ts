@@ -8,10 +8,12 @@ const blog = defineCollection({
     date: z.string(),
     category: z.string(),
     coverImage: z.string().optional(),
-    author: z.object({
-      name: z.string().default('Jason Xu'),
-      avatar: z.string().default('/images/bio-photo.png'),
-    }).default({}),
+    author: z
+      .object({
+        name: z.string().default('Jason Xu'),
+        avatar: z.string().default('/images/bio-photo.png'),
+      })
+      .default({}),
     draft: z.boolean().default(false),
   }),
 });

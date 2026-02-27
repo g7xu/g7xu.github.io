@@ -1,0 +1,6 @@
+dist/
+.astro/
+node_modules/
+obs_notes/
+public/
+package-lock.json

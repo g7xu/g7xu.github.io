@@ -18,15 +18,17 @@ const { categories, activeCategory } = Astro.props;
         All Posts
       </a>
     </li>
-    {categories.map(cat => (
-      <li>
-        <a
-          href={`/blog/?category=${encodeURIComponent(cat)}`}
-          class={`blog-sidebar__item${activeCategory === cat ? ' blog-sidebar__item--active' : ''}`}
-        >
-          {cat}
-        </a>
-      </li>
-    ))}
+    {
+      categories.map((cat) => (
+        <li>
+          <a
+            href={`/blog/?category=${encodeURIComponent(cat)}`}
+            class={`blog-sidebar__item${activeCategory === cat ? ' blog-sidebar__item--active' : ''}`}
+          >
+            {cat}
+          </a>
+        </li>
+      ))
+    }
   </ul>
 </aside>

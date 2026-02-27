@@ -16,8 +16,8 @@ let notes: WikiNote[] = [];
 try {
   const publicDir = path.resolve('obs_notes/public');
   if (fs.existsSync(publicDir)) {
-    const files = fs.readdirSync(publicDir).filter(f => f.endsWith('.md'));
-    notes = files.map(f => ({
+    const files = fs.readdirSync(publicDir).filter((f) => f.endsWith('.md'));
+    notes = files.map((f) => ({
       id: f.replace(/\.md$/, ''),
       folder: 'public',
       content: fs.readFileSync(path.join(publicDir, f), 'utf-8'),
@@ -31,43 +31,65 @@ const notesJson = JSON.stringify(notes);
 ---
 
 <BaseLayout title="Learning Wiki">
-  {notes.length === 0 ? (
-    <div class="wiki-empty">
-      <p>No notes found. Add Markdown files to <code>obs_notes/public/</code> to populate the knowledge graph.</p>
-    </div>
-  ) : (
-    <div class="wiki-shell" id="wiki-shell">
-      <!-- Sidebar collapse toggle -->
-      <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">◀</button>
-
-      <!-- LEFT: Folder tree -->
-      <aside class="left-panel" id="left-panel">
-        <div class="left-panel-header">
-          <input class="search-box" type="text" id="search" placeholder="🔍  Search notes…" />
-        </div>
-        <div class="file-tree" id="file-tree"></div>
-      </aside>
-
-      <!-- CENTER: Graph -->
-      <div class="graph-panel" id="graph-panel">
-        <button class="mobile-toggle" id="mobile-toggle">☰</button>
-        <svg id="graph-svg"></svg>
-        <div class="graph-badge" id="node-count"></div>
-        <div class="graph-hint">Scroll to zoom · Drag nodes · Click to open note</div>
+  {
+    notes.length === 0 ? (
+      <div class="wiki-empty">
+        <p>
+          No notes found. Add Markdown files to <code>obs_notes/public/</code>{' '}
+          to populate the knowledge graph.
+        </p>
       </div>
+    ) : (
+      <div class="wiki-shell" id="wiki-shell">
+        {/* Sidebar collapse toggle */}
+        <button
+          class="sidebar-toggle"
+          id="sidebar-toggle"
+          title="Toggle sidebar"
+        >
+          ◀
+        </button>
 
-      <!-- RIGHT: Note content -->
-      <aside class="right-panel" id="right-panel">
-        <div class="right-panel-header">
-          <span class="right-panel-title" id="note-title"></span>
-          <button class="close-btn" id="close-btn" title="Close">✕</button>
+        {/* LEFT: Folder tree */}
+        <aside class="left-panel" id="left-panel">
+          <div class="left-panel-header">
+            <input
+              class="search-box"
+              type="text"
+              id="search"
+              placeholder="🔍  Search notes…"
+            />
+          </div>
+          <div class="file-tree" id="file-tree" />
+        </aside>
+
+        {/* CENTER: Graph */}
+        <div class="graph-panel" id="graph-panel">
+          <button class="mobile-toggle" id="mobile-toggle">
+            ☰
+          </button>
+          <svg id="graph-svg" />
+          <div class="graph-badge" id="node-count" />
+          <div class="graph-hint">
+            Scroll to zoom · Drag nodes · Click to open note
+          </div>
         </div>
-        <div class="right-panel-content">
-          <div class="md-body" id="note-body"></div>
-        </div>
-      </aside>
-    </div>
-  )}
+
+        {/* RIGHT: Note content */}
+        <aside class="right-panel" id="right-panel">
+          <div class="right-panel-header">
+            <span class="right-panel-title" id="note-title" />
+            <button class="close-btn" id="close-btn" title="Close">
+              ✕
+            </button>
+          </div>
+          <div class="right-panel-content">
+            <div class="md-body" id="note-body" />
+          </div>
+        </aside>
+      </div>
+    )
+  }
 
   <script define:vars={{ notesJson }}>
     window.__WIKI_NOTES__ = JSON.parse(notesJson);
