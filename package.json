@@ -6,7 +6,22 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "check": "astro check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{astro,ts,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{astro,ts,css,md}\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{astro,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,md,json}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "astro": "^5.18.0",
@@ -14,7 +29,17 @@
     "marked": "^17.0.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.6",
     "@types/d3": "^7.4.3",
-    "@types/node": "^25.3.2"
+    "@types/node": "^25.3.2",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^10.0.2",
+    "eslint-plugin-astro": "^1.6.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.9.3"
   }
 }

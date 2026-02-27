@@ -3,7 +3,7 @@ const navItems = [
   { label: 'Projects & Research', href: '/projects/' },
   // { label: 'Blog',                href: '/blog/' },
   // { label: 'Beyond-Tech',         href: '/beyond-tech/' },
-  { label: 'Learning Wiki',       href: '/learning-wiki/' },
+  { label: 'Learning Wiki', href: '/learning-wiki/' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -13,14 +13,16 @@ const currentPath = Astro.url.pathname;
   <div class="navbar-inner">
     <a href="/" class="navbar-brand">Home</a>
     <nav class="navbar-nav" aria-label="Main navigation">
-      {navItems.map(item => (
-        <a
-          href={item.href}
-          class={`navbar-link${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
-        >
-          {item.label}
-        </a>
-      ))}
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class={`navbar-link${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
+          >
+            {item.label}
+          </a>
+        ))
+      }
     </nav>
   </div>
 </header>

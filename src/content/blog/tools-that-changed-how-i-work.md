@@ -1,11 +1,11 @@
 ---
-title: "Tools That Changed How I Work"
-excerpt: "A roundup of the software, workflows, and mental models that dramatically improved my productivity as a data scientist and engineer."
-date: "2026-01-15"
-category: "Tools"
+title: 'Tools That Changed How I Work'
+excerpt: 'A roundup of the software, workflows, and mental models that dramatically improved my productivity as a data scientist and engineer.'
+date: '2026-01-15'
+category: 'Tools'
 author:
-  name: "Jason Xu"
-  avatar: "/images/bio-photo.png"
+  name: 'Jason Xu'
+  avatar: '/images/bio-photo.png'
 draft: false
 ---
 
@@ -15,7 +15,7 @@ After cycling through dozens of tools during my time at UCSD and in internships,
 
 ### Obsidian for Thinking Out Loud
 
-Before Obsidian, notes lived in Google Docs — isolated, unsearchable, and forgotten. The graph view changed how I approach learning: writing a note now means *connecting* it to what I already know.
+Before Obsidian, notes lived in Google Docs — isolated, unsearchable, and forgotten. The graph view changed how I approach learning: writing a note now means _connecting_ it to what I already know.
 
 ### Cursor for Writing Code
 

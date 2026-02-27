@@ -10,7 +10,9 @@ const { project } = Astro.props;
 
 <div
   class="project-item"
-  onclick={project.external ? `window.open('${project.url}', '_blank')` : undefined}
+  onclick={project.external
+    ? `window.open('${project.url}', '_blank')`
+    : undefined}
   style={project.external ? 'cursor: pointer' : undefined}
   role={project.external ? 'button' : undefined}
   tabindex={project.external ? 0 : undefined}

@@ -2,23 +2,25 @@
    Notion-inspired design tokens
    ============================================ */
 :root {
-  --notion-font-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --notion-font-serif:  'Lyon Text', Georgia, YuMincho, serif;
-  --notion-gray-100:    #f9f9f8;
-  --notion-gray-200:    #f6f5f4;
-  --notion-gray-300:    #dfdcd9;
-  --notion-gray-400:    #a39e98;
-  --notion-text:        #000000e6;
-  --notion-text-muted:  #0000008a;
+  --notion-font-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --notion-font-serif: 'Lyon Text', Georgia, YuMincho, serif;
+  --notion-gray-100: #f9f9f8;
+  --notion-gray-200: #f6f5f4;
+  --notion-gray-300: #dfdcd9;
+  --notion-gray-400: #a39e98;
+  --notion-text: #000000e6;
+  --notion-text-muted: #0000008a;
   --notion-text-strong: #000000f2;
-  --notion-blue:        #097fe8;
-  --notion-blue-dark:   #0075de;
-  --notion-card-bg:     white;
+  --notion-blue: #097fe8;
+  --notion-blue-dark: #0075de;
+  --notion-card-bg: white;
   --notion-card-border: #0000001a;
   --notion-card-radius: 0.75rem;
-  --notion-shadow:      0px 3px 9px #00000008, 0px 0.7px 1.4625px rgba(0, 0, 0, 0.015);
+  --notion-shadow:
+    0px 3px 9px #00000008, 0px 0.7px 1.4625px rgba(0, 0, 0, 0.015);
   --notion-shadow-hover: 0px 6px 18px #00000014;
-  --notion-transition:  all 150ms ease-out;
+  --notion-transition: all 150ms ease-out;
 }
 
 /* ============================================

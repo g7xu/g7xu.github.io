@@ -1,11 +1,11 @@
 ---
-title: "Understanding Data Pipelines: A Visual Guide"
-excerpt: "Data pipelines are everywhere but rarely explained clearly. This post breaks down the core concepts — ingestion, transformation, and serving — with examples from real projects."
-date: "2026-02-10"
-category: "Data"
+title: 'Understanding Data Pipelines: A Visual Guide'
+excerpt: 'Data pipelines are everywhere but rarely explained clearly. This post breaks down the core concepts — ingestion, transformation, and serving — with examples from real projects.'
+date: '2026-02-10'
+category: 'Data'
 author:
-  name: "Jason Xu"
-  avatar: "/images/bio-photo.png"
+  name: 'Jason Xu'
+  avatar: '/images/bio-photo.png'
 draft: false
 ---
 
@@ -35,11 +35,11 @@ During my internship, I designed an 8-table database and automated weekly ingest
 
 ## Tools Worth Knowing
 
-| Use case | Tool |
-|---|---|
-| Orchestration | Airflow, Prefect, GitHub Actions |
-| Transformation | dbt, pandas, PySpark |
-| Storage | PostgreSQL, BigQuery, Parquet |
-| Monitoring | Great Expectations, dbt tests |
+| Use case       | Tool                             |
+| -------------- | -------------------------------- |
+| Orchestration  | Airflow, Prefect, GitHub Actions |
+| Transformation | dbt, pandas, PySpark             |
+| Storage        | PostgreSQL, BigQuery, Parquet    |
+| Monitoring     | Great Expectations, dbt tests    |
 
 More on each of these in future posts.
