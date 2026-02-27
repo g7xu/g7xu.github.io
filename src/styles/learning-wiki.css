@@ -1,0 +1,383 @@
+/* ============================================
+   Learning Wiki — Knowledge Graph styles
+   ============================================ */
+
+/* ── Main 3-panel shell ── */
+.wiki-shell {
+  display: flex;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  width: 220px;
+  min-width: 220px;
+  background: #fff;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.22s ease, min-width 0.22s ease;
+  position: relative;
+}
+.left-panel.collapsed {
+  width: 0;
+  min-width: 0;
+  border-right: none;
+}
+.left-panel.collapsed .left-panel-header,
+.left-panel.collapsed .file-tree {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Sidebar toggle button ── */
+.sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 220px;
+  z-index: 20;
+  width: 18px;
+  height: 48px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: var(--secondary-color);
+  transition: left 0.22s ease, background 0.15s;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.06);
+}
+.sidebar-toggle:hover {
+  background: var(--light-bg);
+  color: var(--primary-color);
+}
+.wiki-shell.panel-collapsed .sidebar-toggle {
+  left: 0;
+  border-left: 1px solid var(--border-color);
+  border-radius: 0 6px 6px 0;
+}
+
+.left-panel-header {
+  padding: 0.75rem 1rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.search-box {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.search-box:focus { border-color: var(--primary-color); }
+
+.file-tree {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.tree-folder {
+  user-select: none;
+}
+
+.tree-folder-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.tree-folder-label:hover { color: var(--text-color); }
+
+.tree-children { display: block; }
+.tree-children.collapsed { display: none; }
+
+.tree-note {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 1rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0 0.25rem;
+  color: var(--text-color);
+  transition: background 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tree-note:hover   { background: var(--light-bg); }
+.tree-note.active  { background: #e8f4fd; color: var(--primary-color); font-weight: 500; }
+.tree-note.dimmed  { opacity: 0.35; }
+
+/* ── CENTER — GRAPH ── */
+.graph-panel {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+#graph-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.node-label {
+  font-size: 11px;
+  fill: var(--text-color);
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+
+.node circle {
+  stroke: #fff;
+  stroke-width: 2px;
+  cursor: pointer;
+  transition: r 0.1s;
+}
+
+.link {
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+.graph-hint {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: #aaa;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  width: 0;
+  min-width: 0;
+  background: #fff;
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.25s ease, min-width 0.25s ease;
+}
+.right-panel.open {
+  width: 45%;
+  min-width: 45%;
+}
+
+.right-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.right-panel-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--secondary-color);
+  line-height: 1;
+  padding: 0 0.2rem;
+  flex-shrink: 0;
+}
+.close-btn:hover { color: var(--text-color); }
+
+.right-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.25rem 2rem;
+}
+
+/* ── Markdown rendered styles ── */
+.md-body h1, .md-body h2, .md-body h3,
+.md-body h4, .md-body h5, .md-body h6 {
+  color: var(--text-color);
+  font-weight: 600;
+  margin: 1.2em 0 0.4em;
+  line-height: 1.3;
+}
+.md-body h1 { font-size: 1.3rem; }
+.md-body h2 { font-size: 1.1rem; }
+.md-body h3 { font-size: 1rem; }
+.md-body p  { margin: 0.5em 0; line-height: 1.65; font-size: 0.875rem; }
+.md-body ul, .md-body ol {
+  margin: 0.4em 0 0.4em 1.4em;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.md-body li { margin: 0.15em 0; }
+.md-body strong { color: var(--text-color); }
+.md-body code {
+  background: var(--light-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+  font-size: 0.8rem;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+}
+.md-body pre {
+  background: var(--light-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  margin: 0.75em 0;
+}
+.md-body pre code { background: none; border: none; padding: 0; font-size: 0.8rem; }
+.md-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75em 0;
+  font-size: 0.875rem;
+}
+.md-body th, .md-body td {
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+}
+.md-body th {
+  background: var(--light-bg);
+  font-weight: 600;
+}
+.md-body hr { border: none; border-top: 1px solid var(--border-color); margin: 1rem 0; }
+.md-body blockquote {
+  border-left: 3px solid var(--primary-color);
+  padding-left: 0.75rem;
+  color: var(--secondary-color);
+  margin: 0.75em 0;
+  font-style: italic;
+}
+
+/* ── Wiki-link inside rendered note ── */
+.wiki-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--primary-color);
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.15s, border-color 0.15s;
+}
+.wiki-link:hover {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+.wiki-link.unresolved {
+  color: var(--secondary-color);
+  border-bottom-color: var(--secondary-color);
+  cursor: default;
+}
+
+/* ── Node pulse animation ── */
+@keyframes nodePulse {
+  0%   { r: 10; opacity: 1; }
+  40%  { r: 22; opacity: 0.4; }
+  100% { r: 10; opacity: 1; }
+}
+.node-pulse { animation: nodePulse 0.6s ease-out; }
+
+/* ── Node count badge ── */
+.graph-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.72rem;
+  color: var(--secondary-color);
+}
+
+/* ── Empty state ── */
+.wiki-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 60px);
+  text-align: center;
+  color: var(--secondary-color);
+  font-size: 1rem;
+  padding: 2rem;
+}
+
+/* ── Responsive: tablet ── */
+@media (max-width: 1024px) {
+  .left-panel { display: none; }
+  .left-panel.mobile-open {
+    display: flex;
+    position: absolute;
+    z-index: 50;
+    height: 100%;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+  }
+  .mobile-toggle {
+    position: absolute;
+    top: 0.75rem; left: 0.75rem;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.35rem 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+}
+@media (min-width: 1025px) { .mobile-toggle { display: none; } }
+
+/* ── Responsive: mobile ── */
+@media (max-width: 768px) {
+  .graph-panel { display: none; }
+  .right-panel { width: 100% !important; min-width: 0 !important; border: none; }
+  .right-panel.open { width: 100% !important; }
+  .mobile-note-list {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+    overflow-y: auto;
+  }
+  .mobile-note-item {
+    padding: 0.75rem 1rem;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  .mobile-note-item:hover { border-color: var(--primary-color); color: var(--primary-color); }
+  .mobile-hint { font-size: 0.75rem; color: var(--secondary-color); text-align: center; padding: 0.5rem; }
+}
