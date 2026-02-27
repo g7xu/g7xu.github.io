@@ -1,34 +1,78 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/learning-wiki.css';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Read all .md files from obs_notes/public/ at build time
+interface WikiNote {
+  id: string;
+  folder: string;
+  content: string;
+}
+
+let notes: WikiNote[] = [];
+
+try {
+  const publicDir = path.resolve('obs_notes/public');
+  if (fs.existsSync(publicDir)) {
+    const files = fs.readdirSync(publicDir).filter(f => f.endsWith('.md'));
+    notes = files.map(f => ({
+      id: f.replace(/\.md$/, ''),
+      folder: 'public',
+      content: fs.readFileSync(path.join(publicDir, f), 'utf-8'),
+    }));
+  }
+} catch {
+  // Graceful degradation — page renders with empty state
+}
+
+const notesJson = JSON.stringify(notes);
 ---
 
 <BaseLayout title="Learning Wiki">
-  <main style="max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem;">
-    <blockquote style="border-left: 4px solid #007acc; padding-left: 1rem; font-style: italic; color: #6c757d; margin-bottom: 2rem;">
-      <p>
-        Gaining success without becoming arrogant, facing setbacks without becoming disheartened,
-        and working diligently every single day—this is more important than anything else.
-      </p>
-      <footer>— Kazuo Inamori</footer>
-    </blockquote>
-
-    <h1>Courses</h1>
-    <hr />
-    <div class="course-flex">
-      <div
-        class="course-item"
-        onclick="location.href='/learning_wiki/data_visualization/'"
-        style="cursor: pointer;"
-      >
-        <img
-          src="https://vis-society.github.io/labs/2/images/empty.svg"
-          alt="Image on data visualization"
-        />
-        <div class="course-content">
-          <h3>DSC 106: Data Visualization</h3>
-          <p><strong>Description:</strong> Data visualization taught by Sam Lau in UCSD</p>
-        </div>
-      </div>
+  {notes.length === 0 ? (
+    <div class="wiki-empty">
+      <p>No notes found. Add Markdown files to <code>obs_notes/public/</code> to populate the knowledge graph.</p>
     </div>
-  </main>
+  ) : (
+    <div class="wiki-shell" id="wiki-shell">
+      <!-- Sidebar collapse toggle -->
+      <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">◀</button>
+
+      <!-- LEFT: Folder tree -->
+      <aside class="left-panel" id="left-panel">
+        <div class="left-panel-header">
+          <input class="search-box" type="text" id="search" placeholder="🔍  Search notes…" />
+        </div>
+        <div class="file-tree" id="file-tree"></div>
+      </aside>
+
+      <!-- CENTER: Graph -->
+      <div class="graph-panel" id="graph-panel">
+        <button class="mobile-toggle" id="mobile-toggle">☰</button>
+        <svg id="graph-svg"></svg>
+        <div class="graph-badge" id="node-count"></div>
+        <div class="graph-hint">Scroll to zoom · Drag nodes · Click to open note</div>
+      </div>
+
+      <!-- RIGHT: Note content -->
+      <aside class="right-panel" id="right-panel">
+        <div class="right-panel-header">
+          <span class="right-panel-title" id="note-title"></span>
+          <button class="close-btn" id="close-btn" title="Close">✕</button>
+        </div>
+        <div class="right-panel-content">
+          <div class="md-body" id="note-body"></div>
+        </div>
+      </aside>
+    </div>
+  )}
+
+  <script define:vars={{ notesJson }}>
+    window.__WIKI_NOTES__ = JSON.parse(notesJson);
+  </script>
+  <script>
+    import '../scripts/learning-wiki.ts';
+  </script>
 </BaseLayout>
