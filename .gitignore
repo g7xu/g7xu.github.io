@@ -13,8 +13,10 @@ npm-debug.log*
 # OS
 .DS_Store
 
-# Obsidian notes
+# Obsidian notes (keep public/ tracked for Learning Wiki)
 obs_notes/
+!obs_notes/public/
+!obs_notes/public/**
 
 # Legacy Jekyll (no longer used)
 _site/
