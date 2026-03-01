@@ -1,54 +1,80 @@
 export interface Project {
   title: string;
   description: string;
-  image: string;
-  url: string;
   tags: string[];
-  featured: boolean;
-  external: boolean;
+  categories: string[];
+  githubUrl: string;
+  websiteUrl?: string;
+  imageUrl?: string;
 }
 
-export interface ResearchProject {
-  title: string;
-  description: string;
-  image: string;
-  paper_url: string;
-  study_url: string;
-  tags: string[];
-  featured: boolean;
-}
-
-export const featuredProjects: Project[] = [
+export const allProjects: Project[] = [
+  // === Building the Wheel ===
   {
-    title: 'Secret Life of Blood Glucose',
-    description:
-      'An interactive visualization about blood glucose and diabetes',
-    image: '/images/SLOBG_cover_pic.png',
-    url: 'https://g7xu.github.io/secret-life-of-blood-glucose/',
-    tags: ['Data Science', 'Data Visualization'],
-    featured: true,
-    external: true,
+    title: 'SHOPPING-CART',
+    description: 'Shopping cart application powered by React and Redux Toolkit',
+    tags: ['React'],
+    categories: ['spotlight', 'building-the-wheel'],
+    githubUrl: 'https://github.com/g7xu/SHOPPING-CART',
+    websiteUrl: 'https://g7xu.dev/SHOPPING-CART',
+    imageUrl: '/images/projects/shopping-cart.png',
   },
   {
-    title: 'Trend Bubble \uD83E\uDEB7\uD83E\uDEB7\uD83E\uDEB7',
-    description: 'A real-time dashboard of trending datasets from Kaggle',
-    image: '/images/trend_bubble_cover_pic.png',
-    url: 'https://g7xu.github.io/Trend_Bubble/',
-    tags: ['Data Science', 'Data Visualization', 'Data Pipeline'],
-    featured: true,
-    external: true,
+    title: 'Product-Management-APP',
+    description: 'Product management app with React',
+    tags: ['React'],
+    categories: ['building-the-wheel'],
+    githubUrl: 'https://github.com/g7xu/Product-Management-APP',
+    websiteUrl: 'https://g7xu.dev/Product-Management-APP/',
+    imageUrl: '/images/projects/product-management.png',
   },
-];
-
-export const researchProjects: ResearchProject[] = [
   {
-    title: 'DSTL Lab: Investigation on Effective Data Analytical Strategies',
+    title: 'Task-Management-APP',
+    description: 'Task management app with React',
+    tags: ['React'],
+    categories: ['building-the-wheel'],
+    githubUrl: 'https://github.com/g7xu/Task-Management-APP',
+    websiteUrl: 'https://g7xu.dev/Task-Management-APP/',
+    imageUrl: '/images/projects/task-management.png',
+  },
+
+  // === Data Science ===
+  {
+    title: "I'm not sure, but.. . ",
     description:
       'User speak-aloud study exploring effective practices for novice data scientists',
-    image: '/images/dstl_project_pic.png',
-    paper_url: '/files/2025_sigcse_experts_vs_novices_SIGCSE.pdf',
-    study_url: 'https://github.com/dstl-lab/Code-Comprehension-User-Study',
-    tags: ['Data Science', 'Education', 'Exploratory Data Analysis'],
-    featured: true,
+    tags: ['HCI'],
+    categories: ['spotlight', 'data-science'],
+    githubUrl: 'https://github.com/dstl-lab/Code-Comprehension-User-Study',
+    websiteUrl: 'https://g7xu.dev/Code-Comprehension-User-Study/',
+    imageUrl: '/images/projects/im-not-sure-but.png',
+  },
+  {
+    title: 'Data_vis_LSUS',
+    description:
+      'Data visualization exploring how sunshine impacts life expectancy in US',
+    tags: ['Data Visualization'],
+    categories: ['data-science'],
+    githubUrl: 'https://github.com/g7xu/Data_vis_LSUS',
+    imageUrl: '/images/projects/data-vis-lsus.png',
+  },
+  {
+    title: 'Dual-Lens',
+    description:
+      'Data visualization demonstrating deceptive vs earnest techniques. Top 5% project in class',
+    tags: ['Data Visualization'],
+    categories: ['spotlight', 'data-science'],
+    githubUrl: 'https://github.com/g7xu/Dual-Lens',
+    imageUrl: '/images/projects/dual-lens.png',
   },
 ];
+
+export function getProjectsByCategory(category: string): Project[] {
+  return allProjects.filter((p) => p.categories.includes(category));
+}
+
+export function getAllTags(): string[] {
+  const tags = new Set<string>();
+  allProjects.forEach((p) => p.tags.forEach((t) => tags.add(t)));
+  return [...tags].sort();
+}
