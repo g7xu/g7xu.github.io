@@ -1,23 +1,127 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import ResearchCard from '../components/ResearchCard.astro';
-import { featuredProjects, researchProjects } from '../data/projects';
+import { getProjectsByCategory, getAllTags } from '../data/projects';
 import '../styles/projects.css';
+
+const spotlightProjects = getProjectsByCategory('spotlight');
+const buildingProjects = getProjectsByCategory('building-the-wheel');
+const dataScienceProjects = getProjectsByCategory('data-science');
+const allTags = getAllTags();
 ---
 
-<BaseLayout title="Projects & Research">
+<BaseLayout title="Projects">
   <main class="projects-page">
-    <h2>Projects</h2>
-    <hr />
-    <div class="projects-grid">
-      {featuredProjects.map((project) => <ProjectCard project={project} />)}
+    <div class="tag-filter-bar">
+      <button class="tag-filter active" data-tag="all">All</button>
+      {
+        allTags.map((tag) => (
+          <button class="tag-filter" data-tag={tag}>
+            {tag}
+          </button>
+        ))
+      }
     </div>
 
-    <h2>Research</h2>
-    <hr />
-    <div class="research-grid">
-      {researchProjects.map((research) => <ResearchCard research={research} />)}
-    </div>
+    <section class="project-section">
+      <h2>Spotlight</h2>
+      <hr />
+      <div class="projects-grid">
+        {spotlightProjects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </section>
+
+    <section class="project-section">
+      <button class="accordion-toggle" aria-expanded="false">
+        <span class="accordion-arrow"></span>
+        <h2>Building the Wheel</h2>
+      </button>
+      <div class="accordion-content">
+        <div class="projects-grid">
+          {buildingProjects.map((project) => <ProjectCard project={project} />)}
+        </div>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <button class="accordion-toggle" aria-expanded="false">
+        <span class="accordion-arrow"></span>
+        <h2>Data Science</h2>
+      </button>
+      <div class="accordion-content">
+        <div class="projects-grid">
+          {
+            dataScienceProjects.map((project) => (
+              <ProjectCard project={project} />
+            ))
+          }
+        </div>
+      </div>
+    </section>
   </main>
 </BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Accordion toggle
+    const toggles = document.querySelectorAll('.accordion-toggle');
+    toggles.forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const content = toggle.nextElementSibling as HTMLElement;
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+        if (isOpen) {
+          // Collapse: set explicit height first, then transition to 0
+          content.style.height = content.scrollHeight + 'px';
+          requestAnimationFrame(() => {
+            content.style.height = '0';
+          });
+          toggle.setAttribute('aria-expanded', 'false');
+        } else {
+          // Expand: transition from 0 to scrollHeight
+          content.style.height = content.scrollHeight + 'px';
+          toggle.setAttribute('aria-expanded', 'true');
+          // After transition completes, remove fixed height so content reflows naturally
+          const onEnd = () => {
+            content.style.height = 'auto';
+            content.removeEventListener('transitionend', onEnd);
+          };
+          content.addEventListener('transitionend', onEnd);
+        }
+      });
+    });
+
+    // Tag filtering
+    const filterButtons = document.querySelectorAll('.tag-filter');
+    const projectItems = document.querySelectorAll('.project-item');
+    const sections = document.querySelectorAll('.project-section');
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const selectedTag = btn.getAttribute('data-tag');
+
+        projectItems.forEach((item) => {
+          const tags: string[] = JSON.parse(
+            item.getAttribute('data-tags') || '[]',
+          );
+          if (selectedTag === 'all' || tags.includes(selectedTag!)) {
+            (item as HTMLElement).style.display = '';
+          } else {
+            (item as HTMLElement).style.display = 'none';
+          }
+        });
+
+        sections.forEach((section) => {
+          const visibleCards = section.querySelectorAll(
+            '.project-item:not([style*="display: none"])',
+          );
+          (section as HTMLElement).style.display =
+            visibleCards.length === 0 ? 'none' : '';
+        });
+      });
+    });
+  });
+</script>
