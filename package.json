@@ -28,6 +28,9 @@
     "d3": "^7.9.0",
     "marked": "^17.0.3"
   },
+  "overrides": {
+    "lodash": ">=4.17.23"
+  },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
     "@types/d3": "^7.4.3",
