@@ -59,11 +59,30 @@ export const allProjects: Project[] = [
     imageUrl: '/images/projects/data-vis-lsus.png',
   },
   {
+    title: 'Secret Life of Blood Glucose',
+    description:
+      'Interactive visualization explaining challenges faced by individuals with Type 2 Diabetes',
+    tags: ['Data Visualization'],
+    categories: ['spotlight', 'data-science'],
+    githubUrl: 'https://github.com/g7xu/secret-life-of-blood-glucose',
+    websiteUrl: 'https://g7xu.dev/secret-life-of-blood-glucose/',
+    imageUrl: '/images/projects/secret-life-of-blood-glucose.png',
+  },
+  {
+    title: 'CellMaker_DataParser',
+    description:
+      'Data parser that converts raw CellMarker data to JSON format. Used in production in mygene.info',
+    tags: ['Python'],
+    categories: ['data-science'],
+    githubUrl: 'https://github.com/g7xu/CellMaker_DataParser',
+    imageUrl: '/images/projects/cellmaker-dataparser.png',
+  },
+  {
     title: 'Dual-Lens',
     description:
       'Data visualization demonstrating deceptive vs earnest techniques. Top 5% project in class',
     tags: ['Data Visualization'],
-    categories: ['spotlight', 'data-science'],
+    categories: ['data-science'],
     githubUrl: 'https://github.com/g7xu/Dual-Lens',
     imageUrl: '/images/projects/dual-lens.png',
   },
