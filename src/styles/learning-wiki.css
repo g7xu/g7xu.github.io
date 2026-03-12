@@ -334,6 +334,14 @@
   font-style: italic;
 }
 
+/* ── Images inside rendered note ── */
+.md-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 0.5em 0;
+}
+
 /* ── Wiki-link inside rendered note ── */
 .wiki-link {
   color: var(--primary-color);
