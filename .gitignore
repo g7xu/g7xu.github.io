@@ -14,11 +14,8 @@ npm-debug.log*
 .DS_Store
 
 # Obsidian notes (keep public/ tracked for Learning Wiki)
-obs_notes/
+obs_notes/*
 !obs_notes/public/
 !obs_notes/public/**
-
-# Legacy Jekyll (no longer used)
-_site/
-.sass-cache/
-.jekyll-metadata/
+!obs_notes/attachments/
+!obs_notes/attachments/**

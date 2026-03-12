@@ -335,3 +335,253 @@ const About = React.lazy(() => import('./About'));
 <input value={email} onChange={e => setEmail(e.target.value)} />
 ```
 
+# React Router DOM
+enabling navigation between views and handling client-side routing
+`<BrowserRouter>`: Route capabilities using browser's built-in history
+`<Routes>`: Wraps a group of individual routes
+`<Route>`: route paths and their associated components
+Example
+```jsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+const App = () => (
+
+<BrowserRouter>
+	<Routes>
+		<Route path="/" element={<Home />} />
+		<Route path="/dashboard" element={<Dashboard />} />
+		<Route path="profile" element={<Profile />} />
+		<Route path="about" element={<About />} />
+	</Routes>
+</BrowserRouter>
+);
+``` 
+
+`<Link to="..." />`: routing page without refreshing 
+`<NavLink to-"..." />`: showing the active state of the routes
+`<Outlet />`: Placeholder for rendering child route components in nested routes
+`useNavigate()`: Return a navigate() function to programmatically navigate
+`useParams()`: Returns an object with dynamic params from the current URL
+useLocation(): Returns the current location object containing
+
+# Axios
+A promise-based HTTP client for both browser and Node.js environments with:
+- Automatic JSON conversion
+- Intercept & Modify Request/Response
+- Cancel Pending Requests
+- CSRF Protection Support
+Axios Interceptor: Function that allow you to modify or act upon ongoing requests and incoming responses
+
+
+# Problems of Props Drilling
+- Passing props through multiple nested components to reach a deeply nested child
+- Intermediate components: Only forward props; they don't need to use them
+
+## Context API
+allowing us to pass data throughout the application
+Role based API
+- Provider: supplies the global data to all child
+- Consumer: reads and uses the global data provided
+- Context: the object that bridges the provider and consumer
+
+# Context API in 3 Steps
+
+## 1. Create a Context
+
+```jsx
+// UserContext.js
+import React from 'react';
+const UserContext = React.createContext();
+export default UserContext;
+```
+
+## 2. Provide Value to Child Components
+
+```jsx
+// App.jsx
+import React, { useState } from 'react';
+import UserContext from "./UserContext";
+
+const App = () => {
+  const [user, setUser] = useState({ name: "Jane", email: "jane@dri", age: 20 });
+
+  const increaseAge = () => {
+    setUser((prevUser) => ({ ...prevUser, age: prevUser.age + 1 }));
+  };
+
+  return (
+    <UserContext.Provider value={{ ...user, increaseAge }}>
+      <ChildComponent />
+    </UserContext.Provider>
+  );
+};
+```
+
+## 3. Consume Context Values
+
+```jsx
+// ChildComponent.jsx
+import UserContext from "./UserContext";
+import { useContext } from "react";
+
+export default function ChildComponent() {
+  const context = useContext(UserContext);
+  return <>
+    <p>User: {context.name} with {context.email} at age {context.age}</p>
+    <button onClick={context.increaseAge}>Increase Age</button>
+  </>;
+};
+```
+
+---
+
+**Flow:** `createContext()` → wrap tree with `Provider` + pass `value` → any child calls `useContext()` to read it.
+
+
+## Redux
+JS library for managing global state and logic
+- Centralizes state in a predictable and structured manner using reducer
+- Compatible with any frontend library/framework![[Screenshot 2026-02-26 at 11.07.23 PM.png]]
+
+### Principle
+- Single Source of Truth (the entire application's state is stored in a single object within one store)
+- State is Read-only: the only way to change the state is by dispatching actions
+- State Updates with Pure Functions
+	- Reducers are pure functions that specify how the state changes in response to actions
+
+Store: Centralized storage for application state
+Action: Describes what you want to do with type and payload field
+Action Creator: A function to create actions
+Reducer: Updates state based on actions (executioner)
+Selector: Function to access specific data from state from components
+![[Screenshot 2026-02-26 at 11.15.26 PM.png]]
+- Component dispatches an action to the store
+- Store sends the action and current state to the reducer
+- Reducer updates the state and returns it to the store
+- Store provides the updated state to the components, triggering a re-render
+
+
+Redux DevTools: `npm i redux-devtools-extension` view redux details
+
+## Defining Actions in Redux
+Action Type: string represent the action
+- standard way of naming it: `<reducerName>/<function name>`
+Action Creator: A function that returns the representing the action.
+
+We will send the action creator to store.dispatch -- why? 
+- avoid repetition
+- Hide complexity
+- easy testing
+
+## Setting Up Reducer in Redux
+- A pure function that manages state updates based on dispatched actions
+	- set initial state
+	- Ensure immutability
+		- Avoid directly mutating the state
+		- Always return a new state object
+	- Handle Actions
+		- Use condition check to determine how to generate state
+		- return unchanged state 
+
+- CombineReduer()
+	- all dispatch call will trigger all the reducer
+
+# Accessing State in Redux & React-Redux
+
+## Store Methods (Raw Redux)
+
+Redux provides two key methods on the store:
+
+- **`store.getState()`** — reads the current state as a one-time snapshot. Use chaining to access nested data: `store.getState().account.balance`.
+- **`store.subscribe(callback)`** — registers a callback that fires every time state changes. Returns an `unsubscribe` function to cancel the listener.
+
+## Manual Pattern (Without React-Redux)
+
+```js
+function Sample() {
+  const [balance, setBalance] = useState(store.getState().account.balance);
+
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      setBalance(store.getState().account.balance);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  return <div>Balance: {balance}</div>;
+}
+```
+
+**How it works:**
+
+1. `useState` initializes `balance` with the current store value (one-time read).
+2. `useEffect` with `[]` runs once on mount — subscribes to the store so that every future state change updates `balance` via `setBalance`.
+3. The cleanup function (`return () => unsubscribe()`) runs on unmount — tells Redux to stop notifying this component, preventing memory leaks.
+
+**Key distinction:** `useEffect` runs once to _install_ the listener. The subscribe callback is what fires on every Redux update. `unsubscribe` only fires once at the end to disconnect.
+
+## React-Redux: The Modern Approach
+
+The `react-redux` library eliminates all manual subscribe/unsubscribe boilerplate with three tools:
+
+### 1. `<Provider>` — makes the store available app-wide
+
+```jsx
+<Provider store={store}>
+  <App />
+</Provider>
+```
+
+Wrap once at the root. Every component inside can access the store without importing it directly.
+
+### 2. `useSelector` — read state (replaces getState + subscribe + cleanup)
+
+```js
+const balance = useSelector(state => state.account.balance);
+```
+
+One line replaces `useState` + `useEffect` + `subscribe` + `unsubscribe`. It automatically subscribes on mount, unsubscribes on unmount, and only triggers a re-render when the selected value actually changes.
+
+### 3. `useDispatch` — dispatch actions
+
+```js
+const dispatch = useDispatch();
+dispatch(addAccountDeposit(100));
+```
+
+Replaces direct `store.dispatch()` calls, keeping components decoupled from the store.
+
+### Full Example
+
+```jsx
+import { useSelector, useDispatch } from 'react-redux';
+
+function BankAccount() {
+  const balance = useSelector(state => state.account.balance);
+  const dispatch = useDispatch();
+
+  return (
+    <>
+      <p>Balance: ${balance}</p>
+      <button onClick={() => dispatch(addAccountDeposit(100))}>+100</button>
+    </>
+  );
+}
+```
+
+No `useState`, no `useEffect`, no `subscribe`, no cleanup.
+
+## Why React-Redux is Better
+
+|Concern|Manual|React-Redux|
+|---|---|---|
+|Read state|`store.getState()`|`useSelector()`|
+|Listen for changes|`subscribe()` in `useEffect`|Automatic|
+|Cleanup|`return () => unsubscribe()`|Automatic|
+|Dispatch|`store.dispatch()`|`useDispatch()`|
+|Smart re-renders|No — re-renders on every state change|Yes — only when selected value changes|
+
+**Bottom line:** `useSelector` does the same work as the manual pattern but handles subscription, cleanup, and render optimization automatically. The manual approach is worth understanding because it's what `useSelector` does under the hood.
+
+
+general action creator
+`export constant createAction = (type, payload) => ({type, payload});`
