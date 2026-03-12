@@ -29,7 +29,9 @@
     "marked": "^17.0.3"
   },
   "overrides": {
-    "lodash": ">=4.17.23"
+    "lodash": ">=4.17.23",
+    "svgo": ">=4.0.1",
+    "devalue": ">=5.6.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
