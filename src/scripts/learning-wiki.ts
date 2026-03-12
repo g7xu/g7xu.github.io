@@ -1,5 +1,8 @@
 import * as d3 from 'd3';
 import { marked } from 'marked';
+import katex from 'katex';
+
+marked.setOptions({ breaks: true });
 
 interface WikiNote {
   id: string;
@@ -84,6 +87,46 @@ function buildTree() {
 }
 
 // ─────────────────────────────────────────
+// MATH RENDERING
+// ─────────────────────────────────────────
+function renderMath(html: string): string {
+  const parts = html.split(/(<code[\s\S]*?<\/code>|<pre[\s\S]*?<\/pre>)/gi);
+  return parts
+    .map((part) => {
+      if (/^<code|^<pre/i.test(part)) return part;
+
+      // Display math first: $$...$$
+      part = part.replace(/\$\$([\s\S]+?)\$\$/g, (_, tex: string) => {
+        try {
+          return katex.renderToString(tex.trim(), {
+            displayMode: true,
+            throwOnError: false,
+          });
+        } catch {
+          return `<span class="math-error">${tex}</span>`;
+        }
+      });
+
+      // Inline math: $...$  (not preceded/followed by $)
+      part = part.replace(
+        /(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)/g,
+        (_, tex: string) => {
+          try {
+            return katex.renderToString(tex.trim(), {
+              displayMode: false,
+              throwOnError: false,
+            });
+          } catch {
+            return `<span class="math-error">${tex}</span>`;
+          }
+        },
+      );
+      return part;
+    })
+    .join('');
+}
+
+// ─────────────────────────────────────────
 // RIGHT PANEL — Note content
 // ─────────────────────────────────────────
 function openNote(id: string) {
@@ -92,8 +135,28 @@ function openNote(id: string) {
 
   const noteIds = new Set(NOTES.map((n) => n.id));
 
-  // 1. Strip image/file embeds (![[...]]) — no graph value
-  let processed = note.content.replace(/!\[\[[^\]]*\]\]/g, '');
+  // 1. Convert image embeds (![[...]]) to <img> tags, strip non-image embeds
+  let processed = note.content.replace(
+    /!\[\[([^\]]+)\]\]/g,
+    (_, inner: string) => {
+      const parts = inner.split('|');
+      const filename = parts[0].trim();
+      const width = parts[1]?.trim();
+      const ext = filename.split('.').pop()?.toLowerCase();
+      if (
+        ext === 'png' ||
+        ext === 'jpg' ||
+        ext === 'jpeg' ||
+        ext === 'gif' ||
+        ext === 'svg' ||
+        ext === 'webp'
+      ) {
+        const style = width ? ` style="max-width:${width}px"` : '';
+        return `<img src="/wiki-images/${filename}" alt="${filename}"${style}>`;
+      }
+      return ''; // strip non-image embeds
+    },
+  );
 
   // 2. Convert [[Note|Alias]] and [[Note]] into clickable spans
   processed = processed.replace(
@@ -112,9 +175,12 @@ function openNote(id: string) {
   );
 
   document.getElementById('note-title')!.textContent = note.id;
-  document.getElementById('note-body')!.innerHTML = marked.parse(
-    processed,
-  ) as string;
+  let html = marked.parse(processed) as string;
+
+  // Render math with KaTeX (skip content inside <code>/<pre> tags)
+  html = renderMath(html);
+
+  document.getElementById('note-body')!.innerHTML = html;
   document.getElementById('right-panel')!.classList.add('open');
 }
 

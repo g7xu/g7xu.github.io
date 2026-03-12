@@ -3,8 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "copy:wiki-images": "mkdir -p public/wiki-images && cp -r obs_notes/attachments/* public/wiki-images/ 2>/dev/null || true",
+    "dev": "npm run copy:wiki-images && astro dev",
+    "build": "npm run copy:wiki-images && astro build",
     "preview": "astro preview",
     "clean": "rm -rf dist",
     "check": "astro check",
@@ -24,8 +25,10 @@
     ]
   },
   "dependencies": {
+    "@types/katex": "^0.16.8",
     "astro": "^5.18.0",
     "d3": "^7.9.0",
+    "katex": "^0.16.38",
     "marked": "^17.0.3"
   },
   "overrides": {

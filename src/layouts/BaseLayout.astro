@@ -55,6 +55,7 @@ const pageTitle =
     <meta name="twitter:image" content={new URL(image, Astro.site)} />
 
     <StructuredData />
+    <slot name="head" />
   </head>
   <body>
     <Navbar />
