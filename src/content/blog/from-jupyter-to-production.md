@@ -6,7 +6,7 @@ category: 'Engineering'
 author:
   name: 'Jason Xu'
   avatar: '/images/bio-photo.png'
-draft: false
+draft: true
 ---
 
 ## The Notebook Trap
