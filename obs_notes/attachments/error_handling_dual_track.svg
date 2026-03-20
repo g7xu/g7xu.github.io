@@ -1,0 +1,89 @@
+<svg width="100%" viewBox="0 0 680 640" xmlns="http://www.w3.org/2000/svg" style="font-family: system-ui, -apple-system, sans-serif; background: #ffffff;">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- Bottom: Repository error -->
+<rect x="230" y="540" width="220" height="50" rx="8" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5"/>
+<text x="340" y="558" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#791F1F">Repository error</text>
+<text x="340" y="576" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#A32D2D">Constraint violation, query fail</text>
+
+<!-- Arrow from repo to service -->
+<line x1="340" y1="538" x2="340" y2="500" stroke="#888780" stroke-width="0.5" marker-end="url(#arrow)"/>
+<text x="354" y="522" text-anchor="start" font-size="12" fill="#888780">Bubbles up</text>
+
+<!-- Service layer error -->
+<rect x="230" y="448" width="220" height="50" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+<text x="340" y="466" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#712B13">Service layer error</text>
+<text x="340" y="484" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#993C1D">Business logic, race condition</text>
+
+<!-- Arrow from service to controller -->
+<line x1="340" y1="446" x2="340" y2="408" stroke="#888780" stroke-width="0.5" marker-end="url(#arrow)"/>
+<text x="354" y="430" text-anchor="start" font-size="12" fill="#888780">Wraps and re-throws</text>
+
+<!-- Controller layer error -->
+<rect x="230" y="358" width="220" height="48" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+<text x="340" y="376" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#2C2C2A">Controller layer error</text>
+<text x="340" y="394" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#5F5E5A">400, 404, 405, 500</text>
+
+<!-- LEFT TRACK: Logging system -->
+<rect x="20" y="120" width="160" height="40" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text x="100" y="140" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#633806">Logging system</text>
+
+<!-- Log detail box -->
+<rect x="20" y="180" width="160" height="148" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text x="100" y="204" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#633806">Full details logged</text>
+<text x="36" y="228" dominant-baseline="central" font-size="12" fill="#854F0B">Stack trace</text>
+<text x="36" y="248" dominant-baseline="central" font-size="12" fill="#854F0B">SQL query attempted</text>
+<text x="36" y="268" dominant-baseline="central" font-size="12" fill="#854F0B">Input: jason@ex.com</text>
+<text x="36" y="288" dominant-baseline="central" font-size="12" fill="#854F0B">Request ID: req-abc</text>
+<text x="36" y="308" dominant-baseline="central" font-size="12" fill="#854F0B">Timestamp, user ctx</text>
+
+<line x1="100" y1="160" x2="100" y2="178" stroke="#854F0B" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<!-- Arrow: Controller → Logging -->
+<path d="M230 374 L190 374 L190 200 L182 200" fill="none" stroke="#854F0B" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<!-- Arrow: Service → Logging -->
+<path d="M230 468 L206 468 L206 240 L182 240" fill="none" stroke="#854F0B" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<!-- Arrow: Repository → Logging -->
+<path d="M230 560 L220 560 L220 280 L182 280" fill="none" stroke="#854F0B" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<!-- Label on left arrows -->
+<text x="182" y="346" text-anchor="end" font-size="12" fill="#854F0B">Inward</text>
+<text x="182" y="360" text-anchor="end" font-size="12" fill="#854F0B">(all layers log)</text>
+
+<!-- RIGHT TRACK: Controller to HTTP response -->
+<text x="505" y="372" text-anchor="middle" font-size="12" fill="#0F6E56">Outward</text>
+<path d="M450 382 L560 382 L560 322" fill="none" stroke="#0F6E56" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<rect x="460" y="278" width="200" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="560" y="300" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#085041">HTTP response</text>
+
+<!-- HTTP response to client sees -->
+<line x1="560" y1="276" x2="560" y2="270" stroke="#0F6E56" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<!-- Client response detail -->
+<rect x="460" y="168" width="200" height="100" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="560" y="192" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#085041">Client sees</text>
+<text x="476" y="216" dominant-baseline="central" font-size="12" fill="#0F6E56">status: 409</text>
+<text x="476" y="236" dominant-baseline="central" font-size="12" fill="#0F6E56">message: "An account</text>
+<text x="476" y="256" dominant-baseline="central" font-size="12" fill="#0F6E56">with this email exists"</text>
+
+<line x1="560" y1="166" x2="560" y2="102" stroke="#0F6E56" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<!-- Top labels -->
+<rect x="30" y="60" width="140" height="40" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text x="100" y="80" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#633806">Keep everything</text>
+<line x1="100" y1="100" x2="100" y2="118" stroke="#854F0B" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<rect x="490" y="60" width="140" height="40" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="560" y="80" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#085041">Strip and simplify</text>
+
+<!-- Attribution -->
+<text x="660" y="628" text-anchor="end" font-size="11" fill="#B4B2A9" font-style="italic">Generated by Claude</text>
+
+</svg>
