@@ -14,7 +14,7 @@ export const allProjects: Project[] = [
     title: 'SHOPPING-CART',
     description: 'Shopping cart application powered by React and Redux Toolkit',
     tags: ['React'],
-    categories: ['spotlight', 'building-the-wheel'],
+    categories: ['building-the-wheel'],
     githubUrl: 'https://github.com/g7xu/SHOPPING-CART',
     websiteUrl: 'https://g7xu.dev/SHOPPING-CART',
     imageUrl: '/images/projects/shopping-cart.png',
@@ -37,6 +37,14 @@ export const allProjects: Project[] = [
     websiteUrl: 'https://g7xu.dev/Task-Management-APP/',
     imageUrl: '/images/projects/task-management.png',
   },
+  {
+    title: 'guoxuan-devKit',
+    description:
+      'Automated macOS developer-environment setup toolkit — from a fresh Mac to `git push` in under 20 minutes',
+    tags: ['Shell'],
+    categories: ['building-the-wheel'],
+    githubUrl: 'https://github.com/g7xu/guoxuan-devKit',
+  },
 
   // === Data Science ===
   {
@@ -48,6 +56,16 @@ export const allProjects: Project[] = [
     githubUrl: 'https://github.com/dstl-lab/Code-Comprehension-User-Study',
     websiteUrl: 'https://g7xu.dev/Code-Comprehension-User-Study/',
     imageUrl: '/images/projects/im-not-sure-but.png',
+  },
+  {
+    title: 'ICU Sepsis Decision Support',
+    description:
+      'Full-stack web application providing ML-backed sepsis risk predictions for ICU patients',
+    tags: ['MVC', 'Cloud', 'ML'],
+    categories: ['spotlight', 'full-stack-applications'],
+    githubUrl: 'https://github.com/g7xu/icu-sepsis-decision-support',
+    websiteUrl: 'https://icu-sepsis-detect.g7xu.dev/',
+    imageUrl: '/images/projects/icu-sepsis.png',
   },
   {
     title: 'Data_vis_LSUS',

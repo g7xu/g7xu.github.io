@@ -6,6 +6,7 @@ import '../styles/projects.css';
 
 const spotlightProjects = getProjectsByCategory('spotlight');
 const buildingProjects = getProjectsByCategory('building-the-wheel');
+const fullStackProjects = getProjectsByCategory('full-stack-applications');
 const dataScienceProjects = getProjectsByCategory('data-science');
 const allTags = getAllTags();
 ---
@@ -39,6 +40,22 @@ const allTags = getAllTags();
       <div class="accordion-content">
         <div class="projects-grid">
           {buildingProjects.map((project) => <ProjectCard project={project} />)}
+        </div>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <button class="accordion-toggle" aria-expanded="false">
+        <span class="accordion-arrow"></span>
+        <h2>Full-Stack Applications</h2>
+      </button>
+      <div class="accordion-content">
+        <div class="projects-grid">
+          {
+            fullStackProjects.map((project) => (
+              <ProjectCard project={project} />
+            ))
+          }
         </div>
       </div>
     </section>
