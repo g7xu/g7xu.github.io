@@ -80,7 +80,7 @@ TODO...
 ## Key Assumptions
 - scenario dependent 
 ## Specific Algorithms
-- Convolutional Neural Network (CNN)
+- [[Convolutional Neural Network (CNN)]]
 - RNN
 - LSTM
 - Transformers
