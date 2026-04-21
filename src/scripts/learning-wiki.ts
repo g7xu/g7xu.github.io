@@ -4,6 +4,25 @@ import katex from 'katex';
 
 marked.setOptions({ breaks: true });
 
+function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-');
+}
+
+// Add slug ids to rendered <h1>-<h6> headings so [[#Heading]] anchors can scroll to them.
+function addHeadingIds(html: string): string {
+  return html.replace(
+    /<(h[1-6])>([\s\S]*?)<\/\1>/g,
+    (_, tag: string, inner: string) => {
+      const text = inner.replace(/<[^>]+>/g, '');
+      return `<${tag} id="${slugifyHeading(text)}">${inner}</${tag}>`;
+    },
+  );
+}
+
 interface WikiNote {
   id: string;
   folder: string;
@@ -43,8 +62,13 @@ function extractEdges(notes: WikiNote[]): SimLink[] {
   notes.forEach((note) => {
     const matches = note.content.matchAll(/\[\[([^\]]+)\]\]/g);
     for (const m of matches) {
-      const target = m[1].trim();
-      if (ids.has(target)) {
+      // Strip alias: [[Note|Display]] -> "Note"
+      let target = m[1].split('|')[0].trim();
+      // Skip same-note heading refs: [[#Heading]]
+      if (target.startsWith('#')) continue;
+      // Strip heading anchor: [[Note#Heading]] -> "Note"
+      target = target.split('#')[0].trim();
+      if (target && target !== note.id && ids.has(target)) {
         const key = [note.id, target].sort().join('||');
         if (!seen.has(key)) {
           seen.add(key);
@@ -67,23 +91,108 @@ const edges = extractEdges(NOTES);
 // ─────────────────────────────────────────
 // LEFT PANEL — Folder tree
 // ─────────────────────────────────────────
-function buildTree() {
-  const tree = document.getElementById('file-tree')!;
-  tree.innerHTML = '';
+interface FolderNode {
+  name: string;
+  path: string;
+  folders: Map<string, FolderNode>;
+  notes: WikiNote[];
+}
 
-  const filtered = NOTES.filter((n) =>
-    n.id.toLowerCase().includes(searchQuery.toLowerCase()),
+function makeFolder(name: string, path: string): FolderNode {
+  return { name, path, folders: new Map(), notes: [] };
+}
+
+function buildFolderTree(notes: WikiNote[]): FolderNode {
+  const root = makeFolder('', '');
+  for (const note of notes) {
+    if (!note.folder) {
+      root.notes.push(note);
+      continue;
+    }
+    const segments = note.folder.split('/');
+    let cursor = root;
+    let accPath = '';
+    for (const seg of segments) {
+      accPath = accPath ? `${accPath}/${seg}` : seg;
+      if (!cursor.folders.has(seg)) {
+        cursor.folders.set(seg, makeFolder(seg, accPath));
+      }
+      cursor = cursor.folders.get(seg)!;
+    }
+    cursor.notes.push(note);
+  }
+  return root;
+}
+
+const collapsedFolders = new Set<string>();
+
+function collectMatchingNotes(
+  folder: FolderNode,
+  query: string,
+  out: WikiNote[],
+) {
+  const q = query.toLowerCase();
+  for (const n of folder.notes) {
+    if (!query || n.id.toLowerCase().includes(q)) out.push(n);
+  }
+  for (const child of folder.folders.values()) {
+    collectMatchingNotes(child, query, out);
+  }
+}
+
+function renderFolder(
+  folder: FolderNode,
+  container: HTMLElement,
+  query: string,
+) {
+  const folders = [...folder.folders.values()].sort((a, b) =>
+    a.name.localeCompare(b.name),
   );
+  const notes = [...folder.notes].sort((a, b) => a.id.localeCompare(b.id));
 
-  filtered.forEach((note) => {
+  for (const child of folders) {
+    const matches: WikiNote[] = [];
+    collectMatchingNotes(child, query, matches);
+    if (query && matches.length === 0) continue;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'tree-folder';
+
+    const label = document.createElement('div');
+    label.className = 'tree-folder-label';
+    const isCollapsed = collapsedFolders.has(child.path) && !query;
+    label.textContent = `${isCollapsed ? '▸' : '▾'} ${child.name}`;
+    label.addEventListener('click', () => {
+      if (collapsedFolders.has(child.path)) collapsedFolders.delete(child.path);
+      else collapsedFolders.add(child.path);
+      buildTree();
+    });
+    wrap.appendChild(label);
+
+    const children = document.createElement('div');
+    children.className = 'tree-children' + (isCollapsed ? ' collapsed' : '');
+    renderFolder(child, children, query);
+    wrap.appendChild(children);
+    container.appendChild(wrap);
+  }
+
+  for (const note of notes) {
+    if (query && !note.id.toLowerCase().includes(query.toLowerCase())) continue;
     const item = document.createElement('div');
     item.className = 'tree-note' + (note.id === selectedId ? ' active' : '');
     item.dataset.id = note.id;
     item.textContent = note.id;
-    item.title = note.id;
+    item.title = note.folder ? `${note.folder}/${note.id}` : note.id;
     item.addEventListener('click', () => selectNote(note.id));
-    tree.appendChild(item);
-  });
+    container.appendChild(item);
+  }
+}
+
+function buildTree() {
+  const tree = document.getElementById('file-tree')!;
+  while (tree.firstChild) tree.removeChild(tree.firstChild);
+  const root = buildFolderTree(NOTES);
+  renderFolder(root, tree, searchQuery);
 }
 
 // ─────────────────────────────────────────
@@ -152,30 +261,56 @@ function openNote(id: string) {
         ext === 'webp'
       ) {
         const style = width ? ` style="max-width:${width}px"` : '';
-        return `<img src="/wiki-images/${filename}" alt="${filename}"${style}>`;
+        return `\n\n<img src="/wiki-images/${filename}" alt="${filename}"${style}>\n\n`;
       }
       return ''; // strip non-image embeds
     },
   );
 
-  // 2. Convert [[Note|Alias]] and [[Note]] into clickable spans
+  // 2. Convert [[Note|Alias]], [[Note]], [[#Heading]], [[Note#Heading]] into clickable spans
   processed = processed.replace(
     /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
     (_, target, alias) => {
-      const cleanTarget = target.split('#')[0].split('^')[0].trim();
-      const display = alias ? alias.trim() : cleanTarget;
+      const rawTarget = target.trim();
+      const hashIdx = rawTarget.indexOf('#');
+      const notePart =
+        hashIdx === -1 ? rawTarget : rawTarget.slice(0, hashIdx).trim();
+      const headingPart =
+        hashIdx === -1
+          ? ''
+          : rawTarget
+              .slice(hashIdx + 1)
+              .split('^')[0]
+              .trim();
+      const cleanTarget = notePart.split('^')[0].trim();
+      const display = alias
+        ? alias.trim()
+        : headingPart && !cleanTarget
+          ? headingPart
+          : rawTarget;
+
+      // Same-note heading reference: [[#Heading]]
+      if (!cleanTarget && headingPart) {
+        const slug = slugifyHeading(headingPart);
+        return `<a class="wiki-link heading-link" data-heading="${slug}" title="Jump to: ${headingPart}">${display}</a>`;
+      }
+
       const exists = noteIds.has(cleanTarget);
       const cls = exists ? 'wiki-link' : 'wiki-link unresolved';
-      const dataAttr = exists ? `data-note-id="${cleanTarget}"` : '';
+      const dataAttrs = exists
+        ? `data-note-id="${cleanTarget}"${headingPart ? ` data-heading="${slugifyHeading(headingPart)}"` : ''}`
+        : '';
       const title = exists
-        ? `Go to: ${cleanTarget}`
+        ? `Go to: ${cleanTarget}${headingPart ? ' § ' + headingPart : ''}`
         : `Note not found: ${cleanTarget}`;
-      return `<a class="${cls}" ${dataAttr} title="${title}">${display}</a>`;
+      return `<a class="${cls}" ${dataAttrs} title="${title}">${display}</a>`;
     },
   );
 
   document.getElementById('note-title')!.textContent = note.id;
   let html = marked.parse(processed) as string;
+
+  html = addHeadingIds(html);
 
   // Render math with KaTeX (skip content inside <code>/<pre> tags)
   html = renderMath(html);
@@ -185,14 +320,64 @@ function openNote(id: string) {
 }
 
 // ── Wiki-link click handler (event delegation on note body) ──
+function scrollToHeading(slug: string) {
+  const body = document.getElementById('note-body')!;
+  const h = body.querySelector(
+    `[id="${CSS.escape(slug)}"]`,
+  ) as HTMLElement | null;
+  if (!h) return;
+  const container = document.querySelector(
+    '.right-panel-content',
+  ) as HTMLElement | null;
+  if (!container) return;
+  const top =
+    h.getBoundingClientRect().top -
+    container.getBoundingClientRect().top +
+    container.scrollTop;
+  container.scrollTo({ top, behavior: 'smooth' });
+  highlightSection(h);
+}
+
+function highlightSection(heading: HTMLElement) {
+  const level = parseInt(heading.tagName.slice(1), 10);
+  const section: HTMLElement[] = [heading];
+  let el = heading.nextElementSibling as HTMLElement | null;
+  while (el) {
+    const m = el.tagName.match(/^H([1-6])$/);
+    if (m && parseInt(m[1], 10) <= level) break;
+    section.push(el);
+    el = el.nextElementSibling as HTMLElement | null;
+  }
+  for (const node of section) node.classList.add('section-highlight');
+  window.setTimeout(() => {
+    for (const node of section) node.classList.remove('section-highlight');
+  }, 1600);
+}
+
 document.getElementById('note-body')!.addEventListener('click', (e) => {
   const link = (e.target as HTMLElement).closest('.wiki-link:not(.unresolved)');
   if (!link) return;
   e.preventDefault();
-  const targetId = (link as HTMLElement).dataset.noteId;
+  const el = link as HTMLElement;
+  const targetId = el.dataset.noteId;
+  const heading = el.dataset.heading;
+
+  if (!targetId && heading) {
+    scrollToHeading(heading);
+    return;
+  }
   if (!targetId) return;
+
+  if (targetId === selectedId && heading) {
+    scrollToHeading(heading);
+    return;
+  }
   selectNote(targetId);
   pulseNode(targetId);
+  if (heading) {
+    // Wait for markdown render, then scroll to heading.
+    requestAnimationFrame(() => scrollToHeading(heading));
+  }
 });
 
 function closeNote() {
