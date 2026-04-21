@@ -13,15 +13,27 @@ interface WikiNote {
 
 let notes: WikiNote[] = [];
 
+function walkMarkdown(root: string, dir: string, collected: WikiNote[]) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkMarkdown(root, full, collected);
+    } else if (entry.isFile() && entry.name.endsWith('.md')) {
+      const rel = path.relative(root, full);
+      const folder = path.dirname(rel).split(path.sep).join('/');
+      collected.push({
+        id: entry.name.replace(/\.md$/, ''),
+        folder: folder === '.' ? '' : folder,
+        content: fs.readFileSync(full, 'utf-8'),
+      });
+    }
+  }
+}
+
 try {
   const publicDir = path.resolve('obs_notes/public');
   if (fs.existsSync(publicDir)) {
-    const files = fs.readdirSync(publicDir).filter((f) => f.endsWith('.md'));
-    notes = files.map((f) => ({
-      id: f.replace(/\.md$/, ''),
-      folder: 'public',
-      content: fs.readFileSync(path.join(publicDir, f), 'utf-8'),
-    }));
+    walkMarkdown(publicDir, publicDir, notes);
   }
 } catch {
   // Graceful degradation — page renders with empty state
@@ -36,6 +48,16 @@ const notesJson = JSON.stringify(notes);
     href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
     slot="head"
   />
+  <style is:global>
+    html,
+    body {
+      overflow: hidden;
+      height: 100%;
+    }
+    body > footer {
+      display: none;
+    }
+  </style>
   {
     notes.length === 0 ? (
       <div class="wiki-empty">

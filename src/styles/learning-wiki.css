@@ -115,6 +115,7 @@
 
 .tree-children {
   display: block;
+  padding-left: 0.75rem;
 }
 .tree-children.collapsed {
   display: none;
@@ -361,6 +362,23 @@
   color: var(--secondary-color);
   border-bottom-color: var(--secondary-color);
   cursor: default;
+}
+
+/* ── Section highlight flash (triggered when a heading link is followed) ── */
+@keyframes sectionFlash {
+  0% {
+    background-color: rgba(255, 221, 87, 0);
+  }
+  25% {
+    background-color: rgba(255, 221, 87, 0.55);
+  }
+  100% {
+    background-color: rgba(255, 221, 87, 0);
+  }
+}
+.section-highlight {
+  animation: sectionFlash 1.6s ease-out;
+  border-radius: 4px;
 }
 
 /* ── Node pulse animation ── */
