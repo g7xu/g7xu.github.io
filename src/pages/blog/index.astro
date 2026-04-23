@@ -26,7 +26,7 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))];
               date={post.data.date}
               category={post.data.category}
               coverImage={post.data.coverImage}
-              slug={post.slug}
+              slug={post.id}
               author={post.data.author}
             />
           ))
