@@ -13,7 +13,7 @@ if (
   ) {
     const originalText = pageTitle.textContent;
     pageTitle.textContent = '';
-    pageTitle.style.borderRight = '2px solid #007acc';
+    pageTitle.style.borderRight = '2px solid var(--accent)';
 
     let i = 0;
     const typeWriter = () => {

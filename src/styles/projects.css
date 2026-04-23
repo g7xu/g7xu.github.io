@@ -14,24 +14,25 @@
 
 .tag-filter {
   padding: 0.35rem 0.85rem;
-  border: 1px solid var(--border-color, #e9ecef);
+  border: 1px solid var(--border);
   border-radius: 2rem;
-  background: white;
-  color: var(--text-color, #333);
+  background: var(--bg);
+  color: var(--fg);
+  font-family: inherit;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .tag-filter:hover {
-  border-color: var(--primary-color, #007acc);
-  color: var(--primary-color, #007acc);
+  border-color: var(--fg);
+  color: var(--fg);
 }
 
 .tag-filter.active {
-  background: var(--primary-color, #007acc);
-  color: white;
-  border-color: var(--primary-color, #007acc);
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
 }
 
 /* Section layout */
@@ -42,6 +43,7 @@
 .project-section h2 {
   margin: 0;
   display: inline;
+  font-size: 1.1rem;
 }
 
 /* Accordion toggle */
@@ -55,14 +57,16 @@
   cursor: pointer;
   width: 100%;
   text-align: left;
+  color: inherit;
+  font-family: inherit;
 }
 
 .accordion-arrow {
   display: inline-block;
   width: 0.65rem;
   height: 0.65rem;
-  border-right: 2px solid var(--text-color, #333);
-  border-bottom: 2px solid var(--text-color, #333);
+  border-right: 2px solid var(--fg);
+  border-bottom: 2px solid var(--fg);
   transform: rotate(-45deg);
   transition: transform 0.3s ease;
   flex-shrink: 0;
@@ -93,11 +97,11 @@
 
 /* Card styles */
 .project-item {
-  background: white;
+  background: var(--bg);
   padding: 25px;
-  border: 1px solid var(--border-color, #e9ecef);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -108,7 +112,7 @@
 
 .project-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
 }
 
 .project-item img {
@@ -120,14 +124,15 @@
 
 .project-item h3 {
   margin: 15px 0 10px;
-  font-size: 1.3em;
-  color: var(--primary-color, #007acc);
+  font-size: 1.2rem;
+  color: var(--fg);
+  letter-spacing: -0.01em;
 }
 
 .project-item p.description {
-  font-size: 0.9em;
+  font-size: 0.9rem;
   line-height: 1.5;
-  color: var(--text-color, #333);
+  color: var(--fg-muted);
   margin: 10px 0;
   flex: 1;
 }
@@ -142,12 +147,13 @@
 .project-links a {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--primary-color, #007acc);
-  text-decoration: none;
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .project-links a:hover {
-  text-decoration: underline;
+  color: var(--link-hover);
 }
 
 /* Tag pills on cards */
@@ -162,6 +168,6 @@
   font-size: 0.75rem;
   padding: 0.2rem 0.6rem;
   border-radius: 1rem;
-  background: #f0f4f8;
-  color: #555;
+  background: var(--bg-surface);
+  color: var(--fg-muted);
 }

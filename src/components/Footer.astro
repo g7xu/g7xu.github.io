@@ -1,19 +1,12 @@
 ---
 import { author } from '../data/author';
+
+const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <div class="site-footer__inner">
-    <p class="site-footer__copy">
-      &copy; {new Date().getFullYear()}
-      {author.name}
-    </p>
-    <p class="site-footer__attribution">
-      <a href="https://www.flaticon.com/free-icons/goat" title="goat icons"
-        >Bharal icons created by Chanut-is-Industries - Flaticon</a
-      >
-    </p>
-    <nav class="site-footer__links" aria-label="Footer links">
+    <nav class="site-footer__social" aria-label="Social">
       {
         author.links.map((link) =>
           link.url.startsWith('mailto:') ? (
@@ -39,59 +32,75 @@ import { author } from '../data/author';
         )
       }
     </nav>
+    <p class="site-footer__colophon">
+      &copy; {year}
+      {author.name}. Built with
+      <a href="https://astro.build" target="_blank" rel="noopener noreferrer"
+        >Astro</a
+      > /
+      <a
+        href="https://pages.github.com"
+        target="_blank"
+        rel="noopener noreferrer">GitHub Pages</a
+      > /
+      <a
+        href="https://www.flaticon.com/free-icons/goat"
+        target="_blank"
+        rel="noopener noreferrer">Bharal icons</a
+      >.
+    </p>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--border-color, #e9ecef);
-    margin-top: 4rem;
-    padding: 2rem 1.5rem;
-    font-size: 0.875rem;
-    color: var(--secondary-color, #6c757d);
+    border-top: 1px solid var(--border);
+    margin-top: 5rem;
+    padding: 2rem 1.5rem 3rem;
   }
 
   .site-footer__inner {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 1rem;
   }
 
-  .site-footer__copy {
-    margin: 0;
-  }
-
-  .site-footer__attribution {
-    margin: 0;
-    font-size: 0.75rem;
-  }
-
-  .site-footer__attribution a {
-    color: var(--secondary-color, #6c757d);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .site-footer__attribution a:hover {
-    color: var(--primary-color, #007acc);
-  }
-
-  .site-footer__links {
+  .site-footer__social {
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    font-size: 0.95rem;
   }
 
-  .site-footer__links a {
-    color: var(--secondary-color, #6c757d);
+  .site-footer__social a {
+    color: var(--fg);
     text-decoration: none;
-    transition: color 0.2s ease;
   }
 
-  .site-footer__links a:hover {
-    color: var(--primary-color, #007acc);
+  .site-footer__social a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .site-footer__colophon {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+    opacity: 0.85;
+    line-height: 1.5;
+  }
+
+  .site-footer__colophon a {
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+
+  .site-footer__colophon a:hover {
+    color: var(--fg);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 </style>
