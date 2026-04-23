@@ -18,9 +18,9 @@
 }
 
 .beyond-tech-page blockquote {
-  border-left: 4px solid var(--primary-color, #007acc);
+  border-left: 3px solid var(--border);
   padding-left: 1rem;
   font-style: italic;
-  color: var(--secondary-color, #6c757d);
+  color: var(--fg-muted);
   margin: 1.5rem 0;
 }

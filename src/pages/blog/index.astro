@@ -17,7 +17,7 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))];
     <BlogSidebar categories={categories} activeCategory={null} />
     <div class="blog-main">
       <h1 class="blog-page__title">Blog</h1>
-      <div class="blog-grid" id="blog-grid">
+      <ul class="blog-list" id="blog-grid">
         {
           allPosts.map((post) => (
             <BlogCard
@@ -31,7 +31,7 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))];
             />
           ))
         }
-      </div>
+      </ul>
     </div>
   </div>
 </BaseLayout>
@@ -43,7 +43,7 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))];
 
   if (active) {
     const grid = document.getElementById('blog-grid');
-    grid?.querySelectorAll('.blog-card').forEach((card) => {
+    grid?.querySelectorAll('.blog-list__item').forEach((card) => {
       const cat = (card as HTMLElement).dataset.category;
       (card as HTMLElement).style.display = cat === active ? '' : 'none';
     });

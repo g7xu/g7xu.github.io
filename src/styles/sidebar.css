@@ -19,14 +19,15 @@
 .sidebar-name {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--primary-color, #007acc);
-  margin: 0 0 0.6rem;
+  color: var(--fg);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.01em;
 }
 
 .sidebar-bio {
   font-size: 0.85rem;
-  color: var(--text-color, #333);
-  line-height: 1.5;
+  color: var(--fg-muted);
+  line-height: 1.55;
   margin-bottom: 0.5rem;
 }
 
@@ -35,12 +36,11 @@
   align-items: center;
   justify-content: flex-start;
   gap: 0.3rem;
-  font-size: 0.82rem;
-  color: var(--secondary-color, #6c757d);
+  font-size: 0.8rem;
+  color: var(--fg-muted);
   margin-bottom: 1.1rem;
 }
 
-/* Links: icon + text, NO border boxes */
 .sidebar-links {
   display: flex;
   flex-direction: column;
@@ -57,14 +57,12 @@
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 500;
-  color: var(--secondary-color, #6c757d);
+  color: var(--fg-muted);
   padding: 0.2rem 0;
-  border-bottom: none;
-  transition: color 0.2s ease;
 }
 
 .sidebar-link:hover {
-  color: var(--primary-color, #007acc);
+  color: var(--fg);
 }
 
 .sidebar-link__icon {
