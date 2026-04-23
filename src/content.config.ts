@@ -11,10 +11,10 @@ const blog = defineCollection({
     coverImage: z.string().optional(),
     author: z
       .object({
-        name: z.string().default('Jason Xu'),
-        avatar: z.string().default('/images/bio-photo.png'),
+        name: z.string(),
+        avatar: z.string(),
       })
-      .default({}),
+      .default({ name: 'Jason Xu', avatar: '/images/bio-photo.png' }),
     draft: z.boolean().default(false),
   }),
 });
