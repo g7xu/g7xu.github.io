@@ -6,40 +6,60 @@ import SidebarLayout from '../layouts/SidebarLayout.astro';
   title="Home"
   description="Personal website of Guoxuan Xu, Data Science student at UC San Diego."
 >
-  <section class="home-section">
-    <h2 class="section-heading">About</h2>
-    <div class="bio-content">
-      <p>
-        I aspire to become a full-stack developer. I'm passionate about building
-        production systems across AI, data engineering, and web development.
-        I've built data pipelines that processed millions of IP records,
-        deployed AI automation infrastructure on the cloud, shipped MCP proxy
-        systems enabling enterprise AI integrations, and developed full-stack
-        admin portals with RBAC and secure user management.
-      </p>
-
-      <p>
-        Currently, I'm sharpening my engineering skills by building a stock
-        trading platform using microservices architecture, along with
-        Kafka-based event-driven messaging and MySQL design with Redis caching.
-      </p>
-
-      <p>
-        In an era where building apps has never been more accessible, I care
-        about making what I build scalable, reproducible, and useful. That's
-        what differentiates an outstanding engineer from an average one.
-      </p>
-    </div>
+  <section class="home-hero">
+    <p class="home-hero__lead">
+      Hi, I am Jason. I care about writing good code, building meaningful
+      products, and speaking with users who are impacted by my code and use my
+      products.
+    </p>
+    <p class="home-hero__body">
+      This is a place where I share my projects, my learning, and my feelings —
+      keeping track of my growth. I will be interning at Samsung in the summer
+      of 2026 in Plano Texas, and studying Master of Computer Science at
+      Stanford starting Sep 2026 in Palo Alto. Love to chat or meet up for
+      career, startup ideas, projects, or <strong>FOOD!!</strong>
+    </p>
   </section>
 </SidebarLayout>
 
 <style>
-  .home-section {
-    margin-bottom: 2.75rem;
+  .home-hero {
+    padding-top: 3rem;
   }
 
-  .bio-content p {
-    margin: 0 0 1.1rem;
-    line-height: 1.65;
+  .home-hero__lead {
+    max-width: 40rem;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 0;
+  }
+
+  .home-hero__body {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--fg);
+    margin: 1.5rem 0 0;
+  }
+
+  .home-hero__body strong {
+    font-weight: 700;
+  }
+
+  /* Wide viewports: bump hero size. Supporting keeps the same left-edge
+     position as before (≈ 33% of the old 36rem container = 12rem) but is
+     now free to extend wider than the hero's right edge. */
+  @media (min-width: 900px) {
+    .home-hero__lead {
+      font-size: 2.5rem;
+    }
+
+    .home-hero__body {
+      margin-top: 3rem;
+      margin-left: 12rem;
+      max-width: 38rem;
+    }
   }
 </style>

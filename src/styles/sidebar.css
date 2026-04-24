@@ -16,19 +16,19 @@
   margin-bottom: 1rem;
 }
 
-.sidebar-name {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--fg);
-  margin: 0 0 0.5rem;
-  letter-spacing: -0.01em;
-}
-
 .sidebar-bio {
   font-size: 0.85rem;
+  font-style: italic;
   color: var(--fg-muted);
   line-height: 1.55;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-bio-attribution {
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  opacity: 0.85;
+  margin: 0 0 0.75rem;
 }
 
 .sidebar-location {
