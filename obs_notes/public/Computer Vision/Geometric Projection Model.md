@@ -3,8 +3,8 @@ The real world is 3D, but photos are 2D. Every time we capture an image, 3D got 
 ![[pinhole_camera_model.svg]]
 # Projection Formula
 $$(x, y, z) \rightarrow \left(-d\frac{x}{z},\ -d\frac{y}{z}\right)$$
-where
-- $(x,y)$ is coordinates
+where ^1b2ea1
+- $(x,y)$ is coordinates ^0d2ac1
 - $d$ is focal length
 - $z$ is how far the object is from the pinhole
 # Optimizing Projection Formula
