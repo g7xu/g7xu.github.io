@@ -496,3 +496,81 @@
     padding: 0.5rem;
   }
 }
+
+/* ── Obsidian-style callouts ── */
+.md-body .callout {
+  border-left: 4px solid var(--callout-accent, var(--primary-color));
+  background: var(--callout-bg, var(--light-bg));
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  font-style: normal;
+}
+.md-body .callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--callout-accent);
+  margin-bottom: 0.5rem;
+}
+.md-body .callout-title svg {
+  width: 1.1em;
+  height: 1.1em;
+  flex-shrink: 0;
+}
+.md-body .callout-body > *:first-child {
+  margin-top: 0;
+}
+.md-body .callout-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.md-body .callout-note {
+  --callout-accent: #3b82f6;
+  --callout-bg: #eff6ff;
+}
+.md-body .callout-info {
+  --callout-accent: #06b6d4;
+  --callout-bg: #ecfeff;
+}
+.md-body .callout-tip {
+  --callout-accent: #14b8a6;
+  --callout-bg: #f0fdfa;
+}
+.md-body .callout-question {
+  --callout-accent: #e9973f;
+  --callout-bg: #fff7ed;
+}
+.md-body .callout-warning {
+  --callout-accent: #eab308;
+  --callout-bg: #fefce8;
+}
+.md-body .callout-danger {
+  --callout-accent: #ef4444;
+  --callout-bg: #fef2f2;
+}
+.md-body .callout-failure {
+  --callout-accent: #dc2626;
+  --callout-bg: #fef2f2;
+}
+.md-body .callout-bug {
+  --callout-accent: #e11d48;
+  --callout-bg: #fff1f2;
+}
+.md-body .callout-example {
+  --callout-accent: #a855f7;
+  --callout-bg: #faf5ff;
+}
+.md-body .callout-quote {
+  --callout-accent: #64748b;
+  --callout-bg: #f8fafc;
+}
+.md-body .callout-success {
+  --callout-accent: #22c55e;
+  --callout-bg: #f0fdf4;
+}
+.md-body .callout-abstract {
+  --callout-accent: #0ea5e9;
+  --callout-bg: #f0f9ff;
+}

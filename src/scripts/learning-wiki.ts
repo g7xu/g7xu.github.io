@@ -1,8 +1,10 @@
 import * as d3 from 'd3';
 import { marked } from 'marked';
 import katex from 'katex';
+import { calloutExtension } from './wiki-callouts';
 
 marked.setOptions({ breaks: true });
+marked.use({ extensions: [calloutExtension] });
 
 function slugifyHeading(text: string): string {
   return text
