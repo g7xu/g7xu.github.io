@@ -198,41 +198,63 @@ function buildTree() {
 // ─────────────────────────────────────────
 // MATH RENDERING
 // ─────────────────────────────────────────
-function renderMath(html: string): string {
-  const parts = html.split(/(<code[\s\S]*?<\/code>|<pre[\s\S]*?<\/pre>)/gi);
-  return parts
-    .map((part) => {
-      if (/^<code|^<pre/i.test(part)) return part;
+// Math must be extracted BEFORE marked runs. Otherwise marked HTML-escapes `&`
+// to `&amp;` (breaking matrix column separators) and processes CommonMark
+// backslash escapes (`\\` → `\`, which kills matrix row breaks). Private-use
+// Unicode chars mark the slots since they never appear in source text and
+// marked passes them through unchanged.
+interface ExtractedMath {
+  display: boolean;
+  tex: string;
+}
 
-      // Display math first: $$...$$
-      part = part.replace(/\$\$([\s\S]+?)\$\$/g, (_, tex: string) => {
-        try {
-          return katex.renderToString(tex.trim(), {
-            displayMode: true,
-            throwOnError: false,
-          });
-        } catch {
-          return `<span class="math-error">${tex}</span>`;
-        }
+const MATH_OPEN = '';
+const MATH_CLOSE = '';
+const MATH_SLOT_RE = /M(\d+)/g;
+
+function extractMath(src: string): { text: string; blocks: ExtractedMath[] } {
+  const blocks: ExtractedMath[] = [];
+  const codeBlocks: string[] = [];
+
+  // Protect fenced and inline code so math-like `$..$` inside code stays literal.
+  let text = src.replace(/```[\s\S]*?```|`[^`\n]+`/g, (m) => {
+    codeBlocks.push(m);
+    return `${MATH_OPEN}C${codeBlocks.length - 1}${MATH_CLOSE}`;
+  });
+
+  // Display math: $$...$$
+  text = text.replace(/\$\$([\s\S]+?)\$\$/g, (_, tex: string) => {
+    blocks.push({ display: true, tex: tex.trim() });
+    return `${MATH_OPEN}M${blocks.length - 1}${MATH_CLOSE}`;
+  });
+
+  // Inline math: $...$  (not adjacent to another $; no newlines inside)
+  text = text.replace(
+    /(?<!\$)\$(?!\$)([^\n$]+?)(?<!\$)\$(?!\$)/g,
+    (_, tex: string) => {
+      blocks.push({ display: false, tex: tex.trim() });
+      return `${MATH_OPEN}M${blocks.length - 1}${MATH_CLOSE}`;
+    },
+  );
+
+  // Restore code untouched.
+  text = text.replace(/C(\d+)/g, (_, i: string) => codeBlocks[Number(i)]);
+
+  return { text, blocks };
+}
+
+function restoreMath(html: string, blocks: ExtractedMath[]): string {
+  return html.replace(MATH_SLOT_RE, (_, i: string) => {
+    const { display, tex } = blocks[Number(i)];
+    try {
+      return katex.renderToString(tex, {
+        displayMode: display,
+        throwOnError: false,
       });
-
-      // Inline math: $...$  (not preceded/followed by $)
-      part = part.replace(
-        /(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)/g,
-        (_, tex: string) => {
-          try {
-            return katex.renderToString(tex.trim(), {
-              displayMode: false,
-              throwOnError: false,
-            });
-          } catch {
-            return `<span class="math-error">${tex}</span>`;
-          }
-        },
-      );
-      return part;
-    })
-    .join('');
+    } catch {
+      return `<span class="math-error">${tex}</span>`;
+    }
+  });
 }
 
 // ─────────────────────────────────────────
@@ -308,12 +330,15 @@ function openNote(id: string) {
   );
 
   document.getElementById('note-title')!.textContent = note.id;
-  let html = marked.parse(processed) as string;
 
+  // 3. Extract math BEFORE marked runs, so `&` and `\\` inside $$...$$ survive
+  //    HTML-escaping and CommonMark backslash-escape handling.
+  const { text: markdownWithMathSlots, blocks: mathBlocks } =
+    extractMath(processed);
+
+  let html = marked.parse(markdownWithMathSlots) as string;
   html = addHeadingIds(html);
-
-  // Render math with KaTeX (skip content inside <code>/<pre> tags)
-  html = renderMath(html);
+  html = restoreMath(html, mathBlocks);
 
   document.getElementById('note-body')!.innerHTML = html;
   document.getElementById('right-panel')!.classList.add('open');
