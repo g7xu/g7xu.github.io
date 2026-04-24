@@ -6,32 +6,6 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="site-footer__inner">
-    <nav class="site-footer__social" aria-label="Social">
-      {
-        author.links.map((link) =>
-          link.url.startsWith('mailto:') ? (
-            <a
-              href="#"
-              class="copy-email"
-              data-email={link.url.replace('mailto:', '')}
-              role="button"
-            >
-              {link.label}
-            </a>
-          ) : (
-            <a
-              href={link.url}
-              target={link.url.startsWith('http') ? '_blank' : '_self'}
-              rel={
-                link.url.startsWith('http') ? 'noopener noreferrer' : undefined
-              }
-            >
-              {link.label}
-            </a>
-          ),
-        )
-      }
-    </nav>
     <p class="site-footer__colophon">
       &copy; {year}
       {author.name}. Built with
@@ -65,24 +39,6 @@ const year = new Date().getFullYear();
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
-
-  .site-footer__social {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    font-size: 0.95rem;
-  }
-
-  .site-footer__social a {
-    color: var(--fg);
-    text-decoration: none;
-  }
-
-  .site-footer__social a:hover {
-    color: var(--link-hover);
-    text-decoration: underline;
-    text-underline-offset: 2px;
   }
 
   .site-footer__colophon {
