@@ -43,7 +43,7 @@
 TODO...
 
 # Kernel Methods
-**Core mechanism** -- mapping data to higher-dimensional space via [[kernel function]], creating non-linear decision boundary which makes different classes linearly separable, then find the maximum-margin boundary between them
+**Core mechanism** -- mapping data to higher-dimensional space via [[kernel function (TODO)]], creating non-linear decision boundary which makes different classes linearly separable, then find the maximum-margin boundary between them
 ## Key Assumptions
 - valid kernel exist for the problem
 - sensitive to feature scaling (TODO, need more explanation on this part)

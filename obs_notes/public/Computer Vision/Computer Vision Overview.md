@@ -1,10 +1,14 @@
-# The formation of images
+
+
+# Creating Image
+The process of creating data. The actual world is being transformed into digital numbers
+## The formation of images
 ![[three_components_image_capture.svg|697]]
 the capturing of images require 3 critical components:
 - Light emitted from **Source A**
 - Light reflected off from **Source B** to **Camera**
 - Light recorded by the **sensors** in **Camera**
-## The Full Pipeline
+## The Full Image extraction pipeline
 3D World
 ↓
 [[Camera Projection Pipeline]]
@@ -12,10 +16,8 @@ the capturing of images require 3 critical components:
 2D Images
 ↓
 [[Lambertian Photometric Model|Photometric Stereo]] (digital 3D modeling)
-
-
-
-
+# Analyzing image
+[[Feature Detection]]: detecting feature from image
 
 
 

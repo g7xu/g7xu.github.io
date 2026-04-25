@@ -16,7 +16,7 @@ A mental model, I personal has when doing a problem solving (classic coding) int
 - [ ] the expected time and space complexity
 - [ ] walk through the problem with a few test cases
 # Problem planning
-- [ ] using pseudo code and general terms (reference to [[Algorithm CheatSheet|here]])
+- [ ] using pseudo code and general terms (reference to [[Algorithm CheatSheet (TODO)|here]])
 - [ ] discussing the corresponding time complexity and space complexity
 - [ ] discussing the edge case
 	- [ ] empty input
