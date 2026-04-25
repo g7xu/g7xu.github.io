@@ -574,3 +574,22 @@
   --callout-accent: #0ea5e9;
   --callout-bg: #f0f9ff;
 }
+
+/* ── Multi-Column Markdown (Obsidian plugin) ── */
+.md-body .multi-column {
+  display: grid;
+  gap: 1.25rem;
+  margin: 1rem 0;
+  align-items: start;
+}
+.md-body .multi-column-col > *:first-child {
+  margin-top: 0;
+}
+.md-body .multi-column-col > *:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 768px) {
+  .md-body .multi-column {
+    grid-template-columns: 1fr !important;
+  }
+}

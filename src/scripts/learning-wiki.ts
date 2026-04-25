@@ -2,9 +2,13 @@ import * as d3 from 'd3';
 import { marked } from 'marked';
 import katex from 'katex';
 import { calloutExtension } from './wiki-callouts';
+import {
+  multiColumnExtension,
+  padMultiColumnMarkers,
+} from './wiki-multi-column';
 
 marked.setOptions({ breaks: true });
-marked.use({ extensions: [calloutExtension] });
+marked.use({ extensions: [calloutExtension, multiColumnExtension] });
 
 function slugifyHeading(text: string): string {
   return text
@@ -333,7 +337,11 @@ function openNote(id: string) {
 
   document.getElementById('note-title')!.textContent = note.id;
 
-  // 3. Extract math BEFORE marked runs, so `&` and `\\` inside $$...$$ survive
+  // 3. Pad multi-column markers with blank lines so marked treats them as
+  //    standalone blocks (otherwise paragraph continuation absorbs them).
+  processed = padMultiColumnMarkers(processed);
+
+  // 4. Extract math BEFORE marked runs, so `&` and `\\` inside $$...$$ survive
   //    HTML-escaping and CommonMark backslash-escape handling.
   const { text: markdownWithMathSlots, blocks: mathBlocks } =
     extractMath(processed);
