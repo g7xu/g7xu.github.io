@@ -18,7 +18,7 @@ the capturing of images require 3 critical components:
 [[Lambertian Photometric Model|Photometric Stereo]] (digital 3D modeling)
 # Analyzing image
 [[Feature Detection]]: detecting feature from image
-
+[[Feature Matching]]: combining different images together
 
 
 
