@@ -19,7 +19,7 @@ the capturing of images require 3 critical components:
 # Analyzing image
 [[Feature Detection]]: detecting feature from image
 [[Feature Matching]]: combining different images together
-
+[[Two-View Reconstruction]]: creating 3D model of the entire scene 
 
 
 
