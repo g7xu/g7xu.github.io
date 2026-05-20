@@ -119,13 +119,6 @@ The study of image formation
 
 
 
-# CSE 152A — Image Formation & Photometry
-
-**Course**: CSE 152A, SP26  
-**Instructor**: Manmohan Chandraker  
-**Topic**: Photometry & Geometry of Image Formation
-
----
 
 ## 🗂️ Overview
 

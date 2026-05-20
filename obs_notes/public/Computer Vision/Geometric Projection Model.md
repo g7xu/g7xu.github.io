@@ -24,3 +24,9 @@ At the end of everything, we may divide by the last coordinate:
 $$\begin{bmatrix} -dx \\ -dy \\ z \end{bmatrix} \rightarrow \left(-d\frac{x}{z},\ -d\frac{y}{z}\right)$$
 ### Main Reason
 All the transformations can now be chained into one single matrix and applied to every point in one shot. The division by z is deferred to the very end -- keeping the entire pipeline as clean matrix multiplications.
+# Factor that impacts how pixel get its value
+- illumination strength and direction
+- surface geometry
+- surface material
+- nearby surfaces
+- camera parameters

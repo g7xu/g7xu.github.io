@@ -1,4 +1,4 @@
-Model we use to convert an image to 3D Model
+Model we use to convert images to 3D Model of objects
 ## Motivation
 
 > [!question] Why not inferencing 3D from one image?
