@@ -7,7 +7,7 @@ coverImage: '/images/blog-covers/letter-to-myself-cover.jpg'
 author:
   name: 'Jason Xu'
   avatar: '/images/bio-photo.png'
-draft: false
+draft: true
 ---
 
 To Myself,
