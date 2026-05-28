@@ -1,1 +1,7 @@
+# Load nvm if npx isn't on PATH (e.g. when committing from GUI clients like GitHub Desktop)
+if ! command -v npx >/dev/null 2>&1; then
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+fi
+
 npx lint-staged
