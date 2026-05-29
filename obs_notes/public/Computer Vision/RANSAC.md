@@ -1,4 +1,4 @@
-# RANSAC (Robust Model Fitting)
+**(Robust Model Fitting)**
 
 **Summary**: RANSAC (RANdom SAmple Consensus) fits a model to data that contains outliers by repeatedly fitting to minimal random samples and keeping the model with the most inliers. In computer vision it is the standard way to estimate the fundamental matrix from noisy feature matches.
 

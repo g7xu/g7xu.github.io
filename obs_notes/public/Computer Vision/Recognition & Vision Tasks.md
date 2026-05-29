@@ -64,10 +64,12 @@ Recognition hit an inflection point around **2012**, when three things came toge
 ImageNet top error rates fell from ~25% (2011) to below the **human level (~5%)** by 2015.
 
 ## What's next
-The course will look at **discriminative vs. generative** methods, then families of recognition methods — **retrieval**, **classification**, and **deep learning / neural networks**.
+The course looks at [[Discriminative vs Generative Methods|discriminative vs. generative]] methods, then families of recognition methods — **retrieval** (see [[Image Retrieval (Bag of Words)]]), **classification**, and **deep learning / neural networks**.
 
 ## Related pages
 - [[Computer Vision Overview]]
+- [[Discriminative vs Generative Methods]]
+- [[Image Retrieval (Bag of Words)]]
 - [[Feature Detection]]
 - [[Two-View Reconstruction]]
 - [[RANSAC]]

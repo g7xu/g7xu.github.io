@@ -21,6 +21,8 @@
 - [[Two-View Reconstruction]] — recovering 3D structure from two images via epipolar geometry
 - [[RANSAC]] — robust model fitting: estimating the fundamental matrix despite outlier matches
 - [[Recognition & Vision Tasks]] — recognition as classification, task taxonomy, and the data-driven shift
+- [[Discriminative vs Generative Methods]] — modeling the posterior vs. the likelihood/joint; the three pillars (representation, learning, inference)
+- [[Image Retrieval (Bag of Words)]] — instance recognition via the bag-of-features pipeline
 
 ## Machine Learning
 

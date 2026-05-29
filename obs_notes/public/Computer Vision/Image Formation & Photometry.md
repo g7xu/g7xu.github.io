@@ -1,5 +1,3 @@
-# Image Formation & Photometry
-
 **Summary**: How a real camera turns a 3D scene into pixel values — camera design (pinhole → lens → digital sensor), what determines a pixel's brightness, reflection models and the BRDF, and color sensing.
 
 **Sources**: CSE 152A (SP26, Manmohan Chandraker) — Photometry & Geometry of Image Formation.

@@ -1,5 +1,3 @@
-# Computer Vision Overview
-
 **Summary**: Entry point for the computer-vision notes. Vision works *backwards* from pixel values to the 3D scene that produced them, splitting into image **formation** (how pixels get their values) and image **analysis** (extracting meaning from them).
 
 **Last updated**: 2026-05-29
