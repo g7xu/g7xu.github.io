@@ -5,7 +5,7 @@ Java distinguishes between checked exceptions (foreseeable environmental failure
 We need a systematic approach to handle these exceptions at the right layer, log them with enough context to trace root causes, and return consistent, meaningful responses to users -- never exposing raw stack traces or whitelabel error pages.
 
 # Exception Occurrence by Service Layer
-In [[MVC]] framework with different Service Layer(Repo, Service, Controller), we want to make sure we are clear with two questions: what can go wrong? best practice to handle them
+In [[JSP (Jakarta Server Pages)#MVC|MVC]] framework with different Service Layer(Repo, Service, Controller), we want to make sure we are clear with two questions: what can go wrong? best practice to handle them
 ## Repository Layer
 The Repository is responsible for interacting with database. Any Exception around database, such as connection failures, query errors, timeouts, constrain violations.
 

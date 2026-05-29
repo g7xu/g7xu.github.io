@@ -22,6 +22,60 @@ the capturing of images require 3 critical components:
 [[Two-View Reconstruction]]: creating 3D model of the entire scene 
 
 
+estimation
+- type of things consider noise
+- type of things consider outlines (hard decision whether you allow certain decision to be made)
+
+RANSAC: Counting Incliners 
+- Randomly choose s samples
+- Fit a model to those samples
+- Count the number of inliers that approximately fit the model
+- Repeat N times
+- Choose the model with the largest set of inliers
+
+robustness
+
+
+- F fundemental matrix is the model we use to identify the motion
+- need at least 8 points to resolve the problem (we do have outliers)
+- We kee fiting or drawing the model and check how manyt incliners are there
+
+For N times
+- Pick 8 pairs of correspondence
+- Estimate an F using these 8 correspondences
+- Count number of inliers with x_1Fx close to 0
+Pick the F with the largest number of inliers
+
+Mathematically it shows that you can achieve good result with very very few numbers of draws
+- there is no guarantee, 1% of wrong, you can draw certain amount
+- 
+
+Probability of correctness 
+
+
+Recognition: Classification Problem (choose one class from a list of possible candidates)
+- What is it?
+- Who is it?
+- Where is it?
+- What are they doing?
+
+Verification: Yes/No
+Detection: find the object from the image
+Identification: being from similar object
+Categorization: label different region
+Scene/Context: env
+Activity: movement
+
+Image variation:  same obj but different viewpoint, lighting, Occlusion, Deformation
+Inter-class variation: different categories but similar structure
+Intra-class variation: same category but has a lot of variant
+
+
+Make this possible -- Big dataset, ML, computing power
+
+
+
+
 
 
 

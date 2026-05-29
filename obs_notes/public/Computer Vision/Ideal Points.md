@@ -1,5 +1,5 @@
 Normally, parallel lines never meet. But when a camera 
-captures the world, parallel lines appear to converge toward a single 
+captures the world (see [[Geometric Projection Model]]), parallel lines appear to converge toward a single 
 point on the horizon. We call these points vanishing points or ideal points **How do we represent and handle this mathematically?**
 # Mathematical Definition
 In homogeneous coordinates, an ideal point is any point where the 

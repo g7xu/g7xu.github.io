@@ -13,6 +13,7 @@ We want to apply many transformations to millions of pixels as efficiently as po
 ### Homogenenous coordinates
 - adding an extra coordinate at the end, so going from $(x, y) \Rightarrow \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}$ and $(x, y, z) \Rightarrow \begin{bmatrix} x \\ y \\ z \\ 1 \end{bmatrix}$
 - at the end, converting back from $\begin{bmatrix} x \\ y \\ w \end{bmatrix} \Rightarrow (x/w,\ y/w)$ and $\begin{bmatrix} x \\ y \\ z \\ w \end{bmatrix} \Rightarrow (x/w,\ y/w,\ z/w)$
+- when the last coordinate $w = 0$, this conversion divides by zero — the point is at infinity. See [[Ideal Points]].
 ### Applying the trick
 We write the 3D point in homogeneous form:
 $$
