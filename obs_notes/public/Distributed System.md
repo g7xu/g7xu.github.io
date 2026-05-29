@@ -56,7 +56,7 @@ Question to ask
 It is extremely important to implement **Logging**, **Monitoring**, and **Tracing** because we want the ability to monitor and understand the internal state of a system from the outside based on the data it generates
 ### Real-world tools
 - Logging: ELK Stack
-- Metrics Monitoring: Kubesphere
+- Metrics Monitoring: Prometheus + Grafana
 - Tracing and Service Monitoring: Kiali
 
 [https://medium.com/@jyoti1308/designing-proximity-service-yelp-7472e1f20cee](https://medium.com/@jyoti1308/designing-proximity-service-yelp-7472e1f20cee)

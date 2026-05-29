@@ -6,7 +6,7 @@ Given two photographs of the same scene from different angles, can we recover a 
 
 # Fundamental Concept
 ## Depth from disparity
-$$Z_0 = \frac{d \cdot f}{x_L - x_R}$$
+$$Z_0 = \frac{b \cdot f}{x_L - x_R}$$
 Where,
 * $Z_0$ is depth: distance from the cameras to the 3D point. What you compute. Real-world units.
 * $b$ is baseline: horizontal distance between the two camera centers. Known. Real-world units.
@@ -49,8 +49,8 @@ the Essential matrix E has 5 DOF because $3 + 3 -1$
 - 3 Rotation: the camera orientation
 - 3 Translation: the direction of the placement of the camera
 - -1 scale ambiguity: we can't recover the unit
-# Find $[R|t]$ under calibrated cameras
-We need to account for camera's instinct parameters, so
+# Find $[R|t]$ under uncalibrated cameras
+We need to account for camera's intrinsic parameters, so
 - $p' = K_1p$ 
 - $q' = K_2q$
 
@@ -64,7 +64,11 @@ Where $F$ is called the fundamental matrix and $\mathbf{F} = \mathbf{K}_2^{-\top
 $$
 row_i = [x_2x_1, x_2y_1, x_2, y_2x_1, y_2y_1, y_2, x_1, y_1, 1]
 $$
-- And we we solve this above equation using Singular value decomposition
+- In practice we don't solve $\mathbf{A}\mathbf{f} = \mathbf{0}$ exactly; we seek the $\mathbf{f}$ that **minimizes** $\|\mathbf{A}\mathbf{f}\|$ via SVD (the singular vector for the smallest singular value)
+- The raw solution is generally full rank, so we **impose** $\text{rank}(\mathbf{F}) = 2$ by taking its SVD and **zeroing the smallest singular value**
+- We use $n \ge 8$ (rather than the minimal 7) precisely so the problem stays **linear**: dropping the rank constraint during the solve costs one extra correspondence but avoids a nonlinear ($\det\mathbf F = 0$, cubic) solve — much faster, which matters inside RANSAC's inner loop
+
+Because real correspondences contain outliers, this estimation is run inside [[RANSAC]] — repeatedly fitting F from random 8-point samples and keeping the one with the most inliers.
 
 ### DOF and rank of F
 the Fundamental matrix F has 7 DOF because $9 - 1 - 1$

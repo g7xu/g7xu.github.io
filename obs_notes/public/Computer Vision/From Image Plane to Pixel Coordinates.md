@@ -10,11 +10,11 @@ where:
 In general:
 $$K = \begin{bmatrix} -d_x' & s & c_x' \\ 0 & -d_y' & c_y' \\ 0 & 0 & 1 \end{bmatrix}$$
 Where:
-- $\alpha = d_x / d_y$ — **aspect ratio**: are the pixels square? 
-  (1 unless pixels are not square)
+- $d_x'$, $d_y'$ — **focal length in pixel units** along the x and y axes. Their ratio $\alpha = d_x'/d_y'$ is the **aspect ratio**: are the pixels square? 
+  (equal unless pixels are not square)
 - $s$ — **skew**: are the pixels rectangular? 
   (0 unless pixels are shaped like rhombuses)
-- $(c_x, c_y)$ — **principal point**: where is the center of the image? 
+- $(c_x', c_y')$ — **principal point**: where is the center of the image? 
   (origin unless optical axis does not intersect image plane at center)
 ---
 K is called **intrinsic** because these are fixed properties of the 

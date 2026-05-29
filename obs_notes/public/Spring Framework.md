@@ -147,14 +147,14 @@ Define how Bean instances are created and their visibility scope
 - Singleton: a single bean definition to a single object instance for each Spring IoC container
 - Prototype: Scopes a single bean definition to any number of object instances
 - Request: each HTTP request has a bean
-- Session: single bean for each HTTP request
+- Session: single bean for each HTTP session
 - Global Session: Portlet application. When runs in a Portlet container, it is built on some number of portlets 
 # Spring Lifecycle
 - @PostConstruct
 	- Marks a method to be executed after dependency injection is complete, during the initialization phase
 	- Commonly used to initialize resources or perform preprocessing logic
-- @PreDestory
-	- Marks a method to be executed before the Spring container destory the Bean
+- @PreDestroy
+	- Marks a method to be executed before the Spring container destroys the Bean
 	- Commonly used to release resources or perform cleanup logic
 # Spring Boot
 Another layer of simplicity

@@ -1,4 +1,4 @@
-The real world is 3D, but photos are 2D. Every time we capture an image, 3D got "collapses" into one dimension. The Geometric Projection model explain exactly how the collapse happens
+The real world is 3D, but photos are 2D. Every time we capture an image, the 3D world "collapses" from three dimensions down to two — losing one dimension (depth). The Geometric Projection model explains exactly how that collapse happens
 # How camera works
 ![[pinhole_camera_model.svg]]
 # Projection Formula

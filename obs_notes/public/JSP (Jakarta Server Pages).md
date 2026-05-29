@@ -36,7 +36,7 @@
 	- JSP Page Compilation -- The translated servlet is compiled into a servlet class
 - Initialization Phase -- The JSP servlet is initialized by calling the `jspInit()` method
 - Request Processing Phase -- The JSP servlet processes client requests by calling the `_jspService()` method
-- Cleanup Phase -- The JSP servlet is termianted by calling the jspDestory() method
+- Cleanup Phase -- The JSP servlet is terminated by calling the `jspDestroy()` method
 ## JSP Scripting Elements
 ### JSP Declaration
 - A declaration tag is a piece of Java code for declaring variables, methods, and classes

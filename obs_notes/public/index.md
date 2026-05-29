@@ -9,6 +9,7 @@
 ## Computer Vision
 
 - [[Computer Vision Overview]] — entry point for the CV notes: image formation and the path to 3D reconstruction
+- [[Image Formation & Photometry]] — how a camera turns a scene into pixels: optics, sensors, reflection models, BRDF, color
 - [[Camera Projection Pipeline]] — end-to-end mapping from a 3D world point to a 2D pixel
 - [[Geometric Projection Model]] — pinhole camera model and the projection formula
 - [[Extrinsics]] — world-to-camera coordinate transformation (rotation + translation)
@@ -18,6 +19,8 @@
 - [[Feature Detection]] — detecting corners and keypoints in images
 - [[Feature Matching]] — matching detected features across views
 - [[Two-View Reconstruction]] — recovering 3D structure from two images via epipolar geometry
+- [[RANSAC]] — robust model fitting: estimating the fundamental matrix despite outlier matches
+- [[Recognition & Vision Tasks]] — recognition as classification, task taxonomy, and the data-driven shift
 
 ## Machine Learning
 
@@ -39,7 +42,7 @@
 - [[JSP (Jakarta Server Pages)]] — MVC and server-side rendering with JSP
 - [[MAVEN Java Dev Op]] — standard Java application build and dependency management
 - [[Error Handling & Validation]] — exception handling across service layers
-- [[Auth 2.0]] — authentication and authorization fundamentals
+- [[OAuth 2.0]] — authorization protocol fundamentals (plus OIDC for authentication)
 - [[HTML & CSS]] — document structure and styling basics
 - [[React Programming Language]] — why React and core front-end concepts
 - [[Deployment]] — web servers, containerization, and shipping applications

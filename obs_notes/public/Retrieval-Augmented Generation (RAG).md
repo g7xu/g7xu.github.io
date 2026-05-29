@@ -1,4 +1,4 @@
-technique that lets language model ground its answers in external knowledge rather than replying on internal knowledge
+technique that lets language model ground its answers in external knowledge rather than relying on internal knowledge
 
 RAG's automated context selection mechanism making it a automatic prompt engineering
 ![[rag_pipeline.svg|631]]

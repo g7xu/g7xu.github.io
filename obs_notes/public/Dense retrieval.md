@@ -17,7 +17,7 @@ Contrastive loss over
 - in-batch negative (training multiple query at the same time, so positive document for one query can be negative for others)
 - **only aiming on getting the right relative rankings**
 
-Training goal: maximize $\mathcal{L}$ 
+Training goal: minimize the loss $\mathcal{L}$ (equivalently, maximize the log-probability of the positive pair)
 $$\mathcal{L} = -\log \frac{\exp(\textbf{sim}(q, d^+))}{\exp(\textbf{sim}(q, d^+)) + \sum_{j=1}^{n} \exp(\textbf{sim}(q, d_j^-))}$$
 
 $\exp(\textbf{sim}(q, d^+))$: the similarity score of positive label 

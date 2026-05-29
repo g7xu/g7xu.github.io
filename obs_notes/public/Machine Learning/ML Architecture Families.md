@@ -29,7 +29,7 @@
 ## Classic Algorithms
 - Decision trees
 - Random forests
-- XGBoots, LightGBM, CatBoost
+- XGBoost, LightGBM, CatBoost
 ## Common Characteristic
 - can handle non-linear relationships 
 - can handle messy and noise data
@@ -51,7 +51,7 @@ TODO...
 - Support Vector Machines (SVM)
 - Support Vector Regression (SVR)
 - Kernel Ridge Regression
-- Principal Component Analysis (PCA)
+- Kernel PCA
 ## Common Characteristic
 - effective in high-dimensional spaces
 - Memory-efficient

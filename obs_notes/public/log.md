@@ -13,3 +13,25 @@
   - Renamed `United Testing.md` → `Unit Testing.md` (typo) and updated the index entry.
   - Fixed broken `[[MVC]]` link in `Error Handling & Validation.md` → now points to `[[JSP (Jakarta Server Pages)#MVC|MVC]]`.
   - Added reciprocal links between `Ideal Points` and `Geometric Projection Model`.
+- Ran a content lint (correctness/contradictions/gaps) and applied factual fixes:
+  - `Two-View Reconstruction`: relabeled "calibrated" → "uncalibrated" cameras (fundamental-matrix case); fixed `instinct` → `intrinsic`; corrected depth-from-disparity numerator `d` → `b` (baseline).
+  - `Dense retrieval`: "maximize 𝓛" → "minimize the loss 𝓛" (the InfoNCE loss has a leading minus sign).
+  - Renamed `Auth 2.0.md` → `OAuth 2.0.md`; corrected the intro (authorization protocol, not authentication; authentication is OIDC) and updated the index entry.
+  - `ML Architecture Families`: `Principal Component Analysis (PCA)` → `Kernel PCA` (PCA is not a kernel method); `XGBoots` → `XGBoost`.
+  - `Spring Framework`: Session scope "each HTTP request" → "each HTTP session"; `@PreDestory` → `@PreDestroy`.
+  - `Distributed System`: Metrics monitoring `Kubesphere` → `Prometheus + Grafana`.
+  - `RAG`: `replying` → `relying`. `JSP`: `jspDestory` → `jspDestroy`.
+  - `Geometric Projection Model`: clarified "collapses into one dimension" → "collapses from 3D to 2D, losing one dimension".
+  - `From Image Plane to Pixel Coordinates`: aligned the K-matrix legend with the actual matrix symbols ($d_x'$, $d_y'$, $c_x'$, $c_y'$).
+- Restructured `Computer Vision Overview` (was a sprawling draft + lecture concatenation):
+  - Rewrote it as a concise hub (intro, image-formation pipeline, analysis tasks, core challenge, links).
+  - Extracted the polished "CSE 152A" lecture half into a new public page `Image Formation & Photometry` (single canonical "5 factors" list; removed the triplicated copies); added it to the index.
+  - Extracted the rough draft fragments into two new `inbox/` pages pending review: `RANSAC` (robust model fitting + fundamental-matrix estimation) and `Recognition & Vision Tasks` (task taxonomy + variation challenges).
+  - Removed the `TODO: delete/reconstruct` block and the unstructured fragments from the overview.
+  - Wired links: overview → `Image Formation & Photometry`, `RANSAC`, `Recognition & Vision Tasks`; `Two-View Reconstruction` "Solve for F" → `RANSAC`.
+- Ingested two sources added to `raw/`: `lec10_recognition.pdf` (CSE 152A Lecture 10 slides) and `en-Lecture 12 - May 7th 2026 - CSE 152A - LE [A00] (1).txt` (lecture transcript).
+  - Substantially enhanced `inbox/RANSAC.md` with sourced content: noise vs. outliers, the line-fitting intuition, the general algorithm, the fundamental-matrix application, the adaptive `N = log(1−p)/log(1−(1−ε)^s)` formula + the p=0.99 iteration table, and the 8-point-vs-7-point / degrees-of-freedom efficiency rationale. Added inline (source: …) citations.
+  - Substantially enhanced `inbox/Recognition & Vision Tasks.md`: the four recognition questions (all = classification), the task taxonomy with concrete examples, recognition in autonomous driving, the three kinds of variation (imaging/inter-class/intra-class), why ML replaces rules, and the 2012 data-driven inflection (datasets + deep learning + GPUs; ImageNet error → human level). Added inline citations.
+  - Enhanced public `Two-View Reconstruction` "Solve for F": added the SVD least-norm solve, the imposed rank(F)=2 constraint (zero the smallest singular value), and the linear-vs-nonlinear (8 vs 7 point) rationale.
+  - Both enhanced concept pages remain in `inbox/` pending review before promotion to `public/`.
+- Reviewed and promoted both pages from `inbox/` to `public/Computer Vision/`: `RANSAC.md` and `Recognition & Vision Tasks.md`. Removed the inline `(source: …)` citations from both (kept the one-line Sources metadata field). Added both to the index under Computer Vision.
