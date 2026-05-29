@@ -43,15 +43,34 @@ Naive patch-to-patch matching is **intractable** at scale: 1M images × 1k featu
 
 (High-dimensional feature spaces help here: even a 100-D space with 256 intensity levels per dimension holds $256^{100}$ distinguishable points — plenty to represent diverse features. The clusters in that space *are* the visual words.)
 
-## Tools this requires (coming next)
-- **Clustering** (e.g. k-means) — to build the visual vocabulary
-- **Histograms** — as the per-image representation
-- **Feature distances** — to compare representations
-- **Nearest-neighbor classification** — the simplest classifier on top
+## The tools
+Each pipeline step rests on a standard tool:
 
-(The clustering mechanics and the full retrieval implementation are the next lecture — and the basis for Homework 3.)
+- **Build the vocabulary → [[k-means Clustering]].** Cluster all feature vectors; the cluster centers are the visual words.
+- **Represent an image → a histogram.** Match each patch to its nearest visual word and count: bin $i$ = number of patches closest to codeword $i$. The result is a fixed-length vector (one entry per word). A histogram is just a **vector representation of a distribution**.
+- **Compare images → histogram distance.** With a vocabulary of $V$ words, compare query $q$ and database image $d_j$ by **cosine similarity** (the normalized dot product):
+$$\text{sim}(d_j, q) = \frac{\langle d_j, q\rangle}{\lVert d_j\rVert\,\lVert q\rVert} = \frac{\sum_{i=1}^{V} d_j(i)\,q(i)}{\sqrt{\sum_i d_j(i)^2}\,\sqrt{\sum_i q(i)^2}}$$
+  Cosine measures **similarity** (maximize it — identical vectors → 1); the **Euclidean distance** $\lVert d-q\rVert$ measures **dissimilarity** (minimize it — identical vectors → 0).
+- **Classify on top → [[Nearest-Neighbor Classification]].** Retrieval *is* nearest-neighbor: return the database image with the highest similarity; for labeled classification, take the majority label among the *k* nearest (kNN).
+
+Everything above — features → clustering → histograms → distances — exists to give each image an **efficient yet expressive vector**. (A raw 1000×1000 image is a trivial 1M-D pixel vector: expensive *and* meaningless. The histogram compresses it into a few semantically meaningful dimensions.)
+
+## Evaluating retrieval: precision, recall, average precision
+Treat retrieval as returning matches one-by-one from best to worst. At each step:
+
+- **precision** = relevant returned / total returned
+- **recall** = relevant returned / total relevant in the database
+
+Plotting precision vs. recall over the ranked list gives a **PR curve**. A perfect retriever (all relevant items first) traces a flat line at precision = 1 → area = 1. Summarizing the curve by one number gives the **Average Precision (AP)** = area under the PR curve (also called area-under-the-curve elsewhere).
+
+Caveat: two methods can have the **same AP** but very different PR curves, so AP alone isn't enough to deploy — you also pick an operating point (some apps favor recall, e.g. don't miss pedestrians; others favor precision).
+
+(This pipeline and the [[Bayesian Classification (MAP & ML)|Bayesian skin classifier]] are the basis for Homework 3.)
 
 ## Related pages
+- [[k-means Clustering]]
+- [[Nearest-Neighbor Classification]]
+- [[Bayesian Classification (MAP & ML)]]
 - [[Feature Detection]]
 - [[Feature Matching]]
 - [[Recognition & Vision Tasks]]

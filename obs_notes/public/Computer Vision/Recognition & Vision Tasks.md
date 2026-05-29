@@ -1,5 +1,3 @@
-# Recognition & Vision Tasks
-
 **Summary**: Recognition maps pixels to concepts. This page covers the taxonomy of recognition tasks (all framed as classification), why recognition is hard (three kinds of variation), and why the field shifted from hand-written rules to data-driven machine learning.
 
 **Last updated**: 2026-05-29
