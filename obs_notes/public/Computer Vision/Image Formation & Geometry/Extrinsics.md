@@ -1,3 +1,9 @@
+**Summary**: The world-to-camera transformation: translate the world origin to the camera, then rotate axes to align, giving the extrinsic matrix.
+
+**Last updated**: 2026-04-24
+
+---
+
 A process of standardization ^7b2cf4
 # Problem
 There **TWO** coordinate system when we are talking pictures -- the camera coordinate system and the world coordinate system. Me must standardize both info when handling problem that involve both systems.

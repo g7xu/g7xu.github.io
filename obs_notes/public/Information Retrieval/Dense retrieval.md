@@ -1,3 +1,9 @@
+**Summary**: Neural retrieval with bi-encoders, cross-encoders, and ColBERT — designs, contrastive training, and approximate-nearest-neighbor search at scale.
+
+**Last updated**: 2026-05-29
+
+---
+
 There are multiple ways to design and implement dense retrieval. You can use different ways to compare embedding, different embedding strategies, and so on. Making the choice based on the priorities are most critical here.
 ![[expressiveness_efficiency_spectrum.svg|697]]
 # Encoder Overview
@@ -55,3 +61,7 @@ Two approaches on ranking documents
 - Direct token-level retrieval
 	- for each query word token find n nearest token
 	- finding the documents with highest frequency of appearing across all the query word token
+
+## Related pages
+- [[Retrieval-Augmented Generation (RAG)]]
+- [[Image Retrieval (Bag of Words)]]

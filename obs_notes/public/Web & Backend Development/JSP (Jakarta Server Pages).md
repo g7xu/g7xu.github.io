@@ -1,3 +1,9 @@
+**Summary**: MVC and server-side rendering with JSP — scripting elements, directives, implicit objects, EL, and JSTL.
+
+**Last updated**: 2026-05-29
+
+---
+
 # MVC
 - Stands for Model-View-Controller
 - An architecture pattern that separates the application into three business components to separate business logic and presentation
@@ -187,3 +193,8 @@ A lot easier to extract the value related to the Implicit object
 - Common Used Tags
 	- `fn:length(...)`
 	- `fn:contains(input, substr)`
+
+## Related pages
+- [[Spring Framework]]
+- [[HTML & CSS]]
+- [[Error Handling & Validation]]

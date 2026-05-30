@@ -1,3 +1,9 @@
+**Summary**: Spring's core ideas — IoC / dependency injection, the bean lifecycle, configuration, scopes, and Spring Boot.
+
+**Last updated**: 2026-05-29
+
+---
+
 A Super Framework in the realm of Java Dev. With this you can:
 -  Execute a Java method within a database transaction without directly dealing with transaction APIs
 - Expose a local Java method as a remote procedure call using RESTful Web Service
@@ -184,5 +190,9 @@ Scan through all the JAR dependencies and added to the project
 Non-invasive auto configuration: define customized Bean
 Disable Specific Auto-Configuration Classes
 
-
-
+## Related pages
+- [[JSP (Jakarta Server Pages)]]
+- [[Error Handling & Validation]]
+- [[MAVEN Java Dev Op]]
+- [[OAuth 2.0]]
+- [[Unit Testing]]

@@ -1,3 +1,9 @@
+**Summary**: Java build and dependency management with Maven — artifact types, the POM, the build lifecycle, and multi-module projects.
+
+**Last updated**: 2026-04-06
+
+---
+
 # Standard Java Application Development
 
 Putting everything into a ZIP file
@@ -100,3 +106,7 @@ Advantage
 
 - `<packaging>pom</packaging>`
 - dependency management control the version of dependency of child module
+
+## Related pages
+- [[Spring Framework]]
+- [[JSP (Jakarta Server Pages)]]

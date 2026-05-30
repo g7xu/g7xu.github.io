@@ -1,3 +1,9 @@
+**Summary**: React fundamentals — components (class & functional), props/state, hooks, the virtual DOM, routing, and state management (Context, Redux).
+
+**Last updated**: 2026-04-06
+
+---
+
 
 # Why React?
 
@@ -585,3 +591,6 @@ No `useState`, no `useEffect`, no `subscribe`, no cleanup.
 
 general action creator
 `export constant createAction = (type, payload) => ({type, payload});`
+
+## Related pages
+- [[HTML & CSS]]

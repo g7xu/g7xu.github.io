@@ -1,3 +1,9 @@
+**Summary**: Recovering 3D structure and camera motion from two views via epipolar geometry, the essential/fundamental matrix, and triangulation.
+
+**Last updated**: 2026-05-29
+
+---
+
 # Motivation 
 Given two photographs of the same scene from different angles, can we recover a 3D geometry of the scene, and the relative position and orientation of the cameras
 

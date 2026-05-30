@@ -1,3 +1,9 @@
+**Summary**: Monolith vs. microservices, distributed-system trade-offs, service discovery / API gateway, and observability.
+
+**Last updated**: 2026-05-29
+
+---
+
 **Common Challenge for Monolithic Application**
 - Scalability: how to scale individual components within a single monolithic system (MUST SCALE THE ENTIRE SYSTEM)
 - Performance Bottlenecks: the entire application depends on the services that with the worst performance
@@ -60,3 +66,7 @@ It is extremely important to implement **Logging**, **Monitoring**, and **Tracin
 - Tracing and Service Monitoring: Kiali
 
 [https://medium.com/@jyoti1308/designing-proximity-service-yelp-7472e1f20cee](https://medium.com/@jyoti1308/designing-proximity-service-yelp-7472e1f20cee)
+
+## Related pages
+- [[Deployment]]
+- [[Software Development Lifecycle & System Design]]

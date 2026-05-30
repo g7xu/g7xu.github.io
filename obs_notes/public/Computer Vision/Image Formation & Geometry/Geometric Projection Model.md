@@ -1,3 +1,9 @@
+**Summary**: The pinhole-camera projection formula (3D → 2D) and how homogeneous coordinates turn it into a single matrix multiply.
+
+**Last updated**: 2026-05-29
+
+---
+
 The real world is 3D, but photos are 2D. Every time we capture an image, the 3D world "collapses" from three dimensions down to two — losing one dimension (depth). The Geometric Projection model explains exactly how that collapse happens
 # How camera works
 ![[pinhole_camera_model.svg]]

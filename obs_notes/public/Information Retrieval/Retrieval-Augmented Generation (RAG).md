@@ -1,3 +1,9 @@
+**Summary**: Grounding a language model in retrieved external documents — relevance scoring, retrieval timing, and handling under-use of sources.
+
+**Last updated**: 2026-05-29
+
+---
+
 technique that lets language model ground its answers in external knowledge rather than relying on internal knowledge
 
 RAG's automated context selection mechanism making it a automatic prompt engineering
@@ -32,3 +38,6 @@ retrieving is easy, using and reasoning the retrieved info is hard. Sometimes, p
 fine-tuning the model with retrieval and intentionally use the training data that only has answer from the retrieval document. so that we force the model to learn to read from the retrieval document.
 ## Solution 2 - Training with retrieval
 Improving language models by retrieving from trillions of tokens
+
+## Related pages
+- [[Dense retrieval]]

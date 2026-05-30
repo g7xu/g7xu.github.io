@@ -1,3 +1,9 @@
+**Summary**: Web servers, deployment environments and strategies (blue-green, rolling, canary), Docker containers, and AWS (EC2, S3).
+
+**Last updated**: 2026-04-06
+
+---
+
 # Web Server
 ##  Computer vs. Web Server
 - web server: a computer with CPU, motherboard, disk storage, power 
@@ -181,3 +187,8 @@ the point of interconnection between a computer/server and a private or public n
 	- start container
 - configure our security group and request info using HTTP
 - Key pair (login credential creation)
+
+## Related pages
+- [[Distributed System]]
+- [[Software Development Lifecycle & System Design]]
+- [[MAVEN Java Dev Op]]

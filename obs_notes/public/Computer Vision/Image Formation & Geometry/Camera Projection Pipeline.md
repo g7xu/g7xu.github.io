@@ -1,3 +1,9 @@
+**Summary**: The full pipeline converting a 3D world point to a 2D pixel — extrinsics, projection, and intrinsics composed into one matrix Π = K[R | −Rc].
+
+**Last updated**: 2026-04-24
+
+---
+
 The conversation pipeline that convert 3D worlds into 2D images.
 
 The pipeline covers 3 major steps:

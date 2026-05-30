@@ -9,30 +9,36 @@
 ## Computer Vision
 
 - [[Computer Vision Overview]] — entry point for the CV notes: image formation and the path to 3D reconstruction
+
+### Image Formation & Geometry
 - [[Image Formation & Photometry]] — how a camera turns a scene into pixels: optics, sensors, reflection models, BRDF, color
-- [[Camera Projection Pipeline]] — end-to-end mapping from a 3D world point to a 2D pixel
 - [[Geometric Projection Model]] — pinhole camera model and the projection formula
+- [[Camera Projection Pipeline]] — end-to-end mapping from a 3D world point to a 2D pixel
 - [[Extrinsics]] — world-to-camera coordinate transformation (rotation + translation)
 - [[From Image Plane to Pixel Coordinates]] — intrinsic matrix K and the image-to-pixel step
 - [[Ideal Points]] — points at infinity and their role in projective geometry
 - [[Lambertian Photometric Model]] — diffuse reflectance model and photometric stereo
+
+### Features & Reconstruction
 - [[Feature Detection]] — detecting corners and keypoints in images
 - [[Feature Matching]] — matching detected features across views
 - [[Two-View Reconstruction]] — recovering 3D structure from two images via epipolar geometry
 - [[RANSAC]] — robust model fitting: estimating the fundamental matrix despite outlier matches
+
+### Recognition & Retrieval
 - [[Recognition & Vision Tasks]] — recognition as classification, task taxonomy, and the data-driven shift
 - [[Discriminative vs Generative Methods]] — modeling the posterior vs. the likelihood/joint; the three pillars (representation, learning, inference)
 - [[Image Retrieval (Bag of Words)]] — instance recognition via the bag-of-features pipeline
-- [[k-means Clustering]] — unsupervised clustering that builds the visual vocabulary
-- [[Nearest-Neighbor Classification]] — NN / kNN classification, with pros and cons
-- [[Bayesian Classification (MAP & ML)]] — generative classification via likelihood + prior (MAP vs. ML)
 - [[Scaling Image Retrieval]] — making retrieval fast: inverted file index, TF-IDF, vocabulary tree
-- [[Neural Networks (Introduction)]] — learned features, perceptron → MLP, nonlinearity, gradient descent
 
 ## Machine Learning
 
 - [[ML Overview]] — what machine learning is and the main types of learning
 - [[ML Architecture Families]] — broad categories of ML models (linear, tree-based, kernel, neural, etc.)
+- [[k-means Clustering]] — unsupervised clustering that builds the visual vocabulary
+- [[Nearest-Neighbor Classification]] — NN / kNN classification, with pros and cons
+- [[Bayesian Classification (MAP & ML)]] — generative classification via likelihood + prior (MAP vs. ML)
+- [[Neural Networks (Introduction)]] — learned features, perceptron → MLP, nonlinearity, gradient descent
 
 ## Information Retrieval
 

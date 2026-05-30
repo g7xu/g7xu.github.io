@@ -1,3 +1,9 @@
+**Summary**: The system-design approach and the SDLC phases, models (Waterfall vs. Agile/Scrum), environments, and team roles.
+
+**Last updated**: 2026-04-06
+
+---
+
 # System Design Approach
 
 ## Initial Planning Steps
@@ -255,4 +261,10 @@ SDLC provides a systematic process for building high-quality software while mana
 - Define clear KPIs and metrics  
 - Establish data collection processes  
 - Use A/B testing or randomized sampling  
-- Create continuous feedback loops  
+- Create continuous feedback loops
+
+## Related pages
+- [[Deployment]]
+- [[Distributed System]]
+- [[Unit Testing]]
+- [[Git — Version Control Overview]]

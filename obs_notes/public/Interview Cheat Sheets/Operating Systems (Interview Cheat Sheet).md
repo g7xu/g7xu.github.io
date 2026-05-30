@@ -1,3 +1,9 @@
+**Summary**: OS interview concepts — user vs. kernel mode, processes/threads, IPC, scheduling, synchronization, and memory management.
+
+**Last updated**: 2026-04-20
+
+---
+
 > Source: [All You Should Know About Operating Systems in Technical Interviews](https://towardsdatascience.com/all-you-should-know-about-operating-systems-in-technical-interviews-4dcc55210fea/)
 ## What is an Operating System?
 - Interface between users and computer hardware
@@ -56,3 +62,6 @@ Most applications stay in **user mode** and they are restricted from accessing h
 - **Paged memory management**: Memory by page frames (not continuous)
 - **Segmented memory management**: Divide memory by segments
 - **Segmentation with paging**: Divide things in logic chunks, then separates each segment into several page frames
+
+## Related pages
+- [[Technical Interview Checklist]]

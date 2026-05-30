@@ -1,3 +1,9 @@
+**Summary**: The intrinsic matrix K that converts physical image-plane coordinates into pixels (focal length, skew, principal point).
+
+**Last updated**: 2026-05-29
+
+---
+
 The projection formula gives us a position in physical units — not pixels yet. K (the intrinsic matrix) bridges this gap by converting image plane coordinates into actual pixel coordinates.
 
 # General Pipeline 

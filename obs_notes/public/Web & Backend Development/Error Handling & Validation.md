@@ -1,3 +1,9 @@
+**Summary**: Handling exceptions across the MVC layers — what can go wrong per layer, status-code mapping, logging, and Spring's @ControllerAdvice / @ExceptionHandler.
+
+**Last updated**: 2026-05-29
+
+---
+
 Bugs and errors are inevitable regardless of developer skill. While some problems like `OutOfMemoryError` are unrecoverable system-level failures, most issues are situations the program didn't anticipate. Exceptions give us a structured way to catch and recover from these.
 
 Java distinguishes between checked exceptions (foreseeable environmental failures like I/O and database issues — the compiler forces you to handle them) and unchecked exceptions (programming logic errors like null references — they surface at runtime). In a web application, both types can occur across every layer.
@@ -145,5 +151,7 @@ so that: **we never give user a whitelabel Error Page or StackTrace**
 - consolidate multiple, scatter @ExceptionHandler into global error handling component
 - Enables a mechanism that make use of ResponseEntity
 
-
-
+## Related pages
+- [[Spring Framework]]
+- [[JSP (Jakarta Server Pages)]]
+- [[Unit Testing]]

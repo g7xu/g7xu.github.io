@@ -1,3 +1,9 @@
+**Summary**: Why and how to test — unit / integration / acceptance testing, JUnit & Mockito, the GIVEN-WHEN-THEN structure, and TDD.
+
+**Last updated**: 2026-04-06
+
+---
+
 logic or ways to check if code logic performs as expected 
 
 Two Main Types:
@@ -112,3 +118,8 @@ Testing in Repository
 - create test case first
 - developers create codes to meet test case requirements
 - move to the next failed test case
+
+## Related pages
+- [[Spring Framework]]
+- [[Error Handling & Validation]]
+- [[Software Development Lifecycle & System Design]]

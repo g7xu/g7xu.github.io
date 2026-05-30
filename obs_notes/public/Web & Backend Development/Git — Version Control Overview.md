@@ -1,3 +1,9 @@
+**Summary**: Git basics — commits, the three stages, HEAD, essential commands, branching, merge vs. rebase, and conflict resolution.
+
+**Last updated**: 2026-04-06
+
+---
+
 
 Git is a **change-tracking system** — a form of **Version Control (Source Control)**.
 It tracks modifications, stores history, and manages collaboration. Git is optimized for **line-by-line tracking**, not binary files.
@@ -192,4 +198,7 @@ Steps:
 
 - Rewrites history by moving commits  
 - Produces a cleaner, linear history  
-- Best for local work before pushing  
+- Best for local work before pushing
+
+## Related pages
+- [[Software Development Lifecycle & System Design]]

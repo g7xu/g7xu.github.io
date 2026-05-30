@@ -1,3 +1,9 @@
+**Summary**: The DP thinking process (brute force → memoization → bottom-up), how to define states and recurrences, and classic problem types.
+
+**Last updated**: 2026-05-27
+
+---
+
 “building the next solution using the previous outcome”
 # Thinking process
 1. Brute Force
@@ -18,3 +24,6 @@
 # Complexity
 - time complexity: can be high since trying every single possibilities 
 - space complexity: needs to save all combinations
+
+## Related pages
+- [[Technical Interview Checklist]]

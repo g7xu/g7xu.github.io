@@ -1,3 +1,9 @@
+**Summary**: Broad families of ML models — linear, tree-based, instance-based, kernel, probabilistic, neural — with their mechanisms, assumptions, and use cases.
+
+**Last updated**: 2026-05-29
+
+---
+
 # Broad Categories
 - [[#Linear Models|Linear models]]: creating a straight-line (or hyperplane) using the features to predict the output
 - [[#Tree-based Models|Tree-based models]]: recursively splitting data on feature thresholds (like a tree)
@@ -43,7 +49,7 @@
 TODO...
 
 # Kernel Methods
-**Core mechanism** -- mapping data to higher-dimensional space via [[kernel function (TODO)]], creating non-linear decision boundary which makes different classes linearly separable, then find the maximum-margin boundary between them
+**Core mechanism** -- mapping data to higher-dimensional space via a **kernel function** (the "kernel trick"), creating non-linear decision boundary which makes different classes linearly separable, then find the maximum-margin boundary between them
 ## Key Assumptions
 - valid kernel exist for the problem
 - sensitive to feature scaling (TODO, need more explanation on this part)

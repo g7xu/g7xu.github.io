@@ -1,3 +1,9 @@
+**Summary**: Points at infinity in homogeneous coordinates (last coordinate w = 0) and the line at infinity — where parallel lines meet.
+
+**Last updated**: 2026-05-29
+
+---
+
 Normally, parallel lines never meet. But when a camera 
 captures the world (see [[Geometric Projection Model]]), parallel lines appear to converge toward a single 
 point on the horizon. We call these points vanishing points or ideal points **How do we represent and handle this mathematically?**

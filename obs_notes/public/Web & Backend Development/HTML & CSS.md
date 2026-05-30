@@ -1,3 +1,9 @@
+**Summary**: HTML document structure and semantic tags, forms and tables, plus CSS selectors, the box model, positioning, and flexbox.
+
+**Last updated**: 2026-04-06
+
+---
+
 **HTML (HyperText Markup Language)** is a **descriptive language** used to define the structure and layout of a web page through plaintext files.
 # Basic Document Structure
 - **`<html>`**: The root element that wraps all page content.
@@ -146,3 +152,6 @@ Flexbox is designed for **1-D layouts**, handling spacing and alignment in a sin
 
 https://flexboxfroggy.com/
 
+## Related pages
+- [[React Programming Language]]
+- [[JSP (Jakarta Server Pages)]]

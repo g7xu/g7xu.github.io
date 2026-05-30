@@ -1,3 +1,9 @@
+**Summary**: A personal checklist for coding interviews — the workflow from problem understanding through planning, implementation, and explanation.
+
+**Last updated**: 2026-04-25
+
+---
+
 A mental model, I personal has when doing a problem solving (classic coding) interview
 # General Workflow
 - **Beginning**: General intro and conversation
@@ -31,3 +37,6 @@ A mental model, I personal has when doing a problem solving (classic coding) int
 - [ ] walk through your approach
 - [ ] explain the time complexity and space complexity again
 - [ ] clean up the code if possible
+
+## Related pages
+- [[Operating Systems (Interview Cheat Sheet)]]

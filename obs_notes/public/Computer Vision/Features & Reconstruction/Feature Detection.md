@@ -1,3 +1,9 @@
+**Summary**: Finding distinctive points (corners) via the sliding-window second-moment matrix, with smoothing and gradient/edge computation.
+
+**Last updated**: 2026-04-30
+
+---
+
 Extracting **unique/meaningful/unusual parts from the image**, serving as the foundation of tasks such as panorama stitching and depth estimation
 # Down stream application of feature detection
 - Panorama stitching

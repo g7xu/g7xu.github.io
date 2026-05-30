@@ -1,3 +1,9 @@
+**Summary**: What machine learning is, key terms, the three types (supervised / unsupervised / reinforcement), and the end-to-end ML pipeline.
+
+**Last updated**: 2026-04-20
+
+---
+
 **Source:** [Types of Machine Learning – GeeksforGeeks](https://www.geeksforgeeks.org/machine-learning/types-of-machine-learning/)
 # What is Machine Learning?
 Machine Learning is teaching algorithm and system to learn patterns, make decisions and completing repetitive task for human. The training process usually require a large scale of data in different form.

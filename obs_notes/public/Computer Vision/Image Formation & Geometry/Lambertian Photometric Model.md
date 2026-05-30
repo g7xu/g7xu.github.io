@@ -1,3 +1,9 @@
+**Summary**: Recovering surface normals and albedo from several images under known lighting (photometric stereo), assuming a matte Lambertian surface.
+
+**Last updated**: 2026-05-27
+
+---
+
 Model we use to convert an image to 3D Model
 ## Motivation
 

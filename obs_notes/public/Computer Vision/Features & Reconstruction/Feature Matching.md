@@ -1,3 +1,9 @@
+**Summary**: Comparing detected features across images using descriptors and distances (SSD, NCC) plus the ratio test.
+
+**Last updated**: 2026-05-01
+
+---
+
 
 **Interest Point**:
 - localized position
