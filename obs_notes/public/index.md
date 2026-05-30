@@ -38,7 +38,8 @@
 - [[k-means Clustering]] — unsupervised clustering that builds the visual vocabulary
 - [[Nearest-Neighbor Classification]] — NN / kNN classification, with pros and cons
 - [[Bayesian Classification (MAP & ML)]] — generative classification via likelihood + prior (MAP vs. ML)
-- [[Neural Networks (Introduction)]] — learned features, perceptron → MLP, nonlinearity, gradient descent
+- [[Neural Network]] — what a network is (perceptron → MLP, nonlinearity, universal approximation) and how it's trained (gradient descent, SGD, momentum, backprop)
+- [[Convolutional Neural Network (CNN)]] — the image-specialized network: learned filters, convolution, weight sharing, feature volumes
 
 ## Information Retrieval
 
