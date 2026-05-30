@@ -76,7 +76,7 @@ TODO...
 ## Use Case
 - ...
 # Neural Networks
-**Core mechanism** -- stack layers of neurons and non-linear activation functions to make prediction. And train the model via backpropagation
+**Core mechanism** -- stack layers of neurons and non-linear activation functions to make prediction. And train the model via backpropagation. See [[Neural Networks (Introduction)]] for the foundations (perceptron → MLP, why the nonlinearity matters, gradient descent).
 ## Key Assumptions
 - scenario dependent 
 ## Specific Algorithms

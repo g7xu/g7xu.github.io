@@ -26,6 +26,8 @@
 - [[k-means Clustering]] — unsupervised clustering that builds the visual vocabulary
 - [[Nearest-Neighbor Classification]] — NN / kNN classification, with pros and cons
 - [[Bayesian Classification (MAP & ML)]] — generative classification via likelihood + prior (MAP vs. ML)
+- [[Scaling Image Retrieval]] — making retrieval fast: inverted file index, TF-IDF, vocabulary tree
+- [[Neural Networks (Introduction)]] — learned features, perceptron → MLP, nonlinearity, gradient descent
 
 ## Machine Learning
 

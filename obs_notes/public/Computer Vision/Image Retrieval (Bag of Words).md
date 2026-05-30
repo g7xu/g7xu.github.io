@@ -67,10 +67,14 @@ Caveat: two methods can have the **same AP** but very different PR curves, so AP
 
 (This pipeline and the [[Bayesian Classification (MAP & ML)|Bayesian skin classifier]] are the basis for Homework 3.)
 
+## Making it fast at scale
+Comparing a query against every database image (and matching every patch against a flat vocabulary) doesn't scale to web-sized databases. See [[Scaling Image Retrieval]] for the standard speed-ups: the **inverted file index** (query by word instead of scanning every image), **TF-IDF** weighting, and the **vocabulary tree** (O(log N) word lookup) — including a full end-to-end worked example.
+
 ## Related pages
 - [[k-means Clustering]]
 - [[Nearest-Neighbor Classification]]
 - [[Bayesian Classification (MAP & ML)]]
+- [[Scaling Image Retrieval]]
 - [[Feature Detection]]
 - [[Feature Matching]]
 - [[Recognition & Vision Tasks]]
