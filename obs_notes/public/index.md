@@ -39,7 +39,9 @@
 - [[Nearest-Neighbor Classification]] — NN / kNN classification, with pros and cons
 - [[Bayesian Classification (MAP & ML)]] — generative classification via likelihood + prior (MAP vs. ML)
 - [[Neural Network]] — what a network is (perceptron → MLP, nonlinearity, universal approximation) and how it's trained (gradient descent, SGD, momentum, backprop)
-- [[Convolutional Neural Network (CNN)]] — the image-specialized network: learned filters, convolution, weight sharing, feature volumes
+- [[Convolutional Neural Network (CNN)]] — the image-specialized network: learned filters, convolution, weight sharing, feature volumes, pooling, receptive field, softmax
+- [[Transfer Learning]] — reuse a pretrained network (e.g. ImageNet) for a new task; retrain-by-data-budget and fine-tuning
+- [[Generalization & Model Validation]] — train/validation/test, why you never tune on test, and generalization vs. accuracy
 
 ## Information Retrieval
 

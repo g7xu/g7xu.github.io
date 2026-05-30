@@ -137,6 +137,8 @@ Any operation gets such a rule, so backprop is just: go layer-by-layer from outp
 
 ## Related pages
 - [[Convolutional Neural Network (CNN)]]
+- [[Transfer Learning]]
+- [[Generalization & Model Validation]]
 - [[Recognition & Vision Tasks]]
 - [[Discriminative vs Generative Methods]]
 - [[ML Architecture Families]]

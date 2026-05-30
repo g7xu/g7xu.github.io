@@ -32,5 +32,10 @@ agent that makes a sequence of decisions through trial and error and actively in
 4. Feature Engineering: finding useful info to make prediction
 5. Model Selection: identify the right [[ML Architecture Families|architecture]]
 6. Training: train model
-7. Evaluation: using direct and clear metrics to evaluate model (such as accuracy, precision/recall, F1 for classification, MSE/RMSE)
+7. Evaluation: using direct and clear metrics to evaluate model (such as accuracy, precision/recall, F1 for classification, MSE/RMSE) — and on the right data split, to measure [[Generalization & Model Validation|generalization]] rather than memorization
 8. Deployment and monitoring
+
+## Related pages
+- [[Generalization & Model Validation]]
+- [[ML Architecture Families]]
+- [[Neural Network]]

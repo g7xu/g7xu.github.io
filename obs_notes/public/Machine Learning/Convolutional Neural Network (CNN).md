@@ -43,11 +43,46 @@ Physically: we expect a feature (say a "chair detector") to appear *anywhere* in
 
 **Exception — registered/aligned inputs.** When images are pre-aligned, location-specific filters can help. Face-recognition kiosks first **warp** the face so eyes/nose/mouth land at canonical locations; then **DeepFace** (Facebook AI) — the first face recognition to beat human accuracy — used location-specialized CNN features. Modern networks are powerful enough that plain weight sharing works without this trick.
 
+## Convolution is differentiable
+Training needs gradients (see [[Neural Network#Training a neural network|training]]), so every layer must be differentiable. A convolution is just a **dot product** of the filter with the overlapping patch — a linear operation — so it's trivially differentiable (the derivative w.r.t. a filter weight is the corresponding input value).
+
+## Pooling
+A **pooling** layer aggregates a local region of a feature map into a single value. **2×2 max-pooling with stride 2**: slide a non-overlapping 2×2 window over the map and keep the **max** of each window → an $n{\times}n$ map becomes $\tfrac{n}{2}{\times}\tfrac{n}{2}$.
+
+- **No learnable parameters** — it's a fixed, deterministic operation (you only choose the window size *k* and stride).
+- **Applied per feature map** (each channel independently) — unlike convolution, which spans the whole depth.
+- **Differentiable** — the gradient routes only to the location that won the max (gradient 1 there, 0 elsewhere) — the same "max gate" pattern from [[Neural Network#Gate patterns|backprop]].
+
+Three reasons to pool, least → most important:
+1. **Invariance / keep the most informative values** in noisy data.
+2. **Less computation & memory** — smaller maps downstream.
+3. **The real reason: a bigger receptive field, cheaply.** Pooling widens each unit's view of the input **without adding parameters** (see below).
+
+## Receptive field
+The **receptive field** of a unit is the region of the *input image* it "sees" — its footprint. A unit in the first conv layer sees only a small $k{\times}k$ patch; a unit one layer deeper aggregates the receptive fields of all the units feeding it, so **deeper units see broader regions**.
+
+Why this matters: a 3×3 patch of white fur can't tell a white cat from a white dog — you need a **global, holistic view**. So lower layers learn local features (edges, corners) and deeper layers, with wider receptive fields, learn textures → object parts → whole objects. **The magic word for deep networks is *context*** — deep layers must see enough of the image to reason about it.
+
+Growing the receptive field by stacking conv layers costs more parameters each layer. **Pooling is the shortcut**: it collapses a region into one unit, instantly widening the receptive field with *zero* new parameters. (But don't pool *everything* at once — you'd lose information and skip the learning; the art is balancing context, computation, and enough parameters to actually learn.)
+
+## 1×1 convolution
+A **1×1 convolution** has spatial size 1 but full channel depth — so it's a dot product across channels at each pixel. Its use: **change the number of channels** while keeping spatial size, in a *learnable* way. E.g. a 56×56×64 map → apply 32 different 1×1 filters → 56×56×**32**. Handy for **multimodal fusion** — line up the channel dimensions of, say, an audio stream (64) and a video stream (32) before combining them.
+
+## The classification head: flatten → fully connected → softmax
+The conv/ReLU/pool stack outputs feature maps; a classifier needs one number per class. Two final steps:
+
+1. **Flatten + fully-connected layers.** Once pooling has shrunk the maps (e.g. 4×4 × 100 channels = 1,600 values), **flatten** them and add a couple of **fully-connected layers** ending in output nodes = number of classes. Unlike conv units (local), every FC unit sees the **whole image** — exactly what you need for a holistic class decision.
+2. **Softmax.** ReLU outputs are unbounded $[0,\infty)$, but classification wants a **peaky probability distribution** (the ground truth is one-hot — a delta function). Softmax turns the raw scores $z$ into probabilities:
+$$\text{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}$$
+Dividing by the sum makes it sum to 1 (a probability); exponentiating **exaggerates differences**, making the output peaky. It's a **differentiable approximation of max** — $e^{100}\gg e^{98}$, so the largest logit dominates, but smoothly enough to backprop through.
+
 ## What's next
-Pooling, full CNN architectures, and the **receptive field** (how large a region of the input one deep activation "sees") — covered in the next lecture. *(Personal to-do: define the receptive field, the rule that each extra 3×3 stride-1 conv grows it by 2, how downsampling/pooling multiplies it, and how dilation grows it without adding parameters — e.g. four 3×3 convs → 9×9 receptive field; add one 2× downsample and it doubles.)*
+Full CNN architectures (and the precise receptive-field arithmetic — each extra 3×3 stride-1 conv grows it by 2, pooling/stride multiply it, dilation grows it without adding parameters) — later lectures. CNN features also **transfer** extremely well across tasks → see [[Transfer Learning]].
 
 ## Related pages
 - [[Neural Network]]
+- [[Transfer Learning]]
+- [[Generalization & Model Validation]]
 - [[Feature Detection]]
 - [[ML Architecture Families]]
 - [[Recognition & Vision Tasks]]
