@@ -21,9 +21,9 @@ Even if you *have* test labels, you must not pick hyperparameters by test perfor
 So: **train on train, tune on validation, report on test (once).** Test performance is a measure not just of accuracy but of **generalization**.
 
 ## Why generalization is hard → regularization
-A model with enough parameters can memorize the training data (fit it perfectly) yet fail on new data — **overfitting**. Ensuring generalization is exactly what **overfitting and regularization** address.
+A model with enough parameters can memorize the training data (fit it perfectly) yet fail on new data — **overfitting**. Neural networks are especially prone to it: they're **over-parameterized "lazy learners"** that take shortcuts to explain limited data instead of learning the true pattern. Ensuring generalization is exactly what **overfitting and regularization** address — keep the network's capacity, but constrain *how* it uses that capacity.
 
-*(Regularization techniques — covered in the next lecture — will be added here.)*
+See **[[Regularization]]** for the techniques: weight penalties (L2 / L1), dropout, and data augmentation.
 
 ## Related pages
 - [[Neural Network]]

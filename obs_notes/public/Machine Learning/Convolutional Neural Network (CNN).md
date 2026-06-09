@@ -77,7 +77,7 @@ $$\text{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}$$
 Dividing by the sum makes it sum to 1 (a probability); exponentiating **exaggerates differences**, making the output peaky. It's a **differentiable approximation of max** — $e^{100}\gg e^{98}$, so the largest logit dominates, but smoothly enough to backprop through.
 
 ## What's next
-Full CNN architectures (and the precise receptive-field arithmetic — each extra 3×3 stride-1 conv grows it by 2, pooling/stride multiply it, dilation grows it without adding parameters) — later lectures. CNN features also **transfer** extremely well across tasks → see [[Transfer Learning]].
+Full CNN architectures — LeNet → AlexNet → VGG → ResNet, and *why* depth beats width — are covered in [[CNN Architectures]]. (Plus the precise receptive-field arithmetic — each extra 3×3 stride-1 conv grows it by 2, pooling/stride multiply it, dilation grows it without adding parameters.) Keeping an over-parameterized CNN from overfitting is the job of [[Regularization]], and CNN features also **transfer** extremely well across tasks → see [[Transfer Learning]].
 
 ## Related pages
 - [[Neural Network]]
