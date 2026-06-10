@@ -65,7 +65,7 @@ Counterintuitively, **simply stacking more layers makes things worse**:
 The three ways to grow the receptive field each have a cost:
 - **More pooling** → lose local detail.
 - **Larger filters** → more parameters.
-- **More layers** → **vanishing gradients** — the magnitude of back-propagated gradients shrinks rapidly in the earlier layers, so they barely learn.
+- **More layers** → **[[Vanishing & Exploding Gradients|vanishing gradients]]** — the chain rule multiplies each layer's derivative, so the back-propagated signal shrinks toward zero in the earlier layers and they barely learn. (Note this is an *optimization* failure, not overfitting — training error itself is high.)
 
 > **Motivating example — human pose estimation**. Tasks like pose estimation need *both* local detail and global context: a single cropped patch (a hand, a knee) is ambiguous — "local appearance is insufficient, global appearance is helpful." That demand for a **large receptive field** is exactly what pushes architectures deeper, which is what makes the vanishing-gradient problem unavoidable.
 
@@ -74,10 +74,9 @@ The three ways to grow the receptive field each have a cost:
 
 The idea: instead of asking two stacked weight layers to fit a desired mapping $H(x)$ directly, add a **skip / identity connection** and have them fit the **residual** $F(x) = H(x) - x$, so:
 $$H(x) = F(x) + x$$
-$F(x)$ is a residual *with respect to the identity*. Why this helps:
-- If the **identity** is the optimal mapping, it's trivial to represent — just **drive the weights to 0** so $F(x)=0$.
-- If the optimal mapping is **close to** identity, it's much easier to learn the **small fluctuation** $F(x)$ than the whole function $H(x)$.
-- The skip path also gives gradients a **shortcut** back to early layers, mitigating vanishing gradients.
+$F(x)$ is a residual *with respect to the identity*. There are two complementary reasons it helps:
+- **Easier learning problem.** If the **identity** is the optimal mapping, it's trivial to represent — just **drive the weights to 0** so $F(x)=0$. And if the optimal mapping is merely **close to** identity, it's much easier to learn the **small fluctuation** $F(x)$ than the whole function $H(x)$.
+- **A second gradient pathway.** The skip connection gives the gradient an **alternate route** straight past the two weight layers, so it reaches early layers without the chain-rule attenuation — directly mitigating [[Vanishing & Exploding Gradients|vanishing gradients]]. Chaining 50+ residual blocks still trains because this gradient highway keeps every block supplied with signal.
 
 Design: **simple, 3×3 convs only (like VGG)**, plus the skip connections. With residual blocks, deeper ResNets keep *decreasing* training error where plain nets stall.
 
@@ -93,7 +92,9 @@ A practical checklist (after M. Ranzato):
 
 ## Related pages
 - [[Convolutional Neural Network (CNN)]]
+- [[Vanishing & Exploding Gradients]]
 - [[Regularization]]
 - [[Neural Network]]
+- [[Beyond CNNs — Modern CV Frontier]]
 - [[Transfer Learning]]
 - [[Generalization & Model Validation]]

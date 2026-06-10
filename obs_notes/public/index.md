@@ -21,9 +21,11 @@
 - [[Neural Network]] — what a network is (perceptron → MLP, nonlinearity, universal approximation) and how it's trained (gradient descent, SGD, momentum, backprop)
 - [[Convolutional Neural Network (CNN)]] — the image-specialized network: learned filters, convolution, weight sharing, feature volumes, pooling, receptive field, softmax
 - [[CNN Architectures]] — LeNet → AlexNet → VGG → ResNet; the layer-removal ablation ("Depth!"), width-vs-depth, 3×3 stacks, vanishing gradients, residual/skip connections
+- [[Vanishing & Exploding Gradients]] — why deep plain nets fail to optimize (chain-rule product), gradient clipping, and the gradient-pathway view of residual connections
 - [[Transfer Learning]] — reuse a pretrained network (e.g. ImageNet) for a new task; retrain-by-data-budget and fine-tuning
 - [[Generalization & Model Validation]] — train/validation/test, why you never tune on test, and generalization vs. accuracy
 - [[Regularization]] — keep capacity but constrain it: L2/L1 weight penalties, dropout, data augmentation (the weights / architecture / data levers)
+- [[Beyond CNNs — Modern CV Frontier]] — CSE 152A capstone: the frontier beyond CNNs (ViT, VLMs, diffusion, neural rendering) and the agentic paradigm; bridges into the robotics cluster
 
 ## Information Retrieval
 
