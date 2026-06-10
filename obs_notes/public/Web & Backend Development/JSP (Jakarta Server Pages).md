@@ -12,7 +12,7 @@
 	- Model: manage data and business logic
 	- View: handles layout and display
 	- Control: handles user input and interactions
-![[Screenshot 2026-01-22 at 12.05.35 PM.png]]
+
 ## Advantages of choosing MVC
 - Separation of Concerns: adheres to SOLID principles
 - Readability and Maintainability: Modification in one component have minimal impact on others

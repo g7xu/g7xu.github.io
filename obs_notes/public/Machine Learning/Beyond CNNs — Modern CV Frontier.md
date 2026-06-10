@@ -1,5 +1,3 @@
-# Beyond CNNs — Modern CV Frontier
-
 **Summary**: The capstone map of CSE 152A — a one-paragraph recap of what the course built (image formation → reconstruction → recognition → deep networks), then a survey of the modern frontier the course *opens onto*: vision transformers, vision-language models, diffusion/generative models, and neural rendering, plus the shift toward self-supervised, multimodal, and **agentic** systems. This is the bridge from the CV theory cluster to the [[Robotics & Embodied AI Overview|robotics cluster]].
 
 **Last updated**: 2026-06-09

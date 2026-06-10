@@ -86,8 +86,7 @@ Combinators define the relationship between multiple selectors:
 - **Functions**: Used for calculations or transformations (e.g., `transform: rotate(90deg)`).
 # Layout and Flexbox
 The **`display`** property determines how an element is rendered (e.g., `block`, `inline`, `flex`).
-![[Screenshot 2026-01-21 at 9.55.20 PM.png]]
-![[Screenshot 2026-01-21 at 9.55.30 PM.png]]
+
 ## CSS Display, Box Model, and Position
 ### Position
 Defines how an element is positioned in a document.
@@ -148,7 +147,6 @@ Flexbox is designed for **1-D layouts**, handling spacing and alignment in a sin
 - flex-shrink: a factor by which this item shrinks relative to the others
 - flex: setting flex-grow, flex-shrink, flex-basis
 - algin-self: ...
-
 
 https://flexboxfroggy.com/
 

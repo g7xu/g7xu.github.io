@@ -4,7 +4,6 @@
 
 ---
 
-
 # Why React?
 
 In a **Single-Page Application (SPA)** — a web application that runs on a single HTML page — a **Component-Based Architecture** is essential for organizing different sections and layouts efficiently.
@@ -377,7 +376,6 @@ A promise-based HTTP client for both browser and Node.js environments with:
 - CSRF Protection Support
 Axios Interceptor: Function that allow you to modify or act upon ongoing requests and incoming responses
 
-
 # Problems of Props Drilling
 - Passing props through multiple nested components to reach a deeply nested child
 - Intermediate components: Only forward props; they don't need to use them
@@ -442,11 +440,10 @@ export default function ChildComponent() {
 
 **Flow:** `createContext()` → wrap tree with `Provider` + pass `value` → any child calls `useContext()` to read it.
 
-
 ## Redux
 JS library for managing global state and logic
 - Centralizes state in a predictable and structured manner using reducer
-- Compatible with any frontend library/framework![[Screenshot 2026-02-26 at 11.07.23 PM.png]]
+- Compatible with any frontend library/framework
 
 ### Principle
 - Single Source of Truth (the entire application's state is stored in a single object within one store)
@@ -459,12 +456,11 @@ Action: Describes what you want to do with type and payload field
 Action Creator: A function to create actions
 Reducer: Updates state based on actions (executioner)
 Selector: Function to access specific data from state from components
-![[Screenshot 2026-02-26 at 11.15.26 PM.png]]
+
 - Component dispatches an action to the store
 - Store sends the action and current state to the reducer
 - Reducer updates the state and returns it to the store
 - Store provides the updated state to the components, triggering a re-render
-
 
 Redux DevTools: `npm i redux-devtools-extension` view redux details
 
@@ -587,7 +583,6 @@ No `useState`, no `useEffect`, no `subscribe`, no cleanup.
 |Smart re-renders|No — re-renders on every state change|Yes — only when selected value changes|
 
 **Bottom line:** `useSelector` does the same work as the manual pattern but handles subscription, cleanup, and render optimization automatically. The manual approach is worth understanding because it's what `useSelector` does under the hood.
-
 
 general action creator
 `export constant createAction = (type, payload) => ({type, payload});`

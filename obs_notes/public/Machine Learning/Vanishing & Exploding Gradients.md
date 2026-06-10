@@ -1,5 +1,3 @@
-# Vanishing & Exploding Gradients
-
 **Summary**: When networks get deep, [[Neural Network#Backpropagation|backpropagation]] multiplies many per-layer derivatives together (the chain rule), so the gradient signal **shrinks toward zero** (vanishing) or **blows up** (exploding) the further it travels from the loss layer. Vanishing gradients are why naïvely stacking layers stops working — and the problem [[CNN Architectures#ResNet — residual learning makes depth trainable|residual learning]] was designed to solve.
 
 **Last updated**: 2026-06-09

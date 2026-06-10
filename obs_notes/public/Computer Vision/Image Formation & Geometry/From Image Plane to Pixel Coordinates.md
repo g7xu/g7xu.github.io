@@ -26,3 +26,8 @@ Where:
 K is called **intrinsic** because these are fixed properties of the 
 camera hardware -- they do not change regardless of where the camera 
 is pointing.
+
+## Related pages
+- [[Geometric Projection Model]]
+- [[Extrinsics]]
+- [[Camera Projection Pipeline]]

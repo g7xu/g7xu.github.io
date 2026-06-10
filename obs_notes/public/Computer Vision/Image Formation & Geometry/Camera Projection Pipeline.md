@@ -18,3 +18,9 @@ Let $q=(x, y, z, 1)$ which is cord in the real world, we will
 - $\Pi q$   
 - Divide by the last coordinate to get the final 2D pixel coordinates 
 $$\left(\frac{(\Pi q)_1}{(\Pi q)_3},\ \frac{(\Pi q)_2}{(\Pi q)_3}\right)$$
+
+## Related pages
+- [[Geometric Projection Model]]
+- [[Extrinsics]]
+- [[From Image Plane to Pixel Coordinates]]
+- [[Computer Vision Overview]]

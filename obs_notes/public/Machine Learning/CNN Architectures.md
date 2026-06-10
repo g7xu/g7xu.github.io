@@ -1,5 +1,3 @@
-# CNN Architectures
-
 **Summary**: A tour of the landmark CNN architectures — LeNet → AlexNet → VGG → ResNet — and the design principles they established: **most parameters live in the FC layers, but depth (the conv stack) is what drives accuracy**. Stacking small 3×3 filters, going deeper rather than wider, and finally **residual (skip) connections** to make very deep nets actually trainable.
 
 **Last updated**: 2026-06-09

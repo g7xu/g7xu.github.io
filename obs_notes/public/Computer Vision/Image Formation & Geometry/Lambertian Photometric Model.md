@@ -59,3 +59,7 @@ $$b = (S^TS)^{-1}S^TI$$
 - $\hat{n}(x,y) = \frac{b(x,y)}{\|b(x,y)\|}$ (typical way of finding the unit vector)
 ### Step 6. Repeat this for every single pixel
 
+## Related pages
+- [[Image Formation & Photometry]]
+- [[Geometric Projection Model]]
+- [[Computer Vision Overview]]

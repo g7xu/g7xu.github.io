@@ -43,3 +43,7 @@ $$(0, 0, 1) \cdot (x, y, 0) = 0 + 0 + 0 = 0$$
 Works for every ideal point regardless of x and y.
 # Use Case
 TODO: can do some research and put more use case
+
+## Related pages
+- [[Geometric Projection Model]]
+- [[Camera Projection Pipeline]]

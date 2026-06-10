@@ -15,8 +15,6 @@ Two Main Types:
 - Documentation
 - Test Driven Development: writing test cases before actual code, ensure the developer thinks thoroughly about business requirements and logic
 
-
-![[Pasted image 20260113125505.png]]
 # Perform testing
 ## Testing Scenarios
 - Happy Path Test: normal test cases

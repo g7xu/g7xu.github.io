@@ -102,8 +102,7 @@ Third-party app redirects user to OAuth Provider with following key parameter
 - Client_id: app id
 - Client Secret
 	- The client's secret used for authentication with the Oauth Provider
-![[Pasted image 20260111165750.png]]
-![[Pasted image 20260111120900.png]]
+
 # Client Credential Grant Logic
 - used for machine-to-machine communication
 - No User interaction required

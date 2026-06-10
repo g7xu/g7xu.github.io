@@ -71,7 +71,7 @@ When Spring attempts to inject an object, it treats it like a regular object and
 - Constructor Injection
 - Setter Injection
 - Field Injection
-- Setter Injection is more flexible as it allows optional or late-bound dependencies![[Screenshot 2026-01-16 at 10.05.53 PM.png]]
+- Setter Injection is more flexible as it allows optional or late-bound dependencies
 ### Constructor Injection
 - At object creation, dependencies are injected mandatorily
 - All dependencies must be provided

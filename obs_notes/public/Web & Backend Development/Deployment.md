@@ -117,7 +117,6 @@ instruction on making the docker image
 ### Volume
 - Storage Spaces for the container
 
-
 docker build --> create an image from the dockerfile
 docker run --> create an container out form the docker image
 docker start
@@ -125,8 +124,6 @@ docker stop
 docker log
 docker push
 docker pull
-
-![[dockerFile Demo.mov]]
 
 # AWS (Modern Cloud Service)
 EC2 - Classic Virtual Machine that is hosted in AWS instead of your data center

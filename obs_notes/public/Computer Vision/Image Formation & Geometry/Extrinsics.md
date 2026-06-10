@@ -40,3 +40,8 @@ $$(x, y, z) \rightarrow (x_{cam}, y_{cam}, z_{cam})$$
 > [!question] Are translation and rotation interchangeable? 
 > No, rotation would spins around the origin. Rotation first, would cause the world point spin around the world origin.
 
+## Related pages
+- [[Camera Projection Pipeline]]
+- [[Geometric Projection Model]]
+- [[From Image Plane to Pixel Coordinates]]
+- [[Two-View Reconstruction]]

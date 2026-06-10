@@ -156,4 +156,8 @@ $$C = Q^{-1} \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{bmatrix} Q$$
 **Step 2.** Applying non-maximal suppression to the create R
 **Step 3.** Filtering with a threshold value
 
-
+## Related pages
+- [[Feature Matching]]
+- [[Two-View Reconstruction]]
+- [[Convolutional Neural Network (CNN)]]
+- [[Computer Vision Overview]]

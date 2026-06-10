@@ -1,5 +1,3 @@
-# Regularization
-
 **Summary**: Regularization is any constraint we add to a learner to make it **generalize** rather than memorize — needed because neural networks are over-parameterized "lazy learners" that overfit when data is limited. The lecture covers three levers: constrain the **weights** (L2 / L1), the **architecture** (dropout), or the **data** (augmentation).
 
 **Last updated**: 2026-06-09
