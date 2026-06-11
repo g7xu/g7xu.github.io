@@ -1,6 +1,6 @@
 **Summary**: A tour of the landmark CNN architectures — LeNet → AlexNet → VGG → ResNet — and the design principles they established: **most parameters live in the FC layers, but depth (the conv stack) is what drives accuracy**. Stacking small 3×3 filters, going deeper rather than wider, and finally **residual (skip) connections** to make very deep nets actually trainable.
 
-**Last updated**: 2026-06-09
+**Last updated**: 2026-06-11
 
 ---
 
@@ -75,6 +75,10 @@ $$H(x) = F(x) + x$$
 $F(x)$ is a residual *with respect to the identity*. There are two complementary reasons it helps:
 - **Easier learning problem.** If the **identity** is the optimal mapping, it's trivial to represent — just **drive the weights to 0** so $F(x)=0$. And if the optimal mapping is merely **close to** identity, it's much easier to learn the **small fluctuation** $F(x)$ than the whole function $H(x)$.
 - **A second gradient pathway.** The skip connection gives the gradient an **alternate route** straight past the two weight layers, so it reaches early layers without the chain-rule attenuation — directly mitigating [[Vanishing & Exploding Gradients|vanishing gradients]]. Chaining 50+ residual blocks still trains because this gradient highway keeps every block supplied with signal.
+
+![[resnet_diagram.svg]]
+
+*Reading the diagram: the straight path runs through the weight layers, which only learn the small corrections $F_1(x), F_2(x), \dots$; the **dashed arcs** carry the input $x$ forward untouched (the "free copy"), and each **+** junction adds that copy back to the block's output — so every block computes $F_i(x) + x$. The dashed arcs are also the gradient highway: backprop can flow through them past the weight layers without shrinking. Chain 50 of these and you get a very deep net where each block's default behavior is "do nothing" ($F_i = 0$).*
 
 Design: **simple, 3×3 convs only (like VGG)**, plus the skip connections. With residual blocks, deeper ResNets keep *decreasing* training error where plain nets stall.
 

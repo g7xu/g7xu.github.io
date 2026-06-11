@@ -1,6 +1,6 @@
 **Summary**: Image retrieval (instance recognition) finds the same specific instance or place in a large image database. The classic approach is **bag of words** (bag of features): extract features, learn a visual vocabulary by clustering, represent each image as a histogram of visual-word frequencies, then compare images by the distance between those histograms.
 
-**Last updated**: 2026-05-29
+**Last updated**: 2026-06-09
 
 ---
 
@@ -24,7 +24,7 @@ Retrieval is fundamentally the [[Feature Matching|feature matching]] we already 
 - For a query image, extract its patches the same way; for each, find the closest match in the index (e.g. lowest SSD / smallest vector distance).
 - The training image with the **most matched patches** is the closest instance.
 
-This works, but doesn't scale ([[#Why a visual vocabulary? (why step 2 exists)|see why]]) and does not generalized — which is what motivates the bag-of-words representation.
+This works, but doesn't scale ([[#The four-step pipeline (bag of features)|see why]]) and does not generalize — which is what motivates the bag-of-words representation.
 
 ## Bag of words: the idea
 Borrowed from text search (Salton & McGill, 1983 — the representation under classic Google document search). A **bag of words** is an *orderless* representation: throw away all structure and keep only **which words appear and how often**.
@@ -33,15 +33,16 @@ Borrowed from text search (Salton & McGill, 1983 — the representation under cl
 - **For images:** destroy an image's structure and treat it as a **bag of patches**. Even unordered, the patches (a bit of face, some vegetation, some building) let you infer the image contained a person, a building, flowers — enough to classify.
 
 ## The four-step pipeline (bag of features)
-1. **Extract features.** From every training image, extract patches — either on a **regular grid** (e.g. subdivide into 20×20 patches) or around interest points (corner detectors, SIFT). Each patch becomes a **descriptor**: a vector representing it (simplest: stack the patch's intensities — a 10×10 patch → a 100-D vector), mapping image locations into a high-dimensional feature space.
-2. **Learn a "visual vocabulary."** Cluster all the feature vectors; each **cluster center is a "visual word."** A patch is then described by *which cluster it belongs to*, not its raw pixels or vector representation. (A "circle-ish" cluster might come from a car wheel or a round window — we only care that something looked like that.)
-3. **Represent images by frequencies of "visual words."** Like word frequencies in the speeches, each image becomes a **histogram** over the vocabulary: how many of its patches fall into each cluster. This gives every image a fixed-length vector.
-4. **Use distances between representations for classification.** Compare two images by the distance between their histograms; classify with **nearest neighbors**.
 
-## Why a visual vocabulary? (why step 2 exists)
-Naive patch-to-patch matching is **intractable** at scale: 1M images × 1k features ≈ 1 **billion** patches; a query of 1k patches × 1B ≈ **1 trillion** comparisons. And you don't need exact matches — only closeness. Clustering the feature space collapses a billion patches into a small vocabulary, so you compare **global** bag-of-words histograms instead of individual patches — far more efficient.
+### Walkthrough: follow one image through
+Tiny numbers, one 100×100-pixel training image:
 
-(High-dimensional feature spaces help here: even a 100-D space with 256 intensity levels per dimension holds $256^{100}$ distinguishable points — plenty to represent diverse features. The clusters in that space *are* the visual words.)
+1. **Image → a pile of points.** Cut the image into 100 patches of 10×10. Flatten each patch's intensities into a list of 100 numbers — that list is the patch's **descriptor**, one point in a 100-D feature space. The image is now **100 loose, independent points**. Not combined, not stacked — its spatial structure is thrown away on purpose (that's the "bag").
+2. **Build the dictionary — the only step that uses *other* images.** You can't do this from one image. Pool the points from **all** training images (1,000 images × 100 patches = 100,000 points in one shared space) and cluster them **once, offline** into, say, **50 groups**. Each cluster center is a **visual word** — "circle-ish blob," "vertical edge," "grass texture." (A circle-ish word might come from a car wheel *or* a round window; we only care that something looked like that.)
+3. **Back to the single image: count.** For each of its 100 points, ask *which of the 50 words is it closest to?* — the patch is now described by a **word ID**, not its 100 numbers. Tally the answers: word #1 appeared 7 times, word #2 twice, … That tally — a **histogram of 50 counts** — is the image's feature representation. Every image becomes a list of exactly 50 numbers, no matter its size or patch count.
+4. **Use it.** Two images are similar if their histograms are close; retrieval returns the database image with the nearest histogram, and classification takes the majority label among the *k* nearest.
+
+One-line version: **patch → 100 numbers → "which word is it?" → image = how many times each word appeared.**
 
 ## The tools
 Each pipeline step rests on a standard tool:
