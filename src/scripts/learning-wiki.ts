@@ -94,6 +94,22 @@ let searchQuery = '';
 
 const edges = extractEdges(NOTES);
 
+// ── Adjacency map + degree, used for node sizing and hover highlighting ──
+const neighbors = new Map<string, Set<string>>();
+for (const n of NOTES) neighbors.set(n.id, new Set());
+for (const e of edges) {
+  const s = e.source as string;
+  const t = e.target as string;
+  neighbors.get(s)?.add(t);
+  neighbors.get(t)?.add(s);
+}
+
+// Node radius grows with link count (sqrt so hubs don't dwarf the graph)
+function nodeRadius(id: string): number {
+  const degree = neighbors.get(id)?.size ?? 0;
+  return 4 + Math.min(Math.sqrt(degree) * 2.4, 12);
+}
+
 // ─────────────────────────────────────────
 // LEFT PANEL — Folder tree
 // ─────────────────────────────────────────
@@ -434,13 +450,14 @@ function selectNote(id: string) {
 // ─────────────────────────────────────────
 // D3 FORCE GRAPH
 // ─────────────────────────────────────────
-const svg = d3.select('#graph-svg');
+const svg = d3.select<SVGSVGElement, unknown>('#graph-svg');
 const container = document.getElementById('graph-panel')!;
 
 let simulation: d3.Simulation<SimNode, SimLink>;
 let nodeGroup: d3.Selection<SVGGElement, SimNode, SVGGElement, unknown>;
 let linkGroup: d3.Selection<SVGLineElement, SimLink, SVGGElement, unknown>;
 let gMain: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+let zoomBehavior: d3.ZoomBehavior<SVGSVGElement, unknown>;
 
 function initGraph() {
   svg.selectAll('*').remove();
@@ -448,12 +465,18 @@ function initGraph() {
   const W = container.clientWidth;
   const H = container.clientHeight;
 
-  const zoom = d3
+  zoomBehavior = d3
     .zoom<SVGSVGElement, unknown>()
-    .scaleExtent([0.3, 3])
-    .on('zoom', (e) => gMain.attr('transform', e.transform));
+    .scaleExtent([0.25, 4])
+    .on('zoom', (e) => {
+      gMain.attr('transform', e.transform);
+      // Labels fade in as you zoom closer, like Obsidian's graph view
+      const k: number = e.transform.k;
+      const labelOpacity = Math.max(0, Math.min(1, (k - 0.55) / 0.65));
+      svg.style('--label-opacity', String(labelOpacity));
+    });
 
-  svg.call(zoom as any);
+  svg.call(zoomBehavior as any);
 
   gMain = svg.append('g');
 
@@ -463,6 +486,10 @@ function initGraph() {
   document.getElementById('node-count')!.textContent =
     `${nodes.length} notes · ${links.length} connections`;
 
+  // Obsidian-style forces: link attraction + node repulsion + a WEAK pull
+  // toward the center (forceX/forceY). The weak gravity lets the graph
+  // settle into an organic circular cluster instead of being pinned flat
+  // by a hard centering force.
   simulation = d3
     .forceSimulation<SimNode, SimLink>(nodes)
     .force(
@@ -470,11 +497,16 @@ function initGraph() {
       d3
         .forceLink<SimNode, SimLink>(links)
         .id((d) => d.id)
-        .distance(120),
+        .distance(85)
+        .strength(0.4),
     )
-    .force('charge', d3.forceManyBody().strength(-220))
-    .force('center', d3.forceCenter(W / 2, H / 2))
-    .force('collision', d3.forceCollide(45));
+    .force('charge', d3.forceManyBody().strength(-320))
+    .force('x', d3.forceX(W / 2).strength(0.08))
+    .force('y', d3.forceY(H / 2).strength(0.08))
+    .force(
+      'collision',
+      d3.forceCollide<SimNode>((d) => nodeRadius(d.id) + 10),
+    );
 
   linkGroup = gMain
     .append('g')
@@ -509,45 +541,88 @@ function initGraph() {
           d.fy = null;
         }),
     )
-    .on('click', (_e, d) => selectNote(d.id));
+    .on('click', (_e, d) => selectNote(d.id))
+    .on('mouseenter', (_e, d) => highlightNeighborhood(d.id))
+    .on('mouseleave', clearHighlight);
 
-  nodeGroup
-    .append('circle')
-    .attr('r', 10)
-    .attr('fill', (d) =>
-      d.id === selectedId ? 'var(--accent-color)' : 'var(--primary-color)',
-    )
-    .on('mouseover', function () {
-      d3.select(this).attr('r', 13);
-    })
-    .on('mouseout', function (this: SVGCircleElement, _e, d) {
-      d3.select(this).attr('r', d.id === selectedId ? 13 : 10);
-    });
+  nodeGroup.append('circle').attr('r', (d) => nodeRadius(d.id));
 
   nodeGroup
     .append('text')
     .attr('class', 'node-label')
-    .attr('dy', '1.8em')
+    .attr('y', (d) => nodeRadius(d.id) + 14)
     .text((d) => (d.id.length > 18 ? d.id.slice(0, 16) + '…' : d.id));
 
-  simulation.on('tick', () => {
+  function ticked() {
     linkGroup
       .attr('x1', (d) => (d.source as SimNode).x!)
       .attr('y1', (d) => (d.source as SimNode).y!)
       .attr('x2', (d) => (d.target as SimNode).x!)
       .attr('y2', (d) => (d.target as SimNode).y!);
     nodeGroup.attr('transform', (d) => `translate(${d.x},${d.y})`);
-  });
+  }
+
+  simulation.on('tick', ticked);
+
+  // Settle the layout off-screen so the graph loads already formed,
+  // then fit the whole graph into the viewport (Obsidian opens fitted).
+  simulation.stop();
+  for (let i = 0; i < 300; i++) simulation.tick();
+  ticked();
+  updateGraphSelection();
+  zoomToFit(W, H);
+}
+
+function zoomToFit(W: number, H: number) {
+  const nodes = simulation.nodes();
+  if (nodes.length === 0) return;
+  const pad = 70;
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const n of nodes) {
+    minX = Math.min(minX, n.x!);
+    maxX = Math.max(maxX, n.x!);
+    minY = Math.min(minY, n.y!);
+    maxY = Math.max(maxY, n.y!);
+  }
+  const w = maxX - minX + pad * 2;
+  const h = maxY - minY + pad * 2;
+  const scale = Math.min(1.1, W / w, H / h);
+  const tx = W / 2 - (scale * (minX + maxX)) / 2;
+  const ty = H / 2 - (scale * (minY + maxY)) / 2;
+  svg.call(
+    zoomBehavior.transform as any,
+    d3.zoomIdentity.translate(tx, ty).scale(scale),
+  );
+}
+
+// ── Hover highlighting: light up the hovered node, its neighbors and the
+//    links between them; fade everything else (Obsidian-style) ──
+function highlightNeighborhood(id: string) {
+  if (!nodeGroup) return;
+  const hood = neighbors.get(id) ?? new Set<string>();
+  svg.classed('hovering', true);
+  nodeGroup
+    .classed('focus', (d) => d.id === id)
+    .classed('neighbor', (d) => hood.has(d.id));
+  linkGroup.classed(
+    'link-active',
+    (l) => (l.source as SimNode).id === id || (l.target as SimNode).id === id,
+  );
+}
+
+function clearHighlight() {
+  if (!nodeGroup) return;
+  svg.classed('hovering', false);
+  nodeGroup.classed('focus', false).classed('neighbor', false);
+  linkGroup.classed('link-active', false);
 }
 
 function updateGraphSelection() {
   if (!nodeGroup) return;
-  nodeGroup
-    .selectAll<SVGCircleElement, SimNode>('circle')
-    .attr('fill', (d) =>
-      d.id === selectedId ? 'var(--accent-color)' : 'var(--primary-color)',
-    )
-    .attr('r', (d) => (d.id === selectedId ? 13 : 10));
+  nodeGroup.classed('selected', (d) => d.id === selectedId);
 }
 
 // Pan graph to node + play pulse ring animation
@@ -568,22 +643,28 @@ function pulseNode(id: string) {
     .transition()
     .duration(500)
     .call(
-      d3.zoom<SVGSVGElement, unknown>().transform as any,
+      zoomBehavior.transform as any,
       d3.zoomIdentity.translate(tx, ty).scale(scale),
     );
 
   // Pulse ring: append a temporary circle that expands and fades
+  const r = nodeRadius(id);
   const pulse = gMain
     .append('circle')
     .attr('cx', target.x!)
     .attr('cy', target.y!)
-    .attr('r', 10)
+    .attr('r', r)
     .attr('fill', 'none')
-    .attr('stroke', 'var(--accent-color)')
+    .attr('stroke', 'var(--accent)')
     .attr('stroke-width', 2)
     .attr('opacity', 1);
 
-  pulse.transition().duration(600).attr('r', 32).attr('opacity', 0).remove();
+  pulse
+    .transition()
+    .duration(600)
+    .attr('r', r + 24)
+    .attr('opacity', 0)
+    .remove();
 }
 
 // ─────────────────────────────────────────
@@ -597,20 +678,11 @@ document
 
     // Dim non-matching nodes in graph
     if (!nodeGroup) return;
-    nodeGroup
-      .selectAll<SVGCircleElement, SimNode>('circle')
-      .attr('opacity', (d) =>
-        !searchQuery || d.id.toLowerCase().includes(searchQuery.toLowerCase())
-          ? 1
-          : 0.2,
-      );
-    nodeGroup
-      .selectAll<SVGTextElement, SimNode>('text')
-      .attr('opacity', (d) =>
-        !searchQuery || d.id.toLowerCase().includes(searchQuery.toLowerCase())
-          ? 1
-          : 0.2,
-      );
+    const q = searchQuery.toLowerCase();
+    nodeGroup.classed(
+      'search-dim',
+      (d) => !!searchQuery && !d.id.toLowerCase().includes(q),
+    );
   });
 
 // ─────────────────────────────────────────
