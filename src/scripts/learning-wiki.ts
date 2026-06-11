@@ -45,6 +45,7 @@ interface SimNode extends d3.SimulationNodeDatum {
   id: string;
   folder: string;
   content: string;
+  unresolved?: boolean;
 }
 
 interface SimLink extends d3.SimulationLinkDatum<SimNode> {
@@ -60,13 +61,18 @@ if (NOTES.length === 0) {
   throw new Error('No wiki notes found');
 }
 
-// ── Wiki-link edges extracted from note content ──
-function extractEdges(notes: WikiNote[]): SimLink[] {
+// ── Wiki-link edges extracted from note content. Targets that don't match
+//    any note become pale "unresolved" phantom nodes, like Obsidian. ──
+function extractGraph(notes: WikiNote[]): {
+  edges: SimLink[];
+  unresolvedIds: string[];
+} {
   const ids = new Set(notes.map((n) => n.id));
   const edges: SimLink[] = [];
   const seen = new Set<string>();
+  const unresolved = new Set<string>();
   notes.forEach((note) => {
-    const matches = note.content.matchAll(/\[\[([^\]]+)\]\]/g);
+    const matches = note.content.matchAll(/(?<!!)\[\[([^\]]+)\]\]/g);
     for (const m of matches) {
       // Strip alias: [[Note|Display]] -> "Note"
       let target = m[1].split('|')[0].trim();
@@ -74,16 +80,15 @@ function extractEdges(notes: WikiNote[]): SimLink[] {
       if (target.startsWith('#')) continue;
       // Strip heading anchor: [[Note#Heading]] -> "Note"
       target = target.split('#')[0].trim();
-      if (target && target !== note.id && ids.has(target)) {
-        const key = [note.id, target].sort().join('||');
-        if (!seen.has(key)) {
-          seen.add(key);
-          edges.push({ source: note.id, target });
-        }
-      }
+      if (!target || target === note.id) continue;
+      const key = [note.id, target].sort().join('||');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      if (!ids.has(target)) unresolved.add(target);
+      edges.push({ source: note.id, target });
     }
   });
-  return edges;
+  return { edges, unresolvedIds: [...unresolved] };
 }
 
 // ─────────────────────────────────────────
@@ -92,11 +97,13 @@ function extractEdges(notes: WikiNote[]): SimLink[] {
 let selectedId: string | null = null;
 let searchQuery = '';
 
-const edges = extractEdges(NOTES);
+const { edges, unresolvedIds } = extractGraph(NOTES);
+const unresolvedSet = new Set(unresolvedIds);
 
 // ── Adjacency map + degree, used for node sizing and hover highlighting ──
 const neighbors = new Map<string, Set<string>>();
 for (const n of NOTES) neighbors.set(n.id, new Set());
+for (const id of unresolvedIds) neighbors.set(id, new Set());
 for (const e of edges) {
   const s = e.source as string;
   const t = e.target as string;
@@ -104,10 +111,12 @@ for (const e of edges) {
   neighbors.get(t)?.add(s);
 }
 
-// Node radius grows with link count (sqrt so hubs don't dwarf the graph)
+// Node radius grows with link count (sqrt so hubs don't dwarf the graph).
+// Obsidian's ratio between leaf and hub is ~1:2.5, not larger.
 function nodeRadius(id: string): number {
+  if (unresolvedSet.has(id)) return 4;
   const degree = neighbors.get(id)?.size ?? 0;
-  return 4 + Math.min(Math.sqrt(degree) * 2.4, 12);
+  return 5 + Math.min(Math.sqrt(degree) * 1.8, 9);
 }
 
 // ─────────────────────────────────────────
@@ -472,7 +481,9 @@ function initGraph() {
       gMain.attr('transform', e.transform);
       // Labels fade in as you zoom closer, like Obsidian's graph view
       const k: number = e.transform.k;
-      const labelOpacity = Math.max(0, Math.min(1, (k - 0.55) / 0.65));
+      // Hidden at the fitted overview, fully visible past ~1.6x — matches
+      // Obsidian, where labels only appear once you zoom in.
+      const labelOpacity = Math.max(0, Math.min(1, (k - 0.9) / 0.7));
       svg.style('--label-opacity', String(labelOpacity));
     });
 
@@ -480,16 +491,24 @@ function initGraph() {
 
   gMain = svg.append('g');
 
-  const nodes: SimNode[] = NOTES.map((n) => ({ ...n }));
+  const nodes: SimNode[] = [
+    ...NOTES.map((n) => ({ ...n })),
+    ...unresolvedIds.map((id) => ({
+      id,
+      folder: '',
+      content: '',
+      unresolved: true,
+    })),
+  ];
   const links: SimLink[] = edges.map((e) => ({ ...e }));
 
   document.getElementById('node-count')!.textContent =
-    `${nodes.length} notes · ${links.length} connections`;
+    `${NOTES.length} notes · ${links.length} connections`;
 
-  // Obsidian-style forces: link attraction + node repulsion + a WEAK pull
-  // toward the center (forceX/forceY). The weak gravity lets the graph
-  // settle into an organic circular cluster instead of being pinned flat
-  // by a hard centering force.
+  // Obsidian's force profile: long link distance + strong repulsion +
+  // weak center gravity, and NO collision force. The repulsion alone
+  // spaces nodes, leaving the airy whitespace Obsidian has; orphan and
+  // leaf notes drift into a wide ring around the central cluster.
   simulation = d3
     .forceSimulation<SimNode, SimLink>(nodes)
     .force(
@@ -497,16 +516,11 @@ function initGraph() {
       d3
         .forceLink<SimNode, SimLink>(links)
         .id((d) => d.id)
-        .distance(85)
-        .strength(0.4),
+        .distance(150),
     )
-    .force('charge', d3.forceManyBody().strength(-320))
-    .force('x', d3.forceX(W / 2).strength(0.08))
-    .force('y', d3.forceY(H / 2).strength(0.08))
-    .force(
-      'collision',
-      d3.forceCollide<SimNode>((d) => nodeRadius(d.id) + 10),
-    );
+    .force('charge', d3.forceManyBody().strength(-800))
+    .force('x', d3.forceX(W / 2).strength(0.05))
+    .force('y', d3.forceY(H / 2).strength(0.05));
 
   linkGroup = gMain
     .append('g')
@@ -522,7 +536,7 @@ function initGraph() {
     .selectAll<SVGGElement, SimNode>('g')
     .data(nodes)
     .join('g')
-    .attr('class', 'node')
+    .attr('class', (d) => (d.unresolved ? 'node unresolved' : 'node'))
     .call(
       d3
         .drag<SVGGElement, SimNode>()
@@ -541,7 +555,9 @@ function initGraph() {
           d.fy = null;
         }),
     )
-    .on('click', (_e, d) => selectNote(d.id))
+    .on('click', (_e, d) => {
+      if (!d.unresolved) selectNote(d.id);
+    })
     .on('mouseenter', (_e, d) => highlightNeighborhood(d.id))
     .on('mouseleave', clearHighlight);
 
