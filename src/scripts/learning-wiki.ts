@@ -114,9 +114,9 @@ for (const e of edges) {
 // Node radius grows with link count (sqrt so hubs don't dwarf the graph).
 // Obsidian's ratio between leaf and hub is ~1:2.5, not larger.
 function nodeRadius(id: string): number {
-  if (unresolvedSet.has(id)) return 4;
+  if (unresolvedSet.has(id)) return 1.5;
   const degree = neighbors.get(id)?.size ?? 0;
-  return 5 + Math.min(Math.sqrt(degree) * 1.8, 9);
+  return 2 + Math.min(Math.sqrt(degree) * 0.8, 3.5);
 }
 
 // ─────────────────────────────────────────
@@ -156,6 +156,15 @@ function buildFolderTree(notes: WikiNote[]): FolderNode {
 }
 
 const collapsedFolders = new Set<string>();
+
+// Start with every folder collapsed.
+function collectFolderPaths(folder: FolderNode, out: Set<string>) {
+  for (const child of folder.folders.values()) {
+    out.add(child.path);
+    collectFolderPaths(child, out);
+  }
+}
+collectFolderPaths(buildFolderTree(NOTES), collapsedFolders);
 
 function collectMatchingNotes(
   folder: FolderNode,
@@ -467,6 +476,7 @@ let nodeGroup: d3.Selection<SVGGElement, SimNode, SVGGElement, unknown>;
 let linkGroup: d3.Selection<SVGLineElement, SimLink, SVGGElement, unknown>;
 let gMain: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 let zoomBehavior: d3.ZoomBehavior<SVGSVGElement, unknown>;
+let hasAnimatedEntrance = false;
 
 function initGraph() {
   svg.selectAll('*').remove();
@@ -479,11 +489,11 @@ function initGraph() {
     .scaleExtent([0.25, 4])
     .on('zoom', (e) => {
       gMain.attr('transform', e.transform);
-      // Labels fade in as you zoom closer, like Obsidian's graph view
+      // Labels fade in as you zoom closer, like Obsidian's graph view.
       const k: number = e.transform.k;
-      // Hidden at the fitted overview, fully visible past ~1.6x — matches
-      // Obsidian, where labels only appear once you zoom in.
-      const labelOpacity = Math.max(0, Math.min(1, (k - 0.9) / 0.7));
+      // Faintly visible already at the fitted overview, fully in by ~1x, so
+      // captions show up a little sooner as you scroll in.
+      const labelOpacity = Math.max(0, Math.min(1, (k - 0.45) / 0.5));
       svg.style('--label-opacity', String(labelOpacity));
     });
 
@@ -505,10 +515,12 @@ function initGraph() {
   document.getElementById('node-count')!.textContent =
     `${NOTES.length} notes · ${links.length} connections`;
 
-  // Obsidian's force profile: long link distance + strong repulsion +
-  // weak center gravity, and NO collision force. The repulsion alone
-  // spaces nodes, leaving the airy whitespace Obsidian has; orphan and
-  // leaf notes drift into a wide ring around the central cluster.
+  // Mirror Obsidian's actual graph forces (obs_notes/.obsidian/graph.json:
+  // repelStrength 10, linkStrength 1, linkDistance 250, centerStrength ~0.52).
+  // The recipe is STRONG centering + STRONG short links + MILD repulsion, NOT
+  // the reverse. That pulls linked notes into a dense, meshed core while only
+  // true orphans drift into a loose outer ring — Obsidian's organic look. A
+  // collision force keeps the core from overlapping into a blob.
   simulation = d3
     .forceSimulation<SimNode, SimLink>(nodes)
     .force(
@@ -516,11 +528,16 @@ function initGraph() {
       d3
         .forceLink<SimNode, SimLink>(links)
         .id((d) => d.id)
-        .distance(150),
+        .distance(110)
+        .strength(0.7),
     )
-    .force('charge', d3.forceManyBody().strength(-800))
-    .force('x', d3.forceX(W / 2).strength(0.05))
-    .force('y', d3.forceY(H / 2).strength(0.05));
+    .force('charge', d3.forceManyBody().strength(-260).distanceMax(450))
+    .force('x', d3.forceX(W / 2).strength(0.09))
+    .force('y', d3.forceY(H / 2).strength(0.09))
+    .force(
+      'collide',
+      d3.forceCollide<SimNode>().radius((d) => nodeRadius(d.id) + 6),
+    );
 
   linkGroup = gMain
     .append('g')
@@ -580,13 +597,73 @@ function initGraph() {
 
   simulation.on('tick', ticked);
 
-  // Settle the layout off-screen so the graph loads already formed,
-  // then fit the whole graph into the viewport (Obsidian opens fitted).
+  // Pre-settle off-screen to learn the final layout, fit the viewport to it,
+  // then (first load only) play an Obsidian-style entrance: every node starts
+  // collapsed at the centroid and springs out to its settled spot while the
+  // circles pop in and labels fade up once things land.
   simulation.stop();
   for (let i = 0; i < 300; i++) simulation.tick();
-  ticked();
   updateGraphSelection();
   zoomToFit(W, H);
+
+  if (hasAnimatedEntrance) {
+    ticked();
+  } else {
+    hasAnimatedEntrance = true;
+    playEntrance();
+  }
+
+  function playEntrance() {
+    const final = nodes.map((n) => ({ x: n.x!, y: n.y! }));
+    const cx = final.reduce((a, p) => a + p.x, 0) / final.length;
+    const cy = final.reduce((a, p) => a + p.y, 0) / final.length;
+    const start = final.map(() => ({
+      x: cx + (Math.random() - 0.5) * 30,
+      y: cy + (Math.random() - 0.5) * 30,
+    }));
+
+    // Hold the labels back until the nodes have landed, then fade them up.
+    const k = d3.zoomTransform(svg.node()!).k;
+    const settledLabelOpacity = Math.max(0, Math.min(1, (k - 0.45) / 0.5));
+    svg.style('--label-opacity', '0');
+
+    // Pop the circles in from r=0 with a slight overshoot, lightly staggered.
+    nodeGroup
+      .select<SVGCircleElement>('circle')
+      .attr('r', 0)
+      .transition()
+      .duration(550)
+      .delay((_d, i) => i * 3)
+      .ease(d3.easeBackOut)
+      .attr('r', (d) => nodeRadius(d.id));
+
+    // Render the collapsed start state, then ease every node out to its
+    // settled position; ticked() drags the links along each frame.
+    nodes.forEach((n, i) => {
+      n.x = start[i].x;
+      n.y = start[i].y;
+    });
+    ticked();
+
+    const duration = 900;
+    let t0: number | null = null;
+    function frame(now: number) {
+      if (t0 === null) t0 = now;
+      const t = Math.min(1, (now - t0) / duration);
+      const e = d3.easeCubicOut(t);
+      nodes.forEach((n, i) => {
+        n.x = start[i].x + (final[i].x - start[i].x) * e;
+        n.y = start[i].y + (final[i].y - start[i].y) * e;
+      });
+      ticked();
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        svg.style('--label-opacity', String(settledLabelOpacity));
+      }
+    }
+    requestAnimationFrame(frame);
+  }
 }
 
 function zoomToFit(W: number, H: number) {
@@ -671,7 +748,7 @@ function pulseNode(id: string) {
     .attr('cy', target.y!)
     .attr('r', r)
     .attr('fill', 'none')
-    .attr('stroke', 'var(--accent)')
+    .attr('stroke', 'var(--graph-accent)')
     .attr('stroke-width', 2)
     .attr('opacity', 1);
 
@@ -714,7 +791,9 @@ document.getElementById('mobile-toggle')!.addEventListener('click', () => {
 const shell = document.getElementById('wiki-shell')!;
 const leftPanel = document.getElementById('left-panel')!;
 const toggleBtn = document.getElementById('sidebar-toggle')!;
-let sidebarOpen = true;
+// The sidebar starts collapsed via server-rendered markup (.panel-collapsed /
+// .collapsed) so there's no open→close animation on page load.
+let sidebarOpen = false;
 
 toggleBtn.addEventListener('click', () => {
   sidebarOpen = !sidebarOpen;

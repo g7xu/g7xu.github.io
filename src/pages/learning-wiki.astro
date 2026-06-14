@@ -67,18 +67,14 @@ const notesJson = JSON.stringify(notes);
         </p>
       </div>
     ) : (
-      <div class="wiki-shell" id="wiki-shell">
-        {/* Sidebar collapse toggle */}
-        <button
-          class="sidebar-toggle"
-          id="sidebar-toggle"
-          title="Toggle sidebar"
-        >
-          ◀
+      <div class="wiki-shell panel-collapsed" id="wiki-shell">
+        {/* Sidebar collapse toggle — starts collapsed (see learning-wiki.ts) */}
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Show sidebar">
+          ▶
         </button>
 
         {/* LEFT: Folder tree */}
-        <aside class="left-panel" id="left-panel">
+        <aside class="left-panel collapsed" id="left-panel">
           <div class="left-panel-header">
             <input
               class="search-box"

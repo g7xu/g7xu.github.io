@@ -183,12 +183,18 @@
   fill: #cbd5e1;
 }
 
+/* Obsidian-style purple highlight for hover/selection in the graph. Scoped to
+   the graph so the site's rust --accent (nav indicator) is untouched. */
+#graph-svg {
+  --graph-accent: #8b5cf6;
+}
+
 .node.selected circle {
-  fill: var(--accent);
+  fill: var(--graph-accent);
 }
 
 .node-label {
-  font-size: 10px;
+  font-size: 7px;
   fill: var(--fg-muted);
   text-anchor: middle;
   pointer-events: none;
@@ -216,7 +222,7 @@
   opacity: 1;
 }
 #graph-svg.hovering .node.focus circle {
-  fill: var(--accent);
+  fill: var(--graph-accent);
   transform: scale(1.2);
 }
 /* Hovered node's label always shows, even when zoomed out (Obsidian) */
@@ -228,7 +234,7 @@
   stroke-opacity: 0.05;
 }
 #graph-svg.hovering .link.link-active {
-  stroke: var(--accent);
+  stroke: var(--graph-accent);
   stroke-opacity: 0.85;
   stroke-width: 1.2px;
 }
