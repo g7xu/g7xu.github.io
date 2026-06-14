@@ -1,6 +1,6 @@
-**Summary**: Recovering surface normals and albedo from several images under known lighting (photometric stereo), assuming a matte Lambertian surface.
+**Summary**: Photometric stereo end-to-end: recovering surface normals and albedo from several images under known lighting (assuming a matte Lambertian surface), then **recovering the 3D surface from the normals** — normals → slopes → integration, the integrability problem, and the least-squares fix.
 
-**Last updated**: 2026-05-27
+**Last updated**: 2026-06-11
 
 ---
 
@@ -14,7 +14,14 @@ Model we use to convert an image to 3D Model
 > As we discussed earlier, the brightness of a pixel can depend on multiple factors. Getting an accurate 3D model is like running a controlled experiment, where you have to keep most variables fixed and only a few changeable.
 
 ## The  Lambertian Photometric Model
-To implement this controlled experiment, we will use the Lambertian Photometric model. One key assumption of the Model is that the surface is **matte** (the surface reflect equally regardless of viewing angle). 
+To implement this controlled experiment, we will use the Lambertian Photometric model. One key assumption of the Model is that the surface is **matte** (the surface reflect equally regardless of viewing angle).
+
+**The full assumption list** (each one keeps the "controlled experiment" controlled):
+- We can **control the lighting** — observe the object under **3 or more** light sources
+- Light sources are **distant, directional point lights** (each light is a single known direction $s^k$ for the whole scene)
+- Object is **small relative to its distance from the camera**
+- Object material is **Lambertian** (matte — no specular highlights)
+- Object is **far from all other reflecting surfaces** (no inter-reflections contaminating the measurement)
 
 The brightness of each pixel is described by:
 $$
@@ -58,6 +65,37 @@ $$b = (S^TS)^{-1}S^TI$$
 - $\rho(x,y) = \|b(x,y)\|$ (we are scaling a unit vector, the length is the scaler)
 - $\hat{n}(x,y) = \frac{b(x,y)}{\|b(x,y)\|}$ (typical way of finding the unit vector)
 ### Step 6. Repeat this for every single pixel
+
+## Recovering the surface from normals
+Steps 1–6 give a **normal map** — a normal and albedo at every pixel. The final step of photometric stereo turns those normals into the actual **3D surface**: the height map $z(x,y)$.
+
+### Normals are slopes in disguise
+Write every surface point as $s(x,y) = (x, y, z(x,y))$ — the image plane gives $x, y$; the unknown is the depth $z$. The two tangent vectors of this surface are $t_1 = (1, 0, \tfrac{\partial z}{\partial x})$ and $t_2 = (0, 1, \tfrac{\partial z}{\partial y})$, and the normal is their cross product:
+$$n = t_1 \times t_2 = \left(-\tfrac{\partial z}{\partial x},\; -\tfrac{\partial z}{\partial y},\; 1\right)$$
+
+Invert that relationship and the measured unit normal hands you the **surface slopes** at each pixel:
+$$\frac{\partial z}{\partial x} = \frac{-\hat{n}_1}{\hat{n}_3} \qquad \frac{\partial z}{\partial y} = \frac{-\hat{n}_2}{\hat{n}_3}$$
+
+So the problem becomes: **recover $z(x,y)$ given estimates of its two partial derivatives** (call them $p = \tfrac{\partial z}{\partial x}$, $q = \tfrac{\partial z}{\partial y}$).
+
+### A simple approach: integrate along paths
+Slopes tell you height *differences*, so sum them up:
+1. **Integrate $p$ along row 0** to get the top row of heights: $z(k{+}1, 0) = z(k, 0) + z_x(k, 0)$
+2. **Integrate $q$ down each column**, starting from the row-0 value
+
+(The result is relative — heights up to an unknown constant offset of the starting corner.)
+
+### The catch: integrability
+Height by integration is a **path integral** from a start point: $z(x,y) = z(x_0,y_0) + \int (p\,dx + q\,dy)$. For a *true* height function, the path shouldn't matter — going around any closed loop must return you to the same height, which requires the **mixed partials to agree**:
+$$\frac{\partial p}{\partial y} = \frac{\partial q}{\partial x} \quad\left(= \tfrac{\partial^2 z}{\partial x \partial y}\right)$$
+But $p$ and $q$ were estimated **independently at every pixel** from noisy normals, so this **integrability constraint** can fail — different integration paths give different heights, like an Escher staircase that climbs forever and still meets itself.
+
+### The fix: least-squares surface fitting
+Instead of trusting one path, find the surface whose slopes **best match** the measured gradient field everywhere:
+$$\iint_{\text{Image}} (z_x - p)^2 + (z_y - q)^2 \; dx\, dy \;\to\; \min$$
+where $z_x, z_y$ are the derivatives of the *fitted* surface. Solved by calculus of variations (iterative optimization); because the solution is an actual height function, **integrability is satisfied automatically** [Horn, *Robot Vision*, 1986]. Note the pattern: this is the same move as Step 4 — when noisy measurements over-determine the problem, fit by least squares rather than solving exactly.
+
+**Full pipeline:** K images under known lights → $b = (S^TS)^{-1}S^TI$ per pixel → normals $\hat n$ + albedo $\rho$ → slopes $p, q$ → integrate / least-squares fit → surface $z(x,y)$.
 
 ## Related pages
 - [[Image Formation & Photometry]]

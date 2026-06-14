@@ -45,6 +45,7 @@ interface SimNode extends d3.SimulationNodeDatum {
   id: string;
   folder: string;
   content: string;
+  unresolved?: boolean;
 }
 
 interface SimLink extends d3.SimulationLinkDatum<SimNode> {
@@ -60,13 +61,18 @@ if (NOTES.length === 0) {
   throw new Error('No wiki notes found');
 }
 
-// ── Wiki-link edges extracted from note content ──
-function extractEdges(notes: WikiNote[]): SimLink[] {
+// ── Wiki-link edges extracted from note content. Targets that don't match
+//    any note become pale "unresolved" phantom nodes, like Obsidian. ──
+function extractGraph(notes: WikiNote[]): {
+  edges: SimLink[];
+  unresolvedIds: string[];
+} {
   const ids = new Set(notes.map((n) => n.id));
   const edges: SimLink[] = [];
   const seen = new Set<string>();
+  const unresolved = new Set<string>();
   notes.forEach((note) => {
-    const matches = note.content.matchAll(/\[\[([^\]]+)\]\]/g);
+    const matches = note.content.matchAll(/(?<!!)\[\[([^\]]+)\]\]/g);
     for (const m of matches) {
       // Strip alias: [[Note|Display]] -> "Note"
       let target = m[1].split('|')[0].trim();
@@ -74,16 +80,15 @@ function extractEdges(notes: WikiNote[]): SimLink[] {
       if (target.startsWith('#')) continue;
       // Strip heading anchor: [[Note#Heading]] -> "Note"
       target = target.split('#')[0].trim();
-      if (target && target !== note.id && ids.has(target)) {
-        const key = [note.id, target].sort().join('||');
-        if (!seen.has(key)) {
-          seen.add(key);
-          edges.push({ source: note.id, target });
-        }
-      }
+      if (!target || target === note.id) continue;
+      const key = [note.id, target].sort().join('||');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      if (!ids.has(target)) unresolved.add(target);
+      edges.push({ source: note.id, target });
     }
   });
-  return edges;
+  return { edges, unresolvedIds: [...unresolved] };
 }
 
 // ─────────────────────────────────────────
@@ -92,7 +97,27 @@ function extractEdges(notes: WikiNote[]): SimLink[] {
 let selectedId: string | null = null;
 let searchQuery = '';
 
-const edges = extractEdges(NOTES);
+const { edges, unresolvedIds } = extractGraph(NOTES);
+const unresolvedSet = new Set(unresolvedIds);
+
+// ── Adjacency map + degree, used for node sizing and hover highlighting ──
+const neighbors = new Map<string, Set<string>>();
+for (const n of NOTES) neighbors.set(n.id, new Set());
+for (const id of unresolvedIds) neighbors.set(id, new Set());
+for (const e of edges) {
+  const s = e.source as string;
+  const t = e.target as string;
+  neighbors.get(s)?.add(t);
+  neighbors.get(t)?.add(s);
+}
+
+// Node radius grows with link count (sqrt so hubs don't dwarf the graph).
+// Obsidian's ratio between leaf and hub is ~1:2.5, not larger.
+function nodeRadius(id: string): number {
+  if (unresolvedSet.has(id)) return 1.5;
+  const degree = neighbors.get(id)?.size ?? 0;
+  return 2 + Math.min(Math.sqrt(degree) * 0.8, 3.5);
+}
 
 // ─────────────────────────────────────────
 // LEFT PANEL — Folder tree
@@ -131,6 +156,15 @@ function buildFolderTree(notes: WikiNote[]): FolderNode {
 }
 
 const collapsedFolders = new Set<string>();
+
+// Start with every folder collapsed.
+function collectFolderPaths(folder: FolderNode, out: Set<string>) {
+  for (const child of folder.folders.values()) {
+    out.add(child.path);
+    collectFolderPaths(child, out);
+  }
+}
+collectFolderPaths(buildFolderTree(NOTES), collapsedFolders);
 
 function collectMatchingNotes(
   folder: FolderNode,
@@ -434,13 +468,15 @@ function selectNote(id: string) {
 // ─────────────────────────────────────────
 // D3 FORCE GRAPH
 // ─────────────────────────────────────────
-const svg = d3.select('#graph-svg');
+const svg = d3.select<SVGSVGElement, unknown>('#graph-svg');
 const container = document.getElementById('graph-panel')!;
 
 let simulation: d3.Simulation<SimNode, SimLink>;
 let nodeGroup: d3.Selection<SVGGElement, SimNode, SVGGElement, unknown>;
 let linkGroup: d3.Selection<SVGLineElement, SimLink, SVGGElement, unknown>;
 let gMain: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+let zoomBehavior: d3.ZoomBehavior<SVGSVGElement, unknown>;
+let hasAnimatedEntrance = false;
 
 function initGraph() {
   svg.selectAll('*').remove();
@@ -448,21 +484,43 @@ function initGraph() {
   const W = container.clientWidth;
   const H = container.clientHeight;
 
-  const zoom = d3
+  zoomBehavior = d3
     .zoom<SVGSVGElement, unknown>()
-    .scaleExtent([0.3, 3])
-    .on('zoom', (e) => gMain.attr('transform', e.transform));
+    .scaleExtent([0.25, 4])
+    .on('zoom', (e) => {
+      gMain.attr('transform', e.transform);
+      // Labels fade in as you zoom closer, like Obsidian's graph view.
+      const k: number = e.transform.k;
+      // Faintly visible already at the fitted overview, fully in by ~1x, so
+      // captions show up a little sooner as you scroll in.
+      const labelOpacity = Math.max(0, Math.min(1, (k - 0.45) / 0.5));
+      svg.style('--label-opacity', String(labelOpacity));
+    });
 
-  svg.call(zoom as any);
+  svg.call(zoomBehavior as any);
 
   gMain = svg.append('g');
 
-  const nodes: SimNode[] = NOTES.map((n) => ({ ...n }));
+  const nodes: SimNode[] = [
+    ...NOTES.map((n) => ({ ...n })),
+    ...unresolvedIds.map((id) => ({
+      id,
+      folder: '',
+      content: '',
+      unresolved: true,
+    })),
+  ];
   const links: SimLink[] = edges.map((e) => ({ ...e }));
 
   document.getElementById('node-count')!.textContent =
-    `${nodes.length} notes · ${links.length} connections`;
+    `${NOTES.length} notes · ${links.length} connections`;
 
+  // Mirror Obsidian's actual graph forces (obs_notes/.obsidian/graph.json:
+  // repelStrength 10, linkStrength 1, linkDistance 250, centerStrength ~0.52).
+  // The recipe is STRONG centering + STRONG short links + MILD repulsion, NOT
+  // the reverse. That pulls linked notes into a dense, meshed core while only
+  // true orphans drift into a loose outer ring — Obsidian's organic look. A
+  // collision force keeps the core from overlapping into a blob.
   simulation = d3
     .forceSimulation<SimNode, SimLink>(nodes)
     .force(
@@ -470,11 +528,16 @@ function initGraph() {
       d3
         .forceLink<SimNode, SimLink>(links)
         .id((d) => d.id)
-        .distance(120),
+        .distance(110)
+        .strength(0.7),
     )
-    .force('charge', d3.forceManyBody().strength(-220))
-    .force('center', d3.forceCenter(W / 2, H / 2))
-    .force('collision', d3.forceCollide(45));
+    .force('charge', d3.forceManyBody().strength(-260).distanceMax(450))
+    .force('x', d3.forceX(W / 2).strength(0.09))
+    .force('y', d3.forceY(H / 2).strength(0.09))
+    .force(
+      'collide',
+      d3.forceCollide<SimNode>().radius((d) => nodeRadius(d.id) + 6),
+    );
 
   linkGroup = gMain
     .append('g')
@@ -490,7 +553,7 @@ function initGraph() {
     .selectAll<SVGGElement, SimNode>('g')
     .data(nodes)
     .join('g')
-    .attr('class', 'node')
+    .attr('class', (d) => (d.unresolved ? 'node unresolved' : 'node'))
     .call(
       d3
         .drag<SVGGElement, SimNode>()
@@ -509,45 +572,150 @@ function initGraph() {
           d.fy = null;
         }),
     )
-    .on('click', (_e, d) => selectNote(d.id));
-
-  nodeGroup
-    .append('circle')
-    .attr('r', 10)
-    .attr('fill', (d) =>
-      d.id === selectedId ? 'var(--accent-color)' : 'var(--primary-color)',
-    )
-    .on('mouseover', function () {
-      d3.select(this).attr('r', 13);
+    .on('click', (_e, d) => {
+      if (!d.unresolved) selectNote(d.id);
     })
-    .on('mouseout', function (this: SVGCircleElement, _e, d) {
-      d3.select(this).attr('r', d.id === selectedId ? 13 : 10);
-    });
+    .on('mouseenter', (_e, d) => highlightNeighborhood(d.id))
+    .on('mouseleave', clearHighlight);
+
+  nodeGroup.append('circle').attr('r', (d) => nodeRadius(d.id));
 
   nodeGroup
     .append('text')
     .attr('class', 'node-label')
-    .attr('dy', '1.8em')
+    .attr('y', (d) => nodeRadius(d.id) + 14)
     .text((d) => (d.id.length > 18 ? d.id.slice(0, 16) + '…' : d.id));
 
-  simulation.on('tick', () => {
+  function ticked() {
     linkGroup
       .attr('x1', (d) => (d.source as SimNode).x!)
       .attr('y1', (d) => (d.source as SimNode).y!)
       .attr('x2', (d) => (d.target as SimNode).x!)
       .attr('y2', (d) => (d.target as SimNode).y!);
     nodeGroup.attr('transform', (d) => `translate(${d.x},${d.y})`);
-  });
+  }
+
+  simulation.on('tick', ticked);
+
+  // Pre-settle off-screen to learn the final layout, fit the viewport to it,
+  // then (first load only) play an Obsidian-style entrance: every node starts
+  // collapsed at the centroid and springs out to its settled spot while the
+  // circles pop in and labels fade up once things land.
+  simulation.stop();
+  for (let i = 0; i < 300; i++) simulation.tick();
+  updateGraphSelection();
+  zoomToFit(W, H);
+
+  if (hasAnimatedEntrance) {
+    ticked();
+  } else {
+    hasAnimatedEntrance = true;
+    playEntrance();
+  }
+
+  function playEntrance() {
+    const final = nodes.map((n) => ({ x: n.x!, y: n.y! }));
+    const cx = final.reduce((a, p) => a + p.x, 0) / final.length;
+    const cy = final.reduce((a, p) => a + p.y, 0) / final.length;
+    const start = final.map(() => ({
+      x: cx + (Math.random() - 0.5) * 30,
+      y: cy + (Math.random() - 0.5) * 30,
+    }));
+
+    // Hold the labels back until the nodes have landed, then fade them up.
+    const k = d3.zoomTransform(svg.node()!).k;
+    const settledLabelOpacity = Math.max(0, Math.min(1, (k - 0.45) / 0.5));
+    svg.style('--label-opacity', '0');
+
+    // Pop the circles in from r=0 with a slight overshoot, lightly staggered.
+    nodeGroup
+      .select<SVGCircleElement>('circle')
+      .attr('r', 0)
+      .transition()
+      .duration(550)
+      .delay((_d, i) => i * 3)
+      .ease(d3.easeBackOut)
+      .attr('r', (d) => nodeRadius(d.id));
+
+    // Render the collapsed start state, then ease every node out to its
+    // settled position; ticked() drags the links along each frame.
+    nodes.forEach((n, i) => {
+      n.x = start[i].x;
+      n.y = start[i].y;
+    });
+    ticked();
+
+    const duration = 900;
+    let t0: number | null = null;
+    function frame(now: number) {
+      if (t0 === null) t0 = now;
+      const t = Math.min(1, (now - t0) / duration);
+      const e = d3.easeCubicOut(t);
+      nodes.forEach((n, i) => {
+        n.x = start[i].x + (final[i].x - start[i].x) * e;
+        n.y = start[i].y + (final[i].y - start[i].y) * e;
+      });
+      ticked();
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        svg.style('--label-opacity', String(settledLabelOpacity));
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+}
+
+function zoomToFit(W: number, H: number) {
+  const nodes = simulation.nodes();
+  if (nodes.length === 0) return;
+  const pad = 70;
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const n of nodes) {
+    minX = Math.min(minX, n.x!);
+    maxX = Math.max(maxX, n.x!);
+    minY = Math.min(minY, n.y!);
+    maxY = Math.max(maxY, n.y!);
+  }
+  const w = maxX - minX + pad * 2;
+  const h = maxY - minY + pad * 2;
+  const scale = Math.min(1.1, W / w, H / h);
+  const tx = W / 2 - (scale * (minX + maxX)) / 2;
+  const ty = H / 2 - (scale * (minY + maxY)) / 2;
+  svg.call(
+    zoomBehavior.transform as any,
+    d3.zoomIdentity.translate(tx, ty).scale(scale),
+  );
+}
+
+// ── Hover highlighting: light up the hovered node, its neighbors and the
+//    links between them; fade everything else (Obsidian-style) ──
+function highlightNeighborhood(id: string) {
+  if (!nodeGroup) return;
+  const hood = neighbors.get(id) ?? new Set<string>();
+  svg.classed('hovering', true);
+  nodeGroup
+    .classed('focus', (d) => d.id === id)
+    .classed('neighbor', (d) => hood.has(d.id));
+  linkGroup.classed(
+    'link-active',
+    (l) => (l.source as SimNode).id === id || (l.target as SimNode).id === id,
+  );
+}
+
+function clearHighlight() {
+  if (!nodeGroup) return;
+  svg.classed('hovering', false);
+  nodeGroup.classed('focus', false).classed('neighbor', false);
+  linkGroup.classed('link-active', false);
 }
 
 function updateGraphSelection() {
   if (!nodeGroup) return;
-  nodeGroup
-    .selectAll<SVGCircleElement, SimNode>('circle')
-    .attr('fill', (d) =>
-      d.id === selectedId ? 'var(--accent-color)' : 'var(--primary-color)',
-    )
-    .attr('r', (d) => (d.id === selectedId ? 13 : 10));
+  nodeGroup.classed('selected', (d) => d.id === selectedId);
 }
 
 // Pan graph to node + play pulse ring animation
@@ -568,22 +736,28 @@ function pulseNode(id: string) {
     .transition()
     .duration(500)
     .call(
-      d3.zoom<SVGSVGElement, unknown>().transform as any,
+      zoomBehavior.transform as any,
       d3.zoomIdentity.translate(tx, ty).scale(scale),
     );
 
   // Pulse ring: append a temporary circle that expands and fades
+  const r = nodeRadius(id);
   const pulse = gMain
     .append('circle')
     .attr('cx', target.x!)
     .attr('cy', target.y!)
-    .attr('r', 10)
+    .attr('r', r)
     .attr('fill', 'none')
-    .attr('stroke', 'var(--accent-color)')
+    .attr('stroke', 'var(--graph-accent)')
     .attr('stroke-width', 2)
     .attr('opacity', 1);
 
-  pulse.transition().duration(600).attr('r', 32).attr('opacity', 0).remove();
+  pulse
+    .transition()
+    .duration(600)
+    .attr('r', r + 24)
+    .attr('opacity', 0)
+    .remove();
 }
 
 // ─────────────────────────────────────────
@@ -597,20 +771,11 @@ document
 
     // Dim non-matching nodes in graph
     if (!nodeGroup) return;
-    nodeGroup
-      .selectAll<SVGCircleElement, SimNode>('circle')
-      .attr('opacity', (d) =>
-        !searchQuery || d.id.toLowerCase().includes(searchQuery.toLowerCase())
-          ? 1
-          : 0.2,
-      );
-    nodeGroup
-      .selectAll<SVGTextElement, SimNode>('text')
-      .attr('opacity', (d) =>
-        !searchQuery || d.id.toLowerCase().includes(searchQuery.toLowerCase())
-          ? 1
-          : 0.2,
-      );
+    const q = searchQuery.toLowerCase();
+    nodeGroup.classed(
+      'search-dim',
+      (d) => !!searchQuery && !d.id.toLowerCase().includes(q),
+    );
   });
 
 // ─────────────────────────────────────────
@@ -626,7 +791,9 @@ document.getElementById('mobile-toggle')!.addEventListener('click', () => {
 const shell = document.getElementById('wiki-shell')!;
 const leftPanel = document.getElementById('left-panel')!;
 const toggleBtn = document.getElementById('sidebar-toggle')!;
-let sidebarOpen = true;
+// The sidebar starts collapsed via server-rendered markup (.panel-collapsed /
+// .collapsed) so there's no open→close animation on page load.
+let sidebarOpen = false;
 
 toggleBtn.addEventListener('click', () => {
   sidebarOpen = !sidebarOpen;
