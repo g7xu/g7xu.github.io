@@ -1,6 +1,6 @@
 **Summary**: Finding distinctive points (corners) via the sliding-window second-moment matrix, with smoothing and gradient/edge computation.
 
-**Last updated**: 2026-04-30
+**Last updated**: 2026-06-11
 
 ---
 
@@ -117,7 +117,7 @@ $$dy = \frac{I(x_0, y_0+1) - I(x_0, y_0-1)}{2}$$
 </table>
 
 --- end-multi-column
-We can actually compute the derivative in dot product form across the entire message：
+We can actually compute the derivative in dot product form across the entire image：
 $$I(x,y) * h = \sum_{i=-a}^{a} \sum_{j=-b}^{b} I(x-i, y-j) \cdot h(i,j)$$The convolution in practice is done via efficient
 ## Common Expression
 The gradient of a single point can be defined as:
@@ -152,9 +152,11 @@ where:
 > Every corner is just a rotation of axis aligned corner, so we can always decompose any symmetric matrix into rotational and diagonal matrix.
 $$C = Q^{-1} \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{bmatrix} Q$$
 ## Step by step corner detection
-**Step 1.** Run small window and compute spatial gradient matrix
-**Step 2.** Applying non-maximal suppression to the create R
-**Step 3.** Filtering with a threshold value
+**Step 1.** Run a small window over every pixel and compute the second-moment matrix $M$; from its two eigenvalues compute the **cornerness response $R$** — large only when *both* eigenvalues are large (either λ ≈ 0 → not a corner). $R$ is now a heat map of the image.
+**Step 2.** Apply **non-maximal suppression** to $R$: a real corner lights up a *blob* of neighboring pixels (the window sees it from many nearby positions), so keep only pixels that are the **local maximum** of their neighborhood — one detection per corner, at its precise location.
+**Step 3.** **Threshold**: keep only surviving peaks with $R > \tau$, discarding weak local maxima from noise and faint texture. (Low τ → many features incl. junk; high τ → fewer, stronger corners.)
+
+> NMS asks *"best in its neighborhood?"* (kills duplicates); the threshold asks *"good enough in absolute terms?"* (kills noise). What survives both = the detected corners.
 
 ## Related pages
 - [[Feature Matching]]

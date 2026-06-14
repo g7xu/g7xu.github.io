@@ -2,7 +2,7 @@
 
 **Sources**: CSE 152A (SP26, Manmohan Chandraker) — Photometry & Geometry of Image Formation.
 
-**Last updated**: 2026-05-29
+**Last updated**: 2026-06-11
 
 ---
 
@@ -56,6 +56,16 @@ The same scene looks completely different depending on lighting — e.g. Monet's
 
 ## What Determines a Pixel's Value?
 
+### What the pixel measures: irradiance
+A pixel measures the **irradiance at the sensor**. The units ladder:
+- **Radiant energy** — total # of photons that hit. Unit: **Joules (J)**
+- **Radiant flux** — photons per second. Unit: **J/s = Watts (W)**
+- **Irradiance** — photons per second *per unit area*. Unit: **W/m²** ← the pixel's quantity
+- **Radiance** — energy per second, per unit area, per **solid angle** (a direction). Unit: **W/(m²·sr)**
+
+The BRDF is the ratio of **outgoing differential radiance** to **incoming differential irradiance** → its unit is **1/sr**.
+
+### The 5 factors
 A pixel's brightness depends on **5 factors** — which is why a single pixel is too ambiguous to interpret alone:
 
 1. **Illumination** — strength, direction, color of the light source
