@@ -83,6 +83,14 @@ function initQuoteCloud(
     world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
   }
 
+  // Keep the stage below the sticky navbar so quotes are never hidden under it.
+  // (The navbar grows taller when it wraps on narrow screens, so measure it live.)
+  function layoutStage(): void {
+    const nav = document.querySelector('.navbar');
+    const navH = nav ? Math.ceil(nav.getBoundingClientRect().height) : 0;
+    stage.style.top = navH + 'px';
+  }
+
   function buildEl(q: Quote, i: number): HTMLElement {
     const fig = document.createElement('figure');
     const w = q.weight ?? 3;
@@ -107,8 +115,9 @@ function initQuoteCloud(
   }
 
   function fitAll(animate: boolean): void {
-    const VW = window.innerWidth;
-    const VH = window.innerHeight;
+    // center/fit within the stage (below the navbar), not the whole window
+    const VW = stage.clientWidth;
+    const VH = stage.clientHeight;
     const cw = contentBox.maxX - contentBox.minX || 1;
     const ch = contentBox.maxY - contentBox.minY || 1;
     const ccx = (contentBox.minX + contentBox.maxX) / 2;
@@ -170,9 +179,9 @@ function initQuoteCloud(
       if (!intro) el.classList.add('in'); // appear immediately, no reveal flash
     }
 
-    // shape the spiral into an ellipse matching the window aspect ratio, so the cloud
-    // fills a wide window instead of forming a centered circle ("ball").
-    const aspect = window.innerWidth / window.innerHeight;
+    // shape the spiral into an ellipse matching the stage aspect ratio, so the cloud
+    // fills the visible area instead of forming a centered circle ("ball").
+    const aspect = stage.clientWidth / stage.clientHeight;
     const ax = Math.sqrt(aspect);
     const ay = 1 / Math.sqrt(aspect);
 
@@ -241,7 +250,12 @@ function initQuoteCloud(
     'wheel',
     (e: WheelEvent) => {
       e.preventDefault();
-      zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.12 : 1 / 1.12);
+      const rect = stage.getBoundingClientRect();
+      // smooth, gentle zoom proportional to scroll delta. Clamp the delta (mouse wheels
+      // report large notches) and keep the coefficient small so a notch is only ~3–4%.
+      const delta = Math.max(-60, Math.min(60, e.deltaY));
+      const factor = Math.exp(-delta * 0.0006);
+      zoomAt(e.clientX - rect.left, e.clientY - rect.top, factor);
     },
     { passive: false },
   );
@@ -277,7 +291,12 @@ function initQuoteCloud(
       const [a, b] = [...pointers.values()];
       const dist = Math.hypot(a.x - b.x, a.y - b.y);
       if (pinchDist > 0) {
-        zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, dist / pinchDist);
+        const rect = stage.getBoundingClientRect();
+        zoomAt(
+          (a.x + b.x) / 2 - rect.left,
+          (a.y + b.y) / 2 - rect.top,
+          dist / pinchDist,
+        );
       }
       pinchDist = dist;
       return;
@@ -303,15 +322,15 @@ function initQuoteCloud(
   stage.addEventListener('pointerup', endPointer);
   stage.addEventListener('pointercancel', endPointer);
 
-  // ---- zoom buttons ----
-  const cx = (): number => window.innerWidth / 2;
-  const cy = (): number => window.innerHeight / 2;
+  // ---- zoom buttons (zoom toward the stage center) ----
+  const cx = (): number => stage.clientWidth / 2;
+  const cy = (): number => stage.clientHeight / 2;
   document
     .getElementById('qc-zoom-in')
-    ?.addEventListener('click', () => zoomAt(cx(), cy(), 1.25));
+    ?.addEventListener('click', () => zoomAt(cx(), cy(), 1.18));
   document
     .getElementById('qc-zoom-out')
-    ?.addEventListener('click', () => zoomAt(cx(), cy(), 1 / 1.25));
+    ?.addEventListener('click', () => zoomAt(cx(), cy(), 1 / 1.18));
   document
     .getElementById('qc-zoom-reset')
     ?.addEventListener('click', () => fitAll(!reduce));
@@ -329,12 +348,16 @@ function initQuoteCloud(
     );
     return Promise.all(loads).then(() => document.fonts.ready);
   }
+  layoutStage();
   ready().then(() => pack(true));
 
   // debounced full re-pack on resize so the cloud reshapes to the new window aspect
   let rt = 0;
   window.addEventListener('resize', () => {
     window.clearTimeout(rt);
-    rt = window.setTimeout(() => pack(false), 150);
+    rt = window.setTimeout(() => {
+      layoutStage();
+      pack(false);
+    }, 150);
   });
 }
