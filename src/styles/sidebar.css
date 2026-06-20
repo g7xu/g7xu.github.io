@@ -16,21 +16,6 @@
   margin-bottom: 1rem;
 }
 
-.sidebar-bio {
-  font-size: 0.85rem;
-  font-style: italic;
-  color: var(--fg-muted);
-  line-height: 1.55;
-  margin-bottom: 0.25rem;
-}
-
-.sidebar-bio-attribution {
-  font-size: 0.75rem;
-  color: var(--fg-muted);
-  opacity: 0.85;
-  margin: 0 0 0.75rem;
-}
-
 .sidebar-location {
   display: flex;
   align-items: center;

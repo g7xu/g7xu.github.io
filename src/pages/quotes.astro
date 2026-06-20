@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { quotes } from '../data/quotes';
+import '../styles/quote-cloud.css';
+
+const quotesJson = JSON.stringify(quotes);
+---
+
+<BaseLayout
+  title="Quotes"
+  description="A cloud of quotes I keep coming back to."
+>
+  <!-- Display fonts used only on this page (Manrope is loaded globally) -->
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Spectral:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    slot="head"
+  />
+
+  <style is:global>
+    html,
+    body {
+      overflow: hidden;
+      height: 100%;
+    }
+    body > footer {
+      display: none;
+    }
+  </style>
+
+  {
+    quotes.length === 0 ? (
+      <div class="qc-empty">
+        <p>
+          No quotes yet. Add entries to <code>src/data/quotes.ts</code> to
+          populate the cloud.
+        </p>
+      </div>
+    ) : (
+      <>
+        <div id="qc-stage">
+          <div id="qc-world" />
+        </div>
+        <div id="qc-measure" />
+
+        <div class="qc-zoom-ui">
+          <button id="qc-zoom-in" title="Zoom in" aria-label="Zoom in">
+            +
+          </button>
+          <button id="qc-zoom-out" title="Zoom out" aria-label="Zoom out">
+            −
+          </button>
+          <button
+            id="qc-zoom-reset"
+            title="Fit all"
+            aria-label="Fit all"
+            style="font-size: 13px"
+          >
+            ⤢
+          </button>
+        </div>
+      </>
+    )
+  }
+
+  <script define:vars={{ quotesJson }}>
+    window.__QUOTES__ = JSON.parse(quotesJson);
+  </script>
+  <script>
+    import '../scripts/quote-cloud.ts';
+  </script>
+</BaseLayout>

@@ -1,8 +1,6 @@
 export const author = {
   name: 'Guoxuan Xu',
   displayName: 'Jason (Guoxuan) Xu',
-  bio: '“In me the tiger sniffs the rose.”',
-  bioAttribution: 'Siegfried Sassoon',
   location: 'San Diego, CA',
   email: 'g7xu@ucsd.edu',
   avatar: '/images/bio-photo.png',
