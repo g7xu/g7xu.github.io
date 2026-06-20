@@ -45,4 +45,5 @@ export const quotes: Quote[] = [
     weight: 4,
     source: 'https://www.linkedin.com/in/chayennezhao/',
   },
+  { text: '莫愁前路无知己，天下谁人不识君。', author: '高适', weight: 4 },
 ];
