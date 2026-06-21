@@ -51,10 +51,9 @@
 - [[Git — Version Control Overview]] — core advantages and version-control workflow
 - [[Unit Testing]] — why and how to test software
 
-## Interview Cheat Sheets
+## Job Application
 
-- [[Technical Interview Checklist]] — general workflow for technical interviews
-- [[Operating Systems (Interview Cheat Sheet)]] — OS concepts (user/kernel mode, process lifecycle)
+- [[Job Application Overview]] — **sub-index** for the whole job-application cluster (scoped to **CS SWE**, not MLE): job search (boards, tools) and interview prep (technical practice, behavioral, cheat sheets, company research)
 
 ## Personal Finance
 
