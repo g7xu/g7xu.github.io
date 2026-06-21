@@ -35,6 +35,7 @@
 ## Algorithms
 
 - [[Dynamic Programming]] — thinking process and patterns for DP problems
+- [[Linked List]] — interview strategy: fast/slow pointers, dummy head, in-place reversal, split & merge
 
 ## Web & Backend Development
 
