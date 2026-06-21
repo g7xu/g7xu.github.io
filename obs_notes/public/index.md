@@ -55,3 +55,14 @@
 
 - [[Technical Interview Checklist]] — general workflow for technical interviews
 - [[Operating Systems (Interview Cheat Sheet)]] — OS concepts (user/kernel mode, process lifecycle)
+
+## Personal Finance
+
+- [[Personal Finance Order of Operations]] — the r/personalfinance "Prime Directive" flowchart: the ordered priority list for every dollar of income
+- [[Budgeting]] — Step 0: know where your money goes, cut expenses, set goals
+- [[Emergency Fund]] — Step 1: a 3–6 month liquid reserve (or a $1,000 starter while paying off debt)
+- [[401(k) Employer Match]] — Step 2: capture the free match before paying off debt
+- [[High-Interest Debt Payoff]] — Step 3: avalanche vs. snowball for debts above ~4%
+- [[IRA & Roth vs Traditional]] — Steps 4–5: fund an IRA, then round out retirement to 15–20%
+- [[Saving for Other Goals]] — Step 6: match the account to the goal's time horizon
+- [[HSA & 529 Accounts]] — Step 6 specialized accounts: HSA for medical, 529 for education
