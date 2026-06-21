@@ -13,19 +13,7 @@
 
 ## Machine Learning
 
-- [[ML Overview]] — what machine learning is and the main types of learning
-- [[ML Architecture Families]] — broad categories of ML models (linear, tree-based, kernel, neural, etc.)
-- [[k-means Clustering]] — unsupervised clustering that builds the visual vocabulary
-- [[Nearest-Neighbor Classification]] — NN / kNN classification, with pros and cons
-- [[Bayesian Classification (MAP & ML)]] — generative classification via likelihood + prior (MAP vs. ML)
-- [[Neural Network]] — what a network is (perceptron → MLP, nonlinearity, universal approximation) and how it's trained (gradient descent, SGD, momentum, backprop)
-- [[Convolutional Neural Network (CNN)]] — the image-specialized network: learned filters, convolution, weight sharing, feature volumes, pooling, receptive field, softmax
-- [[CNN Architectures]] — LeNet → AlexNet → VGG → ResNet; the layer-removal ablation ("Depth!"), width-vs-depth, 3×3 stacks, vanishing gradients, residual/skip connections
-- [[Vanishing & Exploding Gradients]] — why deep plain nets fail to optimize (chain-rule product), gradient clipping, and the gradient-pathway view of residual connections
-- [[Transfer Learning]] — reuse a pretrained network (e.g. ImageNet) for a new task; retrain-by-data-budget and fine-tuning
-- [[Generalization & Model Validation]] — train/validation/test, why you never tune on test, and generalization vs. accuracy
-- [[Regularization]] — keep capacity but constrain it: L2/L1 weight penalties, dropout, data augmentation (the weights / architecture / data levers)
-- [[Beyond CNNs — Modern CV Frontier]] — CSE 152A capstone: the frontier beyond CNNs (ViT, VLMs, diffusion, neural rendering) and the agentic paradigm; bridges into the robotics cluster
+- [[ML Overview]] — **sub-index** for the whole ML cluster: foundations (what ML is, types, the pipeline), classical models, neural networks, training & generalization, and the modern frontier
 
 ## Information Retrieval
 
@@ -58,11 +46,4 @@
 
 ## Personal Finance
 
-- [[Personal Finance Order of Operations]] — the r/personalfinance "Prime Directive" flowchart: the ordered priority list for every dollar of income
-- [[Budgeting]] — Step 0: know where your money goes, cut expenses, set goals
-- [[Emergency Fund]] — Step 1: a 3–6 month liquid reserve (or a $1,000 starter while paying off debt)
-- [[401(k) Employer Match]] — Step 2: capture the free match before paying off debt
-- [[High-Interest Debt Payoff]] — Step 3: avalanche vs. snowball for debts above ~4%
-- [[IRA & Roth vs Traditional]] — Steps 4–5: fund an IRA, then round out retirement to 15–20%
-- [[Saving for Other Goals]] — Step 6: match the account to the goal's time horizon
-- [[HSA & 529 Accounts]] — Step 6 specialized accounts: HSA for medical, 529 for education
+- [[Personal Finance Overview]] — **sub-index** for the whole Personal Finance cluster: the r/personalfinance "Prime Directive" ordered priority list, one page per step (budgeting → emergency fund → match → debt → retirement → other goals)

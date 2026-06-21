@@ -1,6 +1,32 @@
-**Summary**: What machine learning is, key terms, the three types (supervised / unsupervised / reinforcement), and the end-to-end ML pipeline.
+**Summary**: Sub-index for the Machine Learning cluster, plus the foundations: what ML is, key terms, the three types (supervised / unsupervised / reinforcement), and the end-to-end ML pipeline.
 
-**Last updated**: 2026-04-20
+**Last updated**: 2026-06-21
+
+---
+
+## Pages in this cluster
+
+**Foundations**
+- [[ML Architecture Families]] — broad categories of ML models (linear, tree-based, kernel, neural, etc.)
+
+**Classical models**
+- [[k-means Clustering]] — unsupervised clustering that builds the visual vocabulary
+- [[Nearest-Neighbor Classification]] — NN / kNN classification, with pros and cons
+- [[Bayesian Classification (MAP & ML)]] — generative classification via likelihood + prior (MAP vs. ML)
+
+**Neural networks**
+- [[Neural Network]] — perceptron → MLP, nonlinearity, and how it's trained (gradient descent, SGD, backprop)
+- [[Convolutional Neural Network (CNN)]] — the image-specialized network: learned filters, weight sharing, pooling, softmax
+- [[CNN Architectures]] — LeNet → AlexNet → VGG → ResNet; depth vs. width, 3×3 stacks, residual connections
+- [[Vanishing & Exploding Gradients]] — why deep plain nets fail to optimize, gradient clipping, the residual pathway view
+
+**Training & generalization**
+- [[Generalization & Model Validation]] — train/validation/test and why you never tune on test
+- [[Regularization]] — constrain capacity: L2/L1, dropout, data augmentation
+- [[Transfer Learning]] — reuse a pretrained network for a new task; fine-tuning by data budget
+
+**Frontier**
+- [[Beyond CNNs — Modern CV Frontier]] — the frontier beyond CNNs (ViT, VLMs, diffusion, neural rendering); bridges into the robotics cluster
 
 ---
 
