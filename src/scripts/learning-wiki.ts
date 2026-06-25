@@ -97,6 +97,14 @@ function extractGraph(notes: WikiNote[]): {
 let selectedId: string | null = null;
 let searchQuery = '';
 
+// ── URL hash deep-linking ──
+// A note's id is carried in the URL hash (e.g. /learning-wiki#Machine%20Learning)
+// so pages can be shared. `suppressHashUpdate` guards against the feedback loop
+// where we write the hash ourselves and then react to our own `hashchange`.
+let suppressHashUpdate = false;
+const encodeHash = (id: string) => '#' + encodeURIComponent(id);
+const decodeHash = () => decodeURIComponent(location.hash.slice(1));
+
 const { edges, unresolvedIds } = extractGraph(NOTES);
 const unresolvedSet = new Set(unresolvedIds);
 
@@ -454,6 +462,10 @@ function closeNote() {
   selectedId = null;
   buildTree();
   updateGraphSelection();
+  // Drop the trailing #fragment without leaving a dangling '#' in the URL.
+  suppressHashUpdate = true;
+  history.replaceState(null, '', location.pathname + location.search);
+  suppressHashUpdate = false;
 }
 
 document.getElementById('close-btn')!.addEventListener('click', closeNote);
@@ -463,7 +475,29 @@ function selectNote(id: string) {
   openNote(id);
   buildTree();
   updateGraphSelection();
+  // Keep the URL in sync so the address bar is always a shareable link. This
+  // pushes a real history entry, enabling browser back/forward between notes.
+  const target = encodeHash(id);
+  if (location.hash !== target) {
+    suppressHashUpdate = true;
+    location.hash = target;
+    suppressHashUpdate = false;
+  }
 }
+
+// React to shared links, manual URL edits, and browser back/forward.
+window.addEventListener('hashchange', () => {
+  if (suppressHashUpdate) return;
+  const id = decodeHash();
+  if (!id) {
+    if (selectedId !== null) closeNote();
+    return;
+  }
+  if (id !== selectedId && NOTES.some((n) => n.id === id)) {
+    selectNote(id);
+    pulseNode(id);
+  }
+});
 
 // ─────────────────────────────────────────
 // D3 FORCE GRAPH
@@ -812,6 +846,15 @@ toggleBtn.addEventListener('click', () => {
 // ─────────────────────────────────────────
 buildTree();
 initGraph();
+
+// Open the page named in the URL hash, if any (shared deep-link). The graph
+// runs an entrance animation, so node positions aren't final immediately —
+// defer the camera centering until they've settled.
+const initialId = decodeHash();
+if (initialId && NOTES.some((n) => n.id === initialId)) {
+  selectNote(initialId);
+  setTimeout(() => pulseNode(initialId), 700);
+}
 
 // Re-init on resize
 window.addEventListener('resize', () => {
