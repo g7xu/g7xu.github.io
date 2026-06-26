@@ -52,14 +52,50 @@
   border-bottom-color: var(--accent);
 }
 
-/* Icon-only link (Travel = coffee cup) */
+/* Icon links with a hover label (tooltip) */
 .navbar-link--icon {
+  position: relative;
   display: inline-flex;
   align-items: center;
   padding: 0.1rem 0;
 }
 .navbar-link--icon svg {
   display: block;
+}
+
+/* Hover/focus label — shows what each icon is */
+.navbar-link--icon::after {
+  content: attr(data-label);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-3px);
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease;
+}
+.navbar-link--icon:hover::after,
+.navbar-link--icon:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-link--icon::after {
+    transition: opacity 0.14s ease;
+    transform: translateX(-50%);
+  }
 }
 
 @media (max-width: 600px) {

@@ -2,16 +2,16 @@
 interface NavItem {
   label: string;
   href: string;
-  icon?: 'coffee' | 'quote';
+  icon: 'projects' | 'blog' | 'wiki' | 'coffee' | 'book';
 }
 
 const navItems: NavItem[] = [
-  { label: 'Projects', href: '/projects/' },
-  { label: 'Blog', href: '/blog/' },
-  // { label: 'Beyond-Tech',         href: '/beyond-tech/' },
-  { label: 'Learning Wiki', href: '/learning-wiki/' },
+  { label: 'Projects', href: '/projects/', icon: 'projects' },
+  { label: 'Blog', href: '/blog/', icon: 'blog' },
+  // { label: 'Beyond-Tech', href: '/beyond-tech/' },
+  { label: 'Learning Wiki', href: '/learning-wiki/', icon: 'wiki' },
   { label: 'Travel', href: '/travel/', icon: 'coffee' },
-  { label: 'Quotes', href: '/quotes/', icon: 'quote' },
+  { label: 'Quotes', href: '/quotes/', icon: 'book' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -25,45 +25,60 @@ const currentPath = Astro.url.pathname;
         navItems.map((item) => (
           <a
             href={item.href}
-            class={`navbar-link${item.icon ? ' navbar-link--icon' : ''}${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
-            aria-label={item.icon ? item.label : undefined}
-            title={item.icon ? item.label : undefined}
+            class={`navbar-link navbar-link--icon${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
+            aria-label={item.label}
+            data-label={item.label}
           >
-            {item.icon === 'coffee' ? (
-              <svg
-                viewBox="0 0 24 24"
-                width="21"
-                height="21"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M4 9h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z" />
-                <path d="M16 10.5h2a2.5 2.5 0 0 1 0 5h-2" />
-                <path d="M7.5 3.5c0 .9-.8 1.2-.8 2.2M11 3.5c0 .9-.8 1.2-.8 2.2" />
-              </svg>
-            ) : item.icon === 'quote' ? (
-              <svg
-                viewBox="0 0 24 24"
-                width="21"
-                height="21"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M12 6.5C10.5 5.6 8.6 5 6.5 5 5.2 5 4.4 5.2 4 5.4v12.2c.4-.2 1.2-.4 2.5-.4 2.1 0 4 .6 5.5 1.5" />
-                <path d="M12 6.5C13.5 5.6 15.4 5 17.5 5c1.3 0 2.1.2 2.5.4v12.2c-.4-.2-1.2-.4-2.5-.4-2.1 0-4 .6-5.5 1.5" />
-                <path d="M12 6.5v12.7" />
-              </svg>
-            ) : (
-              item.label
-            )}
+            <svg
+              viewBox="0 0 24 24"
+              width="21"
+              height="21"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              {item.icon === 'projects' && (
+                <>
+                  <rect x="4" y="4" width="6.5" height="6.5" rx="1.4" />
+                  <rect x="13.5" y="4" width="6.5" height="6.5" rx="1.4" />
+                  <rect x="4" y="13.5" width="6.5" height="6.5" rx="1.4" />
+                  <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.4" />
+                </>
+              )}
+              {item.icon === 'blog' && (
+                <>
+                  <path d="M4 20l.9-3.6L15 6.3a1.8 1.8 0 0 1 2.5 0l.3.3a1.8 1.8 0 0 1 0 2.5L7.6 19.1 4 20Z" />
+                  <path d="M13.4 7.9l2.7 2.7" />
+                </>
+              )}
+              {item.icon === 'wiki' && (
+                <>
+                  <circle cx="6" cy="7.5" r="2" />
+                  <circle cx="18" cy="6.5" r="2" />
+                  <circle cx="12.5" cy="17.5" r="2" />
+                  <path d="M7.9 8.2 16.2 6.9" />
+                  <path d="M6.8 9.4 11.4 15.7" />
+                  <path d="M16.9 8.2 13.6 15.7" />
+                </>
+              )}
+              {item.icon === 'coffee' && (
+                <>
+                  <path d="M4 9h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z" />
+                  <path d="M16 10.5h2a2.5 2.5 0 0 1 0 5h-2" />
+                  <path d="M7.5 3.5c0 .9-.8 1.2-.8 2.2M11 3.5c0 .9-.8 1.2-.8 2.2" />
+                </>
+              )}
+              {item.icon === 'book' && (
+                <>
+                  <path d="M12 6.5C10.5 5.6 8.6 5 6.5 5 5.2 5 4.4 5.2 4 5.4v12.2c.4-.2 1.2-.4 2.5-.4 2.1 0 4 .6 5.5 1.5" />
+                  <path d="M12 6.5C13.5 5.6 15.4 5 17.5 5c1.3 0 2.1.2 2.5.4v12.2c-.4-.2-1.2-.4-2.5-.4-2.1 0-4 .6-5.5 1.5" />
+                  <path d="M12 6.5v12.7" />
+                </>
+              )}
+            </svg>
           </a>
         ))
       }
