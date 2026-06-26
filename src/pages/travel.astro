@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import '../styles/travel.css';
 import { coffeeShops } from '../data/coffeeShops';
 import { geoNaturalEarth1, geoPath, geoContains } from 'd3-geo';
@@ -7,6 +9,32 @@ import { feature } from 'topojson-client';
 import worldTopo from 'world-atlas/countries-110m.json';
 import usStatesTopo from 'us-atlas/states-10m.json';
 import usCountiesTopo from 'us-atlas/counties-10m.json';
+
+// Eager-import every photo so a filename string in coffeeShops.ts resolves to
+// an optimized image at build time (no per-photo ESM import by hand).
+const photoModules = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/travel/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true },
+);
+// Pre-optimize each photo to a square ~300px webp (the polaroid renders at 150,
+// so 300 = 2× retina) and map by bare filename → optimized URL. Done in the
+// frontmatter (not via <Image> in the loop, which trips the Astro compiler).
+const travelPhotoSrc: Record<string, string> = {};
+await Promise.all(
+  Object.entries(photoModules).map(async ([path, mod]) => {
+    const out = await getImage({
+      src: mod.default,
+      width: 300,
+      height: 300,
+      fit: 'cover',
+      position: 'center',
+      format: 'webp',
+    });
+    travelPhotoSrc[path.split('/').pop()!] = out.src;
+  }),
+);
+const resolvePhoto = (src?: string): string | undefined =>
+  src ? travelPhotoSrc[src] : undefined;
 
 // --- Build the illustrated world map at build time (no client mapping library) ---
 const WIDTH = 975;
@@ -142,7 +170,9 @@ const shopCount = pins.length;
 
   <main class="travel">
     <p class="travel-line">
-      I've worked from <em>{shopCount}</em> coffee shops across the U.S.
+      I've worked from <em>{shopCount}</em> coffee shop{
+        shopCount === 1 ? '' : 's'
+      } across the U.S.
     </p>
 
     <div class="map-wrap">
@@ -284,11 +314,14 @@ const shopCount = pins.length;
                   style={`--hue:${p.hue}`}
                   data-emoji={ph.emoji ?? '☕'}
                 >
-                  {ph.src && (
+                  {resolvePhoto(ph.src) && (
                     <img
-                      src={ph.src}
+                      src={resolvePhoto(ph.src)}
                       alt={ph.caption ?? p.name}
+                      width="300"
+                      height="300"
                       loading="lazy"
+                      decoding="async"
                     />
                   )}
                 </div>
