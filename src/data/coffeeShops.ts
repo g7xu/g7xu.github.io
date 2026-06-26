@@ -38,7 +38,7 @@ export const coffeeShops: CoffeeShop[] = [
     lat: 33.0388,
     lng: -96.6628,
     date: '2026-06-21',
-    note: 'Peach-lit lounge with a highland cow on the wall — an iced matcha, an egg sandwich, and a long Sunday of deep work.',
+    note: 'first record on the map and first visited coffee shop at Taxes',
     hue: 24,
     photos: [
       { src: 'cliff-coffee-plano-1.jpg', caption: 'the lounge' },
