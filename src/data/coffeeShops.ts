@@ -46,4 +46,22 @@ export const coffeeShops: CoffeeShop[] = [
       { src: 'cliff-coffee-plano-3.jpg', caption: 'matcha + deep work' },
     ],
   },
+  {
+    id: 'flower-pot-sd',
+    name: 'The Flower Pot Café',
+    city: 'La Jolla, CA',
+    address: '7530 Fay Ave, La Jolla, CA 92037',
+    lat: 32.84077,
+    lng: -117.27424,
+    date: '2025-10-12',
+    note: 'One of my favorites in San Diego',
+    hue: 135,
+    photos: [
+      { src: 'flower-pot-sd-1.jpg', caption: 'iced latte + work' },
+      { src: 'flower-pot-sd-2.jpg', caption: 'the piano corner' },
+      { src: 'flower-pot-sd-3.jpg', caption: 'the patio' },
+      { src: 'flower-pot-sd-4.jpg', caption: 'poem on the wall' },
+      { src: 'flower-pot-sd-5.jpg', caption: 'dreamers & outcasts' },
+    ],
+  },
 ];
