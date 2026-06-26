@@ -236,6 +236,7 @@ const shopCount = pins.length;
                 >
                   <g class="pin-pop">
                     <g class="pin-scale">
+                      <circle class="pin-pulse" cx="0" cy="-15" r="9" />
                       <circle class="pin-hit" cx="0" cy="-15" r="17" />
                       <path
                         class="pin-teardrop"
@@ -253,10 +254,6 @@ const shopCount = pins.length;
           </g>
         </g>
       </svg>
-
-      <p class="map-hint">
-        {shopCount} stops · hover to light up · click to zoom in
-      </p>
     </div>
   </main>
 
@@ -429,6 +426,14 @@ const shopCount = pins.length;
       const collageOpen =
         document.getElementById('collage-overlay')?.hidden === false;
       if (e.key === 'Escape' && stack.length > 0 && !collageOpen) zoomOut();
+    });
+
+    // Click empty space (ocean, or any non-shop region) → zoom out one level.
+    // Zoom-in targets (a shop region or a pin) are ignored here; they drill in.
+    svg.addEventListener('click', (e) => {
+      const t = e.target as Element;
+      if (t.closest('.has-pin') || t.closest('.pin')) return;
+      if (stack.length > 0) zoomOut();
     });
 
     setLevel(0);
