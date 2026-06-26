@@ -30,7 +30,7 @@
 
 .navbar-nav {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   align-items: center;
 }
 
@@ -57,10 +57,45 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 0.1rem 0;
+  justify-content: center;
+  padding: 6px 9px;
+  border-bottom: none; /* no underline indicator on icon tabs */
+  border-radius: 10px;
+  color: var(--fg-muted);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 .navbar-link--icon svg {
   display: block;
+  width: 25px;
+  height: 25px;
+  transform-origin: center;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.3, 1.2);
+}
+.navbar-link--icon:hover svg {
+  transform: scale(1.13);
+}
+
+/* Active tab: the icon grows into a soft rust pill, with a little pop on load. */
+.navbar-link--icon.navbar-link--active {
+  color: var(--accent);
+  background: rgba(194, 65, 12, 0.1);
+}
+.navbar-link--icon.navbar-link--active svg {
+  transform: scale(1.16);
+  animation: navPop 0.5s cubic-bezier(0.2, 0.8, 0.3, 1.4) both;
+}
+@keyframes navPop {
+  0% {
+    transform: scale(0.6);
+  }
+  55% {
+    transform: scale(1.32);
+  }
+  100% {
+    transform: scale(1.16);
+  }
 }
 
 /* Hover/focus label — shows what each icon is */
@@ -95,6 +130,11 @@
   .navbar-link--icon::after {
     transition: opacity 0.14s ease;
     transform: translateX(-50%);
+  }
+  .navbar-link--icon svg,
+  .navbar-link--icon.navbar-link--active svg {
+    transition: none;
+    animation: none;
   }
 }
 
