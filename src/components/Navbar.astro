@@ -26,8 +26,6 @@ const currentPath = Astro.url.pathname;
           <a
             href={item.href}
             class={`navbar-link navbar-link--icon${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
-            aria-label={item.label}
-            data-label={item.label}
           >
             <svg
               viewBox="0 0 24 24"
@@ -79,6 +77,7 @@ const currentPath = Astro.url.pathname;
                 </>
               )}
             </svg>
+            <span class="navbar-label">{item.label}</span>
           </a>
         ))
       }
