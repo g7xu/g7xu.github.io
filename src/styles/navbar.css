@@ -83,19 +83,9 @@
   background: rgba(194, 65, 12, 0.1);
 }
 .navbar-link--icon.navbar-link--active svg {
+  /* Static (no re-animation on load) so it doesn't "flash" on every page
+     switch — full page reloads would otherwise replay an entrance animation. */
   transform: scale(1.16);
-  animation: navPop 0.5s cubic-bezier(0.2, 0.8, 0.3, 1.4) both;
-}
-@keyframes navPop {
-  0% {
-    transform: scale(0.6);
-  }
-  55% {
-    transform: scale(1.32);
-  }
-  100% {
-    transform: scale(1.16);
-  }
 }
 
 /* Hover/focus label — shows what each icon is */
@@ -131,10 +121,8 @@
     transition: opacity 0.14s ease;
     transform: translateX(-50%);
   }
-  .navbar-link--icon svg,
-  .navbar-link--icon.navbar-link--active svg {
+  .navbar-link--icon svg {
     transition: none;
-    animation: none;
   }
 }
 
