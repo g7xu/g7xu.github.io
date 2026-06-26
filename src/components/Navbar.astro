@@ -1,10 +1,17 @@
 ---
-const navItems = [
+interface NavItem {
+  label: string;
+  href: string;
+  icon?: 'coffee' | 'quote';
+}
+
+const navItems: NavItem[] = [
   { label: 'Projects', href: '/projects/' },
   { label: 'Blog', href: '/blog/' },
   // { label: 'Beyond-Tech',         href: '/beyond-tech/' },
   { label: 'Learning Wiki', href: '/learning-wiki/' },
-  { label: 'Quotes', href: '/quotes/' },
+  { label: 'Travel', href: '/travel/', icon: 'coffee' },
+  { label: 'Quotes', href: '/quotes/', icon: 'quote' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -18,9 +25,39 @@ const currentPath = Astro.url.pathname;
         navItems.map((item) => (
           <a
             href={item.href}
-            class={`navbar-link${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
+            class={`navbar-link${item.icon ? ' navbar-link--icon' : ''}${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
+            aria-label={item.icon ? item.label : undefined}
+            title={item.icon ? item.label : undefined}
           >
-            {item.label}
+            {item.icon === 'coffee' ? (
+              <svg
+                viewBox="0 0 24 24"
+                width="21"
+                height="21"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 9h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z" />
+                <path d="M16 10.5h2a2.5 2.5 0 0 1 0 5h-2" />
+                <path d="M7.5 3.5c0 .9-.8 1.2-.8 2.2M11 3.5c0 .9-.8 1.2-.8 2.2" />
+              </svg>
+            ) : item.icon === 'quote' ? (
+              <svg
+                viewBox="0 0 24 24"
+                width="21"
+                height="21"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M6 7h5v5c0 2.5-1.6 4.2-4 4.8l-.5-1.5c1.4-.4 2.2-1.1 2.4-2.3H6V7Zm9 0h5v5c0 2.5-1.6 4.2-4 4.8l-.5-1.5c1.4-.4 2.2-1.1 2.4-2.3H15V7Z" />
+              </svg>
+            ) : (
+              item.label
+            )}
           </a>
         ))
       }

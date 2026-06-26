@@ -1,0 +1,477 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/travel.css';
+import { coffeeShops } from '../data/coffeeShops';
+import { geoNaturalEarth1, geoPath, geoContains } from 'd3-geo';
+import { feature } from 'topojson-client';
+import worldTopo from 'world-atlas/countries-110m.json';
+import usStatesTopo from 'us-atlas/states-10m.json';
+import usCountiesTopo from 'us-atlas/counties-10m.json';
+
+// --- Build the illustrated world map at build time (no client mapping library) ---
+const WIDTH = 975;
+const HEIGHT = 610;
+
+const worldGeo: any = feature(
+  worldTopo as any,
+  (worldTopo as any).objects.countries,
+);
+const countryFeatures = worldGeo.features.filter(
+  (f: any) => f.properties?.name !== 'Antarctica',
+);
+const projection = geoNaturalEarth1().fitSize([WIDTH, HEIGHT], {
+  type: 'FeatureCollection',
+  features: countryFeatures,
+} as any);
+const pathGen = geoPath(projection);
+
+const boundsStr = (f: any) => {
+  const [[x0, y0], [x1, y1]] = pathGen.bounds(f);
+  return [x0, y0, x1, y1].map((n) => Math.round(n)).join(',');
+};
+
+// Geometry sources for the deeper tiers.
+const statesGeo: any = feature(
+  usStatesTopo as any,
+  (usStatesTopo as any).objects.states,
+);
+const countiesGeo: any = feature(
+  usCountiesTopo as any,
+  (usCountiesTopo as any).objects.counties,
+);
+
+// Which regions actually contain a shop — only these are clickable/zoomable.
+const shopCountryNames = new Set<string>();
+const shopStateIds = new Set<string>();
+const shopCountyIds = new Set<string>();
+for (const s of coffeeShops) {
+  const pt: [number, number] = [s.lng, s.lat];
+  const c = countryFeatures.find((f: any) => geoContains(f, pt));
+  if (c) shopCountryNames.add(c.properties?.name ?? '');
+  const st = statesGeo.features.find((f: any) => geoContains(f, pt));
+  if (st) shopStateIds.add(String(st.id));
+  const co = countiesGeo.features.find((f: any) => geoContains(f, pt));
+  if (co) shopCountyIds.add(String(co.id));
+}
+
+// Tier 0 — countries
+const countries = countryFeatures
+  .map((f: any) => ({
+    name: f.properties?.name ?? '',
+    d: pathGen(f) ?? '',
+    bounds: boundsStr(f),
+    hasPin: shopCountryNames.has(f.properties?.name ?? ''),
+  }))
+  .filter((c: any) => c.d);
+
+// Tier 1 — US states (the grid revealed when you zoom into the U.S.)
+const states = statesGeo.features
+  .map((f: any) => ({
+    id: String(f.id),
+    name: f.properties?.name ?? '',
+    d: pathGen(f) ?? '',
+    bounds: boundsStr(f),
+    hasPin: shopStateIds.has(String(f.id)),
+  }))
+  .filter((s: any) => s.d);
+
+// Project each shop (works for any lng/lat on Earth).
+const pins = coffeeShops
+  .map((s) => {
+    const xy = projection([s.lng, s.lat]);
+    return xy ? { ...s, x: xy[0], y: xy[1] } : null;
+  })
+  .filter((p): p is NonNullable<typeof p> => p !== null);
+
+// Tier 2 — counties (the "city grid"), scoped to states that actually have shops
+// so the page stays light. Auto-expands as shops in new states are added.
+const counties = countiesGeo.features
+  .filter((f: any) => shopStateIds.has(String(f.id).slice(0, 2)))
+  .map((f: any) => ({
+    id: String(f.id),
+    name: f.properties?.name ?? '',
+    d: pathGen(f) ?? '',
+    bounds: boundsStr(f),
+    hasPin: shopCountyIds.has(String(f.id)),
+  }))
+  .filter((c: any) => c.d);
+
+// A dashed "travel route" threading the shops in order.
+const routeD = pins.length
+  ? 'M ' + pins.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')
+  : '';
+
+const tilt = (n: number) => (((n * 37) % 13) - 6) * 0.9;
+
+const sparkles = [
+  { x: 120, y: 90 },
+  { x: 470, y: 60 },
+  { x: 720, y: 120 },
+  { x: 880, y: 330 },
+  { x: 250, y: 470 },
+  { x: 600, y: 520 },
+];
+
+const shopCount = pins.length;
+---
+
+<BaseLayout title="Travel — Coffee Shops">
+  <link rel="preconnect" href="https://fonts.googleapis.com" slot="head" />
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+    slot="head"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap"
+    slot="head"
+  />
+
+  <style is:global>
+    html,
+    body {
+      overflow: hidden;
+      height: 100%;
+    }
+    body > footer {
+      display: none;
+    }
+  </style>
+
+  <main class="travel">
+    <p class="travel-line">
+      I've worked from <em>{shopCount}</em> coffee shops across the U.S.
+    </p>
+
+    <div class="map-wrap">
+      <button class="map-back" id="map-back" hidden>← Zoom out</button>
+
+      <svg
+        class="us-map lod-world"
+        id="us-map"
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        role="img"
+        aria-label="Illustrated world map with coffee-shop pins"
+      >
+        <g class="zoom-layer" id="zoom-layer">
+          <!-- Tier 0: countries -->
+          <g class="countries">
+            {
+              countries.map((c) => (
+                <path
+                  d={c.d}
+                  class={`country${c.hasPin ? ' has-pin' : ''}`}
+                  data-name={c.name}
+                  data-bounds={c.bounds}
+                  tabindex={c.hasPin ? '0' : '-1'}
+                  role="button"
+                  aria-label={c.hasPin ? `Zoom into ${c.name}` : c.name}
+                />
+              ))
+            }
+          </g>
+
+          <!-- Tier 1: US states (grid appears when zoomed into the U.S.) -->
+          <g class="states">
+            {
+              states.map((s) => (
+                <path
+                  d={s.d}
+                  class={`state${s.hasPin ? ' has-pin' : ''}`}
+                  data-name={s.name}
+                  data-bounds={s.bounds}
+                  tabindex={s.hasPin ? '0' : '-1'}
+                  role="button"
+                  aria-label={s.hasPin ? `Zoom into ${s.name}` : s.name}
+                />
+              ))
+            }
+          </g>
+
+          <!-- Tier 2: counties / city grid (only for visited states) -->
+          <g class="counties">
+            {
+              counties.map((c) => (
+                <path
+                  d={c.d}
+                  class={`county${c.hasPin ? ' has-pin' : ''}`}
+                  data-name={c.name}
+                  data-bounds={c.bounds}
+                  tabindex={c.hasPin ? '0' : '-1'}
+                />
+              ))
+            }
+          </g>
+
+          <!-- Decorative sparkles -->
+          <g class="sparkles" aria-hidden="true">
+            {
+              sparkles.map((p) => (
+                <path
+                  class="sparkle"
+                  transform={`translate(${p.x} ${p.y})`}
+                  d="M0,-7 C0.6,-2 2,-0.6 7,0 C2,0.6 0.6,2 0,7 C-0.6,2 -2,0.6 -7,0 C-2,-0.6 -0.6,-2 0,-7 Z"
+                />
+              ))
+            }
+          </g>
+
+          <!-- Travel route -->
+          {routeD && <path class="route" d={routeD} aria-hidden="true" />}
+
+          <!-- Pins -->
+          <g class="pins">
+            {
+              pins.map((p, i) => (
+                <g
+                  class="pin"
+                  transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`}
+                  data-id={p.id}
+                  role="button"
+                  tabindex="0"
+                  aria-label={`${p.name}, ${p.city}`}
+                  style={`--hue:${p.hue}; --i:${i}`}
+                >
+                  <g class="pin-pop">
+                    <g class="pin-scale">
+                      <circle class="pin-hit" cx="0" cy="-15" r="17" />
+                      <path
+                        class="pin-teardrop"
+                        d="M0 0 C -4 -7 -9 -10 -9 -15 A 9 9 0 1 1 9 -15 C 9 -10 4 -7 0 0 Z"
+                      />
+                      <circle class="pin-center" cx="0" cy="-15" r="3.4" />
+                      <text class="pin-flag-text" y="-32" text-anchor="middle">
+                        {p.name}
+                      </text>
+                    </g>
+                  </g>
+                </g>
+              ))
+            }
+          </g>
+        </g>
+      </svg>
+
+      <p class="map-hint">
+        {shopCount} stops · hover to light up · click to zoom in
+      </p>
+    </div>
+  </main>
+
+  <!-- Collage overlay (one panel per shop, toggled by JS) -->
+  <div class="collage-overlay" id="collage-overlay" hidden>
+    <div class="collage-backdrop" data-close></div>
+    {
+      pins.map((p) => (
+        <article class="collage" data-id={p.id} hidden style={`--hue:${p.hue}`}>
+          <button class="collage-close" data-close aria-label="Close">
+            ×
+          </button>
+          <div class="collage-head">
+            <h2 class="collage-name">{p.name}</h2>
+            <p class="collage-city">
+              📍 {p.city}
+              {p.date && <span> · {p.date}</span>}
+            </p>
+          </div>
+          <div class="polaroids">
+            {p.photos.map((ph, i) => (
+              <figure
+                class="polaroid"
+                style={`--tilt:${tilt(i + p.name.length)}deg`}
+              >
+                <div
+                  class="polaroid-img"
+                  style={`--hue:${p.hue}`}
+                  data-emoji={ph.emoji ?? '☕'}
+                >
+                  {ph.src && (
+                    <img
+                      src={ph.src}
+                      alt={ph.caption ?? p.name}
+                      loading="lazy"
+                    />
+                  )}
+                </div>
+                {ph.caption && <figcaption>{ph.caption}</figcaption>}
+              </figure>
+            ))}
+          </div>
+          {p.note && <p class="collage-note">{p.note}</p>}
+        </article>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  // ---- Level-of-detail drill: globe → country → state grid → city grid ----
+  const svg = document.getElementById(
+    'us-map',
+  ) as unknown as SVGSVGElement | null;
+  const backBtn = document.getElementById('map-back');
+  const VB_W = 975;
+  const VB_H = 610;
+
+  if (svg && backBtn) {
+    let k = 1;
+    let tx = 0;
+    let ty = 0;
+    // History of views so "Zoom out" steps back one level at a time.
+    // levelIdx: 0 = world, 1 = country, 2 = state grid, 3 = city (zoomed county)
+    const stack: { k: number; tx: number; ty: number; levelIdx: number }[] = [];
+    let levelIdx = 0;
+
+    const setView = (nk: number, ntx: number, nty: number) => {
+      k = nk;
+      tx = ntx;
+      ty = nty;
+      svg.style.setProperty('--k', String(k));
+      // Precompute 1/k in JS so pins counter-scale with a plain multiply (no
+      // division-in-calc, which can render inconsistently and balloon a pin).
+      svg.style.setProperty('--inv-k', String(1 / k));
+      svg.style.setProperty('--tx', String(tx));
+      svg.style.setProperty('--ty', String(ty));
+    };
+
+    // Animate the view with ONE rAF loop so the map and the pin counter-scale
+    // stay perfectly in sync every frame (no mid-zoom "ballooning pin").
+    let raf = 0;
+    const easeInOut = (t: number) =>
+      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const animateView = (tk: number, ttx: number, tty: number, dur = 620) => {
+      cancelAnimationFrame(raf);
+      const k0 = k,
+        tx0 = tx,
+        ty0 = ty;
+      const start = performance.now();
+      const step = (now: number) => {
+        const p = Math.min(1, (now - start) / dur);
+        const e = easeInOut(p);
+        setView(
+          k0 + (tk - k0) * e,
+          tx0 + (ttx - tx0) * e,
+          ty0 + (tty - ty0) * e,
+        );
+        if (p < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+    const classForLevel = (i: number) =>
+      i === 0 ? 'lod-world' : i === 1 ? 'lod-country' : 'lod-state';
+    const setLevel = (i: number) => {
+      levelIdx = i;
+      svg.classList.remove('lod-world', 'lod-country', 'lod-state');
+      svg.classList.add(classForLevel(i));
+      backBtn.hidden = i === 0;
+    };
+
+    const frameTarget = (bounds: string, pad: number, maxK: number) => {
+      const [x0, y0, x1, y1] = bounds.split(',').map(Number);
+      const bw = Math.max(1, x1 - x0);
+      const bh = Math.max(1, y1 - y0);
+      const nk = Math.min(VB_W / (bw * pad), VB_H / (bh * pad), maxK);
+      const cx = (x0 + x1) / 2;
+      const cy = (y0 + y1) / 2;
+      return { k: nk, tx: VB_W / 2 - nk * cx, ty: VB_H / 2 - nk * cy };
+    };
+
+    // Go to a target view. Going DEEPER remembers the current view first;
+    // clicking within the same level just re-centers (no runaway history,
+    // so one "Zoom out" per real level — not per click).
+    const goTo = (
+      target: { k: number; tx: number; ty: number },
+      toIdx: number,
+    ) => {
+      if (toIdx > levelIdx) {
+        stack.push({ k, tx, ty, levelIdx });
+        setLevel(toIdx);
+      }
+      animateView(target.k, target.tx, target.ty);
+      (document.activeElement as HTMLElement | null)?.blur?.();
+    };
+
+    const zoomOut = () => {
+      const prev = stack.pop();
+      if (!prev) return;
+      animateView(prev.k, prev.tx, prev.ty);
+      setLevel(prev.levelIdx);
+    };
+
+    const bindDrill = (
+      selector: string,
+      pad: number,
+      maxK: number,
+      toIdx: number,
+    ) => {
+      document.querySelectorAll<SVGPathElement>(selector).forEach((el) => {
+        const go = () => {
+          const b = el.getAttribute('data-bounds');
+          if (b) goTo(frameTarget(b, pad, maxK), toIdx);
+        };
+        el.addEventListener('click', go);
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            go();
+          }
+        });
+      });
+    };
+    bindDrill('.country.has-pin', 1.3, 14, 1); // world → country
+    bindDrill('.state.has-pin', 1.3, 26, 2); // country → state grid
+    bindDrill('.county.has-pin', 1.4, 60, 3); // state → city
+
+    backBtn.addEventListener('click', zoomOut);
+    document.addEventListener('keydown', (e) => {
+      const collageOpen =
+        document.getElementById('collage-overlay')?.hidden === false;
+      if (e.key === 'Escape' && stack.length > 0 && !collageOpen) zoomOut();
+    });
+
+    setLevel(0);
+  }
+
+  // ---- Coffee-shop collage ----
+  const overlay = document.getElementById('collage-overlay');
+  if (overlay) {
+    const panels = Array.from(
+      overlay.querySelectorAll<HTMLElement>('.collage'),
+    );
+
+    const open = (id: string) => {
+      panels.forEach((panel) => (panel.hidden = panel.dataset.id !== id));
+      overlay.hidden = false;
+      document.body.classList.add('collage-open');
+    };
+    const close = () => {
+      overlay.hidden = true;
+      panels.forEach((panel) => (panel.hidden = true));
+      document.body.classList.remove('collage-open');
+    };
+
+    document.querySelectorAll<HTMLElement>('.pin').forEach((pin) => {
+      const id = pin.dataset.id;
+      if (!id) return;
+      pin.addEventListener('click', (e) => {
+        e.stopPropagation();
+        open(id);
+      });
+      pin.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          open(id);
+        }
+      });
+    });
+
+    overlay
+      .querySelectorAll<HTMLElement>('[data-close]')
+      .forEach((el) => el.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !overlay.hidden) close();
+    });
+  }
+</script>

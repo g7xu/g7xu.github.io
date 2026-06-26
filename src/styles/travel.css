@@ -1,0 +1,464 @@
+/* Travel / coffee-shop map — a scrapbook-styled, self-contained page.
+   Playful styling is scoped to .travel and the collage overlay so it does not
+   bleed into the rest of the site's restrained system. */
+
+.travel {
+  --paper: #faf5ec;
+  --paper-edge: #e9dcc6;
+  --ink: #2b2622;
+  --rust: #c2410c;
+  --route: #1d4ed8;
+
+  /* Fill the viewport below the navbar — the map takes over the page. */
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(
+    130% 110% at 50% -10%,
+    #fffdf8 0%,
+    var(--paper) 52%,
+    var(--paper-edge) 100%
+  );
+}
+
+/* Make the page a flex column so .travel can fill the remaining height. */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Single quote-like line ---- */
+.travel-line {
+  flex: 0 0 auto;
+  text-align: center;
+  margin: 0;
+  padding: 1.1rem 1.25rem 0.4rem;
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+  font-weight: 700;
+  color: #5b4d3e;
+}
+.travel-line em {
+  font-style: normal;
+  color: var(--rust);
+}
+
+/* ---- Map canvas (the "paper") ---- */
+.map-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  padding: 0.25rem clamp(0.5rem, 2vw, 1.5rem) 1rem;
+}
+.us-map {
+  --k: 1;
+  --tx: 0;
+  --ty: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+  /* First-render: the globe settles in. */
+  animation: mapIn 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes mapIn {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The single layer that pans/zooms. Driven per-frame by JS (animateView),
+   so no CSS transition here — that keeps pins exactly constant size. */
+.zoom-layer {
+  transform: translate(calc(var(--tx) * 1px), calc(var(--ty) * 1px))
+    scale(var(--k));
+  transform-origin: 0 0;
+}
+
+/* Never paint a browser focus ring on map regions (it can render as a stray
+   ring/disc when an SVG region is focused at deep zoom). Hover/focus fill
+   highlights below still provide feedback. */
+.us-map :focus,
+.us-map :focus-visible {
+  outline: none;
+}
+
+/* ---- Tier 0: countries (interactive only at the world level) ---- */
+.country {
+  fill: #fbf3e3;
+  stroke: #cdb79a;
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke; /* crisp borders at any zoom */
+  cursor: default;
+  outline: none;
+  pointer-events: none;
+  transition: fill 0.2s ease;
+}
+.country:nth-of-type(3n) {
+  fill: #f7eed8;
+}
+.country:nth-of-type(4n) {
+  fill: #f3ecdc;
+}
+.country:nth-of-type(5n) {
+  fill: #f6ecd4;
+}
+/* Only countries with a shop are interactive. */
+.lod-world .country.has-pin {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.lod-world .country.has-pin:hover,
+.lod-world .country.has-pin:focus-visible {
+  fill: #f3dcae;
+}
+
+/* ---- Tier 1: US states — grid appears when zoomed into a country ---- */
+.states {
+  display: none;
+}
+.lod-country .states,
+.lod-state .states {
+  display: inline;
+}
+.state {
+  fill: transparent; /* country fill shows through; lights up on hover */
+  stroke: #c9b291;
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  cursor: default;
+  outline: none;
+  pointer-events: none;
+  transition: fill 0.2s ease;
+}
+/* Only states with a shop are interactive. */
+.lod-country .state.has-pin {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.lod-country .state.has-pin:hover,
+.lod-country .state.has-pin:focus-visible {
+  fill: rgba(243, 220, 174, 0.85);
+}
+
+/* ---- Tier 2: counties / city grid — appears when zoomed into a state ---- */
+.counties {
+  display: none;
+}
+.lod-state .counties {
+  display: inline;
+}
+.county {
+  fill: transparent;
+  stroke: #d8c4a4;
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  cursor: default;
+  pointer-events: none;
+  transition: fill 0.15s ease;
+}
+/* Only counties with a shop are interactive. */
+.lod-state .county.has-pin {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.lod-state .county.has-pin:hover {
+  fill: rgba(239, 208, 158, 0.9);
+}
+
+/* Decorative sparkles + route */
+.sparkle {
+  fill: #e9bd6b;
+  opacity: 0.75;
+}
+.route {
+  fill: none;
+  stroke: var(--route);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 2 9;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.45;
+  /* First-render: the route fades in after the pins land. */
+  animation: routeIn 0.9s ease both;
+  animation-delay: 0.55s;
+}
+@keyframes routeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.45;
+  }
+}
+
+/* ---- Pins (teardrop markers) ---- */
+.pin {
+  --pin-base: 1;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Intro: pins pop out of the globe on load, staggered. */
+.pin-pop {
+  transform-origin: 0 0; /* the teardrop tip = the shop location */
+  animation: pinIn 0.55s cubic-bezier(0.2, 0.75, 0.3, 1.15) both;
+  animation-delay: calc(var(--i, 0) * 0.06s);
+}
+@keyframes pinIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.1);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.pin:hover,
+.pin:focus-visible {
+  --pin-base: 1.22;
+}
+
+/* Counter-scale the glyph by the map zoom so pins stay a constant size,
+   and bump on hover. Anchored at the teardrop tip (the shop's location). */
+.pin-scale {
+  /* --inv-k (= 1/zoom) is computed in JS so pins stay a constant size at every
+     zoom. Plain multiply avoids the division-in-calc that could balloon a pin. */
+  transform: scale(calc(var(--pin-base) * var(--inv-k, 1)));
+  transform-origin: 0 0;
+}
+
+/* Generous, stable click/tap target. */
+.pin-hit {
+  fill: transparent;
+}
+.pin-teardrop {
+  fill: hsl(var(--hue) 60% 47%);
+  stroke: #fffdf8;
+  stroke-width: 1.6;
+}
+.pin:hover .pin-teardrop,
+.pin:focus-visible .pin-teardrop {
+  fill: hsl(var(--hue) 64% 42%);
+}
+.pin-center {
+  fill: #fffdf8;
+}
+
+/* Hover name flag — white outline so it reads over the map, no background box */
+.pin-flag-text {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  fill: var(--ink);
+  stroke: #fffdf8;
+  stroke-width: 3.5px;
+  paint-order: stroke fill;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.pin:hover .pin-flag-text,
+.pin:focus-visible .pin-flag-text {
+  opacity: 1;
+}
+
+/* ---- Back-to-US button (shown when zoomed) ---- */
+.map-back {
+  position: absolute;
+  top: 0.85rem;
+  left: 1rem;
+  z-index: 5;
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  color: #5b4d3e;
+  background: #fffdf8;
+  border: 1px solid var(--paper-edge);
+  border-radius: 999px;
+  padding: 0.2rem 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px -6px rgba(80, 60, 30, 0.5);
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+.map-back:hover {
+  color: var(--rust);
+  transform: translateY(-1px);
+}
+
+.map-hint {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 0.5rem;
+  margin: 0;
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  color: #9a8b76;
+  transform: rotate(-1.5deg);
+}
+
+/* ---- Collage overlay ---- */
+.collage-open {
+  overflow: hidden;
+}
+.collage-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+.collage-overlay[hidden] {
+  display: none;
+}
+.collage-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 30, 20, 0.55);
+  backdrop-filter: blur(2px);
+}
+.collage {
+  position: relative;
+  z-index: 1;
+  width: min(640px, 94vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #fffdf8, #fbf4e7);
+  border: 1px solid #e7d8bd;
+  border-radius: 16px;
+  padding: 1.5rem 1.5rem 1.75rem;
+  box-shadow: 0 30px 60px -20px rgba(40, 25, 10, 0.55);
+  animation: collage-pop 0.22s ease;
+}
+@keyframes collage-pop {
+  from {
+    transform: translateY(10px) scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.collage-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.8rem;
+  border: none;
+  background: none;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #9a8b76;
+  cursor: pointer;
+}
+.collage-close:hover {
+  color: var(--rust, #c2410c);
+}
+.collage-head {
+  margin-bottom: 1rem;
+}
+.collage-name {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 2rem;
+  margin: 0;
+  color: #2b2622;
+}
+.collage-city {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  color: #7a6a55;
+  margin: 0.1rem 0 0;
+}
+
+/* Polaroids */
+.polaroids {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.2rem;
+  justify-content: center;
+  padding: 0.5rem 0 0.25rem;
+}
+.polaroid {
+  margin: 0;
+  background: #fff;
+  padding: 0.55rem 0.55rem 0;
+  border-radius: 2px;
+  box-shadow: 0 8px 18px -8px rgba(40, 25, 10, 0.45);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.2s ease;
+}
+.polaroid:hover {
+  transform: rotate(0deg) scale(1.04);
+  z-index: 2;
+}
+.polaroid-img {
+  width: 150px;
+  height: 150px;
+  display: grid;
+  place-items: center;
+  border-radius: 1px;
+  background: linear-gradient(
+    150deg,
+    hsl(var(--hue) 55% 78%),
+    hsl(calc(var(--hue) + 24) 50% 62%)
+  );
+  overflow: hidden;
+}
+.polaroid-img::before {
+  content: attr(data-emoji);
+  font-size: 3.2rem;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.18));
+}
+.polaroid-img img {
+  grid-area: 1 / 1; /* overlay the emoji placeholder */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.polaroid-img::before {
+  grid-area: 1 / 1;
+}
+.polaroid figcaption {
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  text-align: center;
+  color: #5c4f40;
+  padding: 0.35rem 0 0.6rem;
+}
+.collage-note {
+  font-family: 'Caveat', cursive;
+  font-size: 1.35rem;
+  line-height: 1.45;
+  color: #4a4036;
+  text-align: center;
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px dashed #e0d0b4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collage,
+  .pin-pop,
+  .us-map,
+  .route {
+    animation: none;
+  }
+  .polaroid {
+    transition: none;
+  }
+}
