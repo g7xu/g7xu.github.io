@@ -10,12 +10,15 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /** Per-page color theme (sets `data-theme` on <body>). See global.css. */
+  theme?: string;
 }
 
 const {
   title = author.siteTitle,
   description = author.siteDescription,
   image = '/images/bio-photo.png',
+  theme = 'workshop',
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -65,7 +68,7 @@ const pageTitle =
     <StructuredData />
     <slot name="head" />
   </head>
-  <body>
+  <body data-theme={theme}>
     <Navbar />
     <slot />
     <Footer />

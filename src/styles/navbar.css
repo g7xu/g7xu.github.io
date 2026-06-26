@@ -1,12 +1,29 @@
+/* Colors come from the active theme's --nav-* tokens (see global.css), so the
+   bar adopts each page's palette and blends into it. */
 .navbar {
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
+  background: var(--nav-bg);
+  /* Anchor a gradient --nav-bg to the viewport so the bar and the page below
+     render one continuous gradient (no seam). No-op for solid colors. */
+  background-attachment: fixed;
+  border-bottom: 1px solid var(--nav-border);
+}
+@keyframes navIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .navbar-inner {
+  /* Settle the bar's contents in (kept off .navbar so its fixed bg stays put). */
+  animation: navIn 0.45s ease both;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,18 +36,18 @@
 .navbar-brand {
   font-weight: 700;
   font-size: 1rem;
-  color: var(--fg);
+  color: var(--nav-fg);
   text-decoration: none;
   letter-spacing: -0.01em;
 }
 
 .navbar-brand:hover {
-  color: var(--link-hover);
+  opacity: 0.7;
 }
 
 .navbar-nav {
   display: flex;
-  gap: 1.5rem;
+  gap: 0.55rem;
   align-items: center;
 }
 
@@ -50,6 +67,76 @@
 .navbar-link--active {
   color: var(--fg);
   border-bottom-color: var(--accent);
+}
+
+/* Icon tabs: a pill that expands on hover to reveal the tab's label.
+   Because the nav is right-anchored, expanding pushes the hovered icon left
+   while its label fills in to the right. */
+.navbar-link--icon {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border-bottom: none; /* no underline indicator on icon tabs */
+  border-radius: 999px;
+  color: var(--nav-muted);
+  white-space: nowrap;
+  transition:
+    background 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    color 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.navbar-link--icon svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+/* The label — collapsed to zero width at rest, slides open on hover. */
+.navbar-label {
+  max-width: 0;
+  margin-left: 0;
+  overflow: hidden;
+  opacity: 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.5; /* room for descenders (g, p, y) so overflow doesn't clip them */
+  white-space: nowrap;
+  transition:
+    max-width 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
+    margin-left 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.3s ease;
+}
+.navbar-link--icon:hover,
+.navbar-link--icon:focus-visible {
+  color: var(--nav-fg);
+}
+.navbar-link--icon:hover .navbar-label,
+.navbar-link--icon:focus-visible .navbar-label {
+  max-width: 9rem;
+  margin-left: 8px;
+  opacity: 1;
+}
+
+/* Active tab: rust pill that always shows its label ("you are here"). */
+.navbar-link--icon.navbar-link--active {
+  color: var(--nav-accent);
+  background: var(--nav-accent-soft);
+}
+.navbar-link--icon.navbar-link--active .navbar-label {
+  max-width: 9rem;
+  margin-left: 8px;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-link--icon,
+  .navbar-label {
+    transition: none;
+  }
+  .navbar-inner {
+    animation: none;
+  }
 }
 
 @media (max-width: 600px) {
