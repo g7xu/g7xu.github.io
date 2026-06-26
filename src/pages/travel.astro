@@ -4,7 +4,13 @@ import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import '../styles/travel.css';
 import { coffeeShops } from '../data/coffeeShops';
-import { geoNaturalEarth1, geoPath, geoContains } from 'd3-geo';
+import {
+  geoNaturalEarth1,
+  geoPath,
+  geoContains,
+  geoDistance,
+  geoCentroid,
+} from 'd3-geo';
 import { feature } from 'topojson-client';
 import worldTopo from 'world-atlas/countries-110m.json';
 import usStatesTopo from 'us-atlas/states-10m.json';
@@ -69,6 +75,23 @@ const countiesGeo: any = feature(
 );
 
 // Which regions actually contain a shop — only these are clickable/zoomable.
+// Coastal points (e.g. La Jolla) can fall just outside a simplified polygon,
+// so if nothing contains the point we snap it to the nearest region.
+const nearest = (features: any[], pt: [number, number]) => {
+  let best: any = null;
+  let bestD = Infinity;
+  for (const f of features) {
+    const d = geoDistance(geoCentroid(f), pt);
+    if (d < bestD) {
+      bestD = d;
+      best = f;
+    }
+  }
+  return best;
+};
+const containingOrNearest = (features: any[], pt: [number, number]) =>
+  features.find((f: any) => geoContains(f, pt)) ?? nearest(features, pt);
+
 const shopCountryNames = new Set<string>();
 const shopStateIds = new Set<string>();
 const shopCountyIds = new Set<string>();
@@ -76,9 +99,17 @@ for (const s of coffeeShops) {
   const pt: [number, number] = [s.lng, s.lat];
   const c = countryFeatures.find((f: any) => geoContains(f, pt));
   if (c) shopCountryNames.add(c.properties?.name ?? '');
-  const st = statesGeo.features.find((f: any) => geoContains(f, pt));
-  if (st) shopStateIds.add(String(st.id));
-  const co = countiesGeo.features.find((f: any) => geoContains(f, pt));
+  const st = containingOrNearest(statesGeo.features, pt);
+  const stId = st ? String(st.id) : '';
+  if (st) shopStateIds.add(stId);
+  // Match the county within the shop's state (fast + avoids cross-state snaps).
+  const stateCounties = countiesGeo.features.filter(
+    (f: any) => String(f.id).slice(0, 2) === stId,
+  );
+  const co = containingOrNearest(
+    stateCounties.length ? stateCounties : countiesGeo.features,
+    pt,
+  );
   if (co) shopCountyIds.add(String(co.id));
 }
 
@@ -143,7 +174,7 @@ const sparkles = [
 const shopCount = pins.length;
 ---
 
-<BaseLayout title="Travel — Coffee Shops">
+<BaseLayout title="Coffee Map" theme="coffee">
   <link rel="preconnect" href="https://fonts.googleapis.com" slot="head" />
   <link
     rel="preconnect"

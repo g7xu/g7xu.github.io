@@ -20,6 +20,9 @@
     var(--paper) 52%,
     var(--paper-edge) 100%
   );
+  /* Viewport-anchored so it lines up exactly with the navbar's matching
+     gradient — the bar and the map read as one continuous surface. */
+  background-attachment: fixed;
 }
 
 /* Make the page a flex column so .travel can fill the remaining height. */

@@ -32,6 +32,39 @@
 }
 
 /* ============================================
+   Per-page navbar themes — set via <body data-theme="…">.
+   The navbar reads only these --nav-* tokens, so it adopts each page's
+   palette and blends into it. Add a new theme = one block here + pass
+   `theme="…"` to BaseLayout.
+   ============================================ */
+:root,
+[data-theme='workshop'] {
+  --nav-bg: var(--bg); /* #f8fafc slate */
+  --nav-fg: var(--fg); /* #0f172a */
+  --nav-muted: var(--fg-muted); /* #64748b */
+  --nav-accent: var(--accent); /* #c2410c rust */
+  --nav-accent-soft: rgba(194, 65, 12, 0.12);
+  --nav-border: var(--border); /* hairline */
+}
+
+[data-theme='coffee'] {
+  /* The SAME radial as the map page (travel.css .travel). Both use
+     background-attachment: fixed, so the bar and the page share one
+     continuous gradient — perfectly seamless. */
+  --nav-bg: radial-gradient(
+    130% 110% at 50% -10%,
+    #fffdf8 0%,
+    #faf5ec 52%,
+    #e9dcc6 100%
+  );
+  --nav-fg: #3a2a1d; /* espresso */
+  --nav-muted: #8a7359; /* coffee */
+  --nav-accent: #c2410c; /* warm rust */
+  --nav-accent-soft: rgba(194, 65, 12, 0.12);
+  --nav-border: transparent; /* no divider → blends into the page */
+}
+
+/* ============================================
    Base reset & typography
    ============================================ */
 *,

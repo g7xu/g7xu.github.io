@@ -1,12 +1,29 @@
+/* Colors come from the active theme's --nav-* tokens (see global.css), so the
+   bar adopts each page's palette and blends into it. */
 .navbar {
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
+  background: var(--nav-bg);
+  /* Anchor a gradient --nav-bg to the viewport so the bar and the page below
+     render one continuous gradient (no seam). No-op for solid colors. */
+  background-attachment: fixed;
+  border-bottom: 1px solid var(--nav-border);
+}
+@keyframes navIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .navbar-inner {
+  /* Settle the bar's contents in (kept off .navbar so its fixed bg stays put). */
+  animation: navIn 0.45s ease both;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,13 +36,13 @@
 .navbar-brand {
   font-weight: 700;
   font-size: 1rem;
-  color: var(--fg);
+  color: var(--nav-fg);
   text-decoration: none;
   letter-spacing: -0.01em;
 }
 
 .navbar-brand:hover {
-  color: var(--link-hover);
+  opacity: 0.7;
 }
 
 .navbar-nav {
@@ -61,7 +78,7 @@
   padding: 7px 11px;
   border-bottom: none; /* no underline indicator on icon tabs */
   border-radius: 999px;
-  color: var(--fg-muted);
+  color: var(--nav-muted);
   white-space: nowrap;
   transition:
     background 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -92,7 +109,7 @@
 }
 .navbar-link--icon:hover,
 .navbar-link--icon:focus-visible {
-  color: var(--fg);
+  color: var(--nav-fg);
 }
 .navbar-link--icon:hover .navbar-label,
 .navbar-link--icon:focus-visible .navbar-label {
@@ -103,8 +120,8 @@
 
 /* Active tab: rust pill that always shows its label ("you are here"). */
 .navbar-link--icon.navbar-link--active {
-  color: var(--accent);
-  background: rgba(194, 65, 12, 0.1);
+  color: var(--nav-accent);
+  background: var(--nav-accent-soft);
 }
 .navbar-link--icon.navbar-link--active .navbar-label {
   max-width: 9rem;
@@ -116,6 +133,9 @@
   .navbar-link--icon,
   .navbar-label {
     transition: none;
+  }
+  .navbar-inner {
+    animation: none;
   }
 }
 
