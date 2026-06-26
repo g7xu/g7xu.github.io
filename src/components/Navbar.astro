@@ -50,10 +50,16 @@ const currentPath = Astro.url.pathname;
                 viewBox="0 0 24 24"
                 width="21"
                 height="21"
-                fill="currentColor"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
                 aria-hidden="true"
               >
-                <path d="M6 7h5v5c0 2.5-1.6 4.2-4 4.8l-.5-1.5c1.4-.4 2.2-1.1 2.4-2.3H6V7Zm9 0h5v5c0 2.5-1.6 4.2-4 4.8l-.5-1.5c1.4-.4 2.2-1.1 2.4-2.3H15V7Z" />
+                <path d="M12 6.5C10.5 5.6 8.6 5 6.5 5 5.2 5 4.4 5.2 4 5.4v12.2c.4-.2 1.2-.4 2.5-.4 2.1 0 4 .6 5.5 1.5" />
+                <path d="M12 6.5C13.5 5.6 15.4 5 17.5 5c1.3 0 2.1.2 2.5.4v12.2c-.4-.2-1.2-.4-2.5-.4-2.1 0-4 .6-5.5 1.5" />
+                <path d="M12 6.5v12.7" />
               </svg>
             ) : (
               item.label
