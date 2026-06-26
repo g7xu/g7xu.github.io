@@ -299,7 +299,7 @@ const shopCount = pins.length;
           <div class="collage-head">
             <h2 class="collage-name">{p.name}</h2>
             <p class="collage-city">
-              📍 {p.city}
+              📍 {p.address ?? p.city}
               {p.date && <span> · {p.date}</span>}
             </p>
           </div>
@@ -309,11 +309,7 @@ const shopCount = pins.length;
                 class="polaroid"
                 style={`--tilt:${tilt(i + p.name.length)}deg`}
               >
-                <div
-                  class="polaroid-img"
-                  style={`--hue:${p.hue}`}
-                  data-emoji={ph.emoji ?? '☕'}
-                >
+                <div class="polaroid-img" style={`--hue:${p.hue}`}>
                   {resolvePhoto(ph.src) && (
                     <img
                       src={resolvePhoto(ph.src)}

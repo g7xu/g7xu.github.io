@@ -443,19 +443,11 @@ body {
   );
   overflow: hidden;
 }
-.polaroid-img::before {
-  content: attr(data-emoji);
-  font-size: 3.2rem;
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.18));
-}
 .polaroid-img img {
-  grid-area: 1 / 1; /* overlay the emoji placeholder */
+  grid-area: 1 / 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.polaroid-img::before {
-  grid-area: 1 / 1;
 }
 .polaroid figcaption {
   font-family: 'Caveat', cursive;
