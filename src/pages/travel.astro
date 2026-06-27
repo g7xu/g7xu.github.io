@@ -220,7 +220,7 @@ const shopCount = pins.length;
           <!-- Tier 0: countries -->
           <g class="countries">
             {
-              countries.map((c) => (
+              countries.map((c: any) => (
                 <path
                   d={c.d}
                   class={`country${c.hasPin ? ' has-pin' : ''}`}
@@ -237,7 +237,7 @@ const shopCount = pins.length;
           <!-- Tier 1: US states (grid appears when zoomed into the U.S.) -->
           <g class="states">
             {
-              states.map((s) => (
+              states.map((s: any) => (
                 <path
                   d={s.d}
                   class={`state${s.hasPin ? ' has-pin' : ''}`}
@@ -254,7 +254,7 @@ const shopCount = pins.length;
           <!-- Tier 2: counties / city grid (only for visited states) -->
           <g class="counties">
             {
-              counties.map((c) => (
+              counties.map((c: any) => (
                 <path
                   d={c.d}
                   class={`county${c.hasPin ? ' has-pin' : ''}`}
