@@ -72,7 +72,7 @@ export const coffeeShops: CoffeeShop[] = [
     lat: 30.2546,
     lng: -97.7487,
     date: '2026-06-28',
-    note: 'Aussie-inspired café & bar on South Congress — comfort food, cold-pressed juice, great cocktails. Great coffee after talking to a VC.',
+    note: 'Great coffee after talking to a VC.',
     hue: 212,
     photos: [
       { src: 'two-hands-austin-1.jpg', caption: 'the blue-tiled corner' },
