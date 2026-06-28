@@ -35,6 +35,9 @@ import SidebarLayout from '../layouts/SidebarLayout.astro';
     letter-spacing: -0.02em;
     color: var(--fg);
     margin: 0;
+    /* Intro: the lead text slides in from the right. */
+    animation: home-slide-right 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    animation-delay: 0.1s;
   }
 
   .home-hero__body {
@@ -42,6 +45,26 @@ import SidebarLayout from '../layouts/SidebarLayout.astro';
     line-height: 1.6;
     color: var(--fg);
     margin: 1.5rem 0 0;
+    animation: home-slide-right 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    animation-delay: 0.28s;
+  }
+
+  @keyframes home-slide-right {
+    from {
+      opacity: 0;
+      transform: translateX(32px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-hero__lead,
+    .home-hero__body {
+      animation: none;
+    }
   }
 
   .home-hero__body strong {

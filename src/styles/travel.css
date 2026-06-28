@@ -63,8 +63,8 @@ body {
   height: 100%;
   display: block;
   overflow: hidden;
-  /* First-render: the globe settles in. */
-  animation: mapIn 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  /* First-render: the globe settles in (slow, unhurried). */
+  animation: mapIn 1.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 @keyframes mapIn {
   from {
@@ -200,8 +200,8 @@ body {
   vector-effect: non-scaling-stroke;
   opacity: 0.45;
   /* First-render: the route fades in after the pins land. */
-  animation: routeIn 0.9s ease both;
-  animation-delay: 0.55s;
+  animation: routeIn 1.4s ease both;
+  animation-delay: 1.3s;
 }
 @keyframes routeIn {
   from {
@@ -222,8 +222,9 @@ body {
 /* Intro: pins pop out of the globe on load, staggered. */
 .pin-pop {
   transform-origin: 0 0; /* the teardrop tip = the shop location */
-  animation: pinIn 0.55s cubic-bezier(0.2, 0.75, 0.3, 1.15) both;
-  animation-delay: calc(var(--i, 0) * 0.06s);
+  animation: pinIn 0.85s cubic-bezier(0.2, 0.75, 0.3, 1.15) both;
+  /* Pins pop in gently, one after another, after the globe settles. */
+  animation-delay: calc(0.8s + var(--i, 0) * 0.16s);
 }
 @keyframes pinIn {
   from {
@@ -483,5 +484,36 @@ body {
   }
   .polaroid {
     transition: none;
+  }
+}
+
+/* ---- Touch devices: bigger, easier-to-tap pins & targets (issue #41) ----
+   The map is rendered small on phones, so enlarge the pins and their hit
+   area, and stop relying on hover (which doesn't exist on touch). */
+@media (pointer: coarse) {
+  .pin {
+    --pin-base: 1.45;
+  }
+  .pin-hit {
+    r: 24px; /* generous, finger-sized tap target */
+  }
+  /* Show each shop's name flag by default since there is no hover. */
+  .pin-flag-text {
+    opacity: 1;
+  }
+}
+
+/* ---- Small screens: give the map more room ---- */
+@media (max-width: 600px) {
+  .travel-line {
+    padding: 0.7rem 1rem 0.3rem;
+  }
+  .map-back {
+    top: 0.6rem;
+    left: 0.6rem;
+    font-size: 1.1rem;
+  }
+  .collage {
+    padding: 1.25rem 1rem 1.5rem;
   }
 }

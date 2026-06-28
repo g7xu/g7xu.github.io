@@ -171,3 +171,20 @@
   background: var(--bg-surface);
   color: var(--fg-muted);
 }
+
+/* Phones: tighten padding and force a single, full-width column so the
+   18em card minimum never overflows a narrow screen (issue #41). */
+@media (max-width: 600px) {
+  .projects-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .project-item {
+    padding: 20px;
+  }
+}
