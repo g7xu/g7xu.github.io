@@ -108,37 +108,58 @@ const allTags = getAllTags();
       });
     });
 
-    // Tag filtering
-    const filterButtons = document.querySelectorAll('.tag-filter');
+    // Tag filtering — toggleable + multi-select.
+    // Click a tag to add it, click again to remove it. With several tags
+    // selected, a project shows if it matches ANY of them. "All" clears
+    // the selection (and is active whenever nothing is selected).
+    const filterButtons = document.querySelectorAll<HTMLElement>('.tag-filter');
+    const allButton = document.querySelector<HTMLElement>(
+      '.tag-filter[data-tag="all"]',
+    );
     const projectItems = document.querySelectorAll('.project-item');
     const sections = document.querySelectorAll('.project-section');
+    const selectedTags = new Set<string>();
+
+    const applyFilter = () => {
+      // Reflect selection state on the buttons.
+      filterButtons.forEach((b) => {
+        const tag = b.getAttribute('data-tag')!;
+        b.classList.toggle('active', selectedTags.has(tag));
+      });
+      allButton?.classList.toggle('active', selectedTags.size === 0);
+
+      projectItems.forEach((item) => {
+        const tags: string[] = JSON.parse(
+          item.getAttribute('data-tags') || '[]',
+        );
+        const visible =
+          selectedTags.size === 0 || tags.some((t) => selectedTags.has(t));
+        (item as HTMLElement).style.display = visible ? '' : 'none';
+      });
+
+      sections.forEach((section) => {
+        const visibleCards = section.querySelectorAll(
+          '.project-item:not([style*="display: none"])',
+        );
+        (section as HTMLElement).style.display =
+          visibleCards.length === 0 ? 'none' : '';
+      });
+    };
 
     filterButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
-        filterButtons.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const selectedTag = btn.getAttribute('data-tag');
-
-        projectItems.forEach((item) => {
-          const tags: string[] = JSON.parse(
-            item.getAttribute('data-tags') || '[]',
-          );
-          if (selectedTag === 'all' || tags.includes(selectedTag!)) {
-            (item as HTMLElement).style.display = '';
-          } else {
-            (item as HTMLElement).style.display = 'none';
-          }
-        });
-
-        sections.forEach((section) => {
-          const visibleCards = section.querySelectorAll(
-            '.project-item:not([style*="display: none"])',
-          );
-          (section as HTMLElement).style.display =
-            visibleCards.length === 0 ? 'none' : '';
-        });
+        const tag = btn.getAttribute('data-tag')!;
+        if (tag === 'all') {
+          selectedTags.clear();
+        } else if (selectedTags.has(tag)) {
+          selectedTags.delete(tag); // toggle off (deselect)
+        } else {
+          selectedTags.add(tag); // toggle on
+        }
+        applyFilter();
       });
     });
+
+    applyFilter();
   });
 </script>
