@@ -64,4 +64,22 @@ export const coffeeShops: CoffeeShop[] = [
       { src: 'flower-pot-sd-5.jpg', caption: 'dreamers & outcasts' },
     ],
   },
+  {
+    id: 'two-hands-austin',
+    name: 'Two Hands',
+    city: 'Austin, TX',
+    address: '1011 S Congress Ave Ste 170, Austin, TX 78704',
+    lat: 30.2546,
+    lng: -97.7487,
+    date: '2026-06-28',
+    note: 'Aussie-inspired café & bar on South Congress — comfort food, cold-pressed juice, great cocktails',
+    hue: 212,
+    photos: [
+      { src: 'two-hands-austin-1.jpg', caption: 'the blue-tiled corner' },
+      { src: 'two-hands-austin-2.jpg', caption: 'chairs out front' },
+      { src: 'two-hands-austin-3.jpg', caption: 'patio under the oaks' },
+      { src: 'two-hands-austin-5.jpg', caption: 'ordering at the window' },
+      { src: 'two-hands-austin-6.jpg', caption: 'shade & string lights' },
+    ],
+  },
 ];
