@@ -46,4 +46,9 @@ export const quotes: Quote[] = [
     source: 'https://www.linkedin.com/in/chayennezhao/',
   },
   { text: '莫愁前路无知己，天下谁人不识君。', author: '高适', weight: 4 },
+  {
+    text: '井蛙不可以语于海者，拘于虚也；夏虫不可以语于冰者，笃于时也。',
+    author: '庄子 · 秋水',
+    weight: 4,
+  },
 ];
