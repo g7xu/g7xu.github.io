@@ -78,7 +78,6 @@ export const coffeeShops: CoffeeShop[] = [
       { src: 'two-hands-austin-1.jpg', caption: 'the blue-tiled corner' },
       { src: 'two-hands-austin-2.jpg', caption: 'chairs out front' },
       { src: 'two-hands-austin-3.jpg', caption: 'patio under the oaks' },
-      { src: 'two-hands-austin-5.jpg', caption: 'ordering at the window' },
       { src: 'two-hands-austin-6.jpg', caption: 'shade & string lights' },
     ],
   },
