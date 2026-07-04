@@ -464,6 +464,8 @@ Selector: Function to access specific data from state from components
 
 Redux DevTools: `npm i redux-devtools-extension` view redux details
 
+> **Cross-domain echo:** the Python agent framework **LangGraph** borrows this exact reducer idea for merging graph-state updates, and its checkpoint **time travel** mirrors Redux DevTools. See [[LangGraph state schemas and reducers#Aside: the same idea as React / Redux reducers]].
+
 ## Defining Actions in Redux
 Action Type: string represent the action
 - standard way of naming it: `<reducerName>/<function name>`

@@ -42,7 +42,7 @@
 
 ## Agent Engineering *(pending review — in inbox/)*
 
-- [[Agent Engineering Overview]] — **sub-index** for building software *with* coding agents: harness design, generator–evaluator loops, context management, agent legibility, and entropy control (from OpenAI's Codex case study + Anthropic's long-running-app experiment)
+- [[Agent Engineering Overview]] — **sub-index** for engineering agentic systems: building software *with* coding agents (harness design, generator–evaluator loops, context management, legibility, entropy control — from OpenAI's Codex case study + Anthropic's long-running-app experiment) **and** building agent applications with the **LangGraph** framework (a nested sub-index covering graph primitives, state/reducers, agents, memory, human-in-the-loop, multi-agent control, and deployment)
 
 ## Job Application
 
@@ -51,3 +51,15 @@
 ## Personal Finance
 
 - [[Personal Finance Overview]] — **sub-index** for the whole Personal Finance cluster: the r/personalfinance "Prime Directive" ordered priority list, one page per step (budgeting → emergency fund → match → debt → retirement → other goals)
+
+## Health & Metabolism *(pending review - in inbox/)*
+
+- [[Health & Metabolism Overview]] - sub-index for the Glucose Revolution cluster: the science of glucose & spikes, their short/long-term effects, and the 10 food hacks.
+
+## AI Data Infrastructure
+
+- [[AI Data Infrastructure Overview]] — **sub-index** for the LanceDB (佘昶/Chang She) interview cluster: not a product page, but a set of ideas that bridge into existing domains — the data-as-bottleneck thesis, the "derive the tool from the workload, not the paradigm" lens (pandas → Lance), multimodal retrieval, agentic data experimentation, world models, and Lance-vs-Parquet storage.
+
+## Personal Brand
+
+- [[Personal Brand Overview]] — **sub-index** for building a public figure across platforms (LinkedIn first; 小红书 / WeChat 公众号 planned). Nests the **LinkedIn** cluster: [[LinkedIn Networking]] (profile, connection requests, recruiter outreach, finding people, follow-up & engagement) plus the [[The strength of weak ties]] anchor.
