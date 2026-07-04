@@ -7,7 +7,6 @@
   --paper-edge: #e9dcc6;
   --ink: #2b2622;
   --rust: #c2410c;
-  --route: #1d4ed8;
 
   /* Fill the viewport below the navbar — the map takes over the page. */
   flex: 1;
@@ -186,30 +185,10 @@ body {
   fill: rgba(239, 208, 158, 0.9);
 }
 
-/* Decorative sparkles + route */
+/* Decorative sparkles */
 .sparkle {
   fill: #e9bd6b;
   opacity: 0.75;
-}
-.route {
-  fill: none;
-  stroke: var(--route);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-dasharray: 2 9;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.45;
-  /* First-render: the route fades in after the pins land. */
-  animation: routeIn 1.4s ease both;
-  animation-delay: 1.3s;
-}
-@keyframes routeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.45;
-  }
 }
 
 /* ---- Pins (teardrop markers) ---- */
@@ -251,6 +230,41 @@ body {
      zoom. Plain multiply avoids the division-in-calc that could balloon a pin. */
   transform: scale(calc(var(--pin-base) * var(--inv-k, 1)));
   transform-origin: 0 0;
+}
+
+/* Declutter offset: when shops sit too close at the current zoom, the glyph
+   slides to its cluster/fan position (set by JS in updateDeclutter) and eases
+   back to its true location when zoom separates pins naturally. */
+.pin-fan {
+  transition: transform 0.45s cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+
+/* Cluster pin: nearby shops collapse into one pin with a count badge.
+   Members hidden behind the badge get .clustered-hidden until you drill in. */
+.pin.clustered-hidden {
+  display: none;
+}
+.pin-count {
+  display: none;
+  pointer-events: none;
+}
+.pin.cluster .pin-count {
+  display: inline;
+}
+/* A cluster isn't one shop — suppress the single-shop hover flag. */
+.pin.cluster .pin-flag-text {
+  display: none;
+}
+.pin-count circle {
+  fill: #fffdf6;
+  stroke: hsl(var(--hue) 50% 45%);
+  stroke-width: 1.3;
+}
+.pin-count text {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 10px;
+  fill: hsl(var(--hue) 55% 32%);
+  text-anchor: middle;
 }
 
 /* Ambient "ping" — a soft ring that radiates from each pin to signal the map
@@ -475,8 +489,7 @@ body {
   .collage,
   .pin-pop,
   .pin-pulse,
-  .us-map,
-  .route {
+  .us-map {
     animation: none;
   }
   .pin-pulse {

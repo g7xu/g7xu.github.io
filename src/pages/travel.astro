@@ -155,11 +155,6 @@ const counties = countiesGeo.features
   }))
   .filter((c: any) => c.d);
 
-// A dashed "travel route" threading the shops in order.
-const routeD = pins.length
-  ? 'M ' + pins.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')
-  : '';
-
 const tilt = (n: number) => (((n * 37) % 13) - 6) * 0.9;
 
 const sparkles = [
@@ -279,9 +274,6 @@ const shopCount = pins.length;
             }
           </g>
 
-          <!-- Travel route -->
-          {routeD && <path class="route" d={routeD} aria-hidden="true" />}
-
           <!-- Pins -->
           <g class="pins">
             {
@@ -290,6 +282,8 @@ const shopCount = pins.length;
                   class="pin"
                   transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`}
                   data-id={p.id}
+                  data-x={p.x.toFixed(2)}
+                  data-y={p.y.toFixed(2)}
                   role="button"
                   tabindex="0"
                   aria-label={`${p.name}, ${p.city}`}
@@ -297,16 +291,30 @@ const shopCount = pins.length;
                 >
                   <g class="pin-pop">
                     <g class="pin-scale">
-                      <circle class="pin-pulse" cx="0" cy="-15" r="9" />
-                      <circle class="pin-hit" cx="0" cy="-15" r="17" />
-                      <path
-                        class="pin-teardrop"
-                        d="M0 0 C -4 -7 -9 -10 -9 -15 A 9 9 0 1 1 9 -15 C 9 -10 4 -7 0 0 Z"
-                      />
-                      <circle class="pin-center" cx="0" cy="-15" r="3.4" />
-                      <text class="pin-flag-text" y="-32" text-anchor="middle">
-                        {p.name}
-                      </text>
+                      <g class="pin-fan">
+                        <circle class="pin-pulse" cx="0" cy="-15" r="9" />
+                        <circle class="pin-hit" cx="0" cy="-15" r="17" />
+                        <path
+                          class="pin-teardrop"
+                          d="M0 0 C -4 -7 -9 -10 -9 -15 A 9 9 0 1 1 9 -15 C 9 -10 4 -7 0 0 Z"
+                        />
+                        <circle class="pin-center" cx="0" cy="-15" r="3.4" />
+                        <text
+                          class="pin-flag-text"
+                          y="-32"
+                          text-anchor="middle"
+                        >
+                          {p.name}
+                        </text>
+                        {/* Count badge, shown when this pin represents a
+                            cluster of nearby shops (set by updateDeclutter). */}
+                        <g class="pin-count" aria-hidden="true">
+                          <circle cx="8.5" cy="-25" r="6.5" />
+                          <text x="8.5" y="-21.6">
+                            2
+                          </text>
+                        </g>
+                      </g>
                     </g>
                   </g>
                 </g>
@@ -393,6 +401,131 @@ const shopCount = pins.length;
       svg.style.setProperty('--ty', String(ty));
     };
 
+    // ── Declutter: shops too close together at the current zoom collapse ──
+    // into ONE pin with a count badge (the maps "cluster" pattern); clicking
+    // it zooms in a level. Only at the deepest level does anything still
+    // stacked (e.g. two shops on the same downtown block) fan out with a
+    // small leg instead, so every shop stays visible and clickable.
+    const CLUSTER_THRESH = 22; // screen px under which pins are "stacked"
+    const MAX_LEVEL = 3;
+    const pinEls = Array.from(document.querySelectorAll<SVGGElement>('.pin'));
+    const pinPts = pinEls.map((el) => ({
+      el,
+      x: Number(el.dataset.x),
+      y: Number(el.dataset.y),
+    }));
+
+    const applyOffset = (i: number, ox: number, oy: number) => {
+      const fan = pinPts[i].el.querySelector<SVGGElement>('.pin-fan');
+      if (fan) fan.style.transform = `translate(${ox}px, ${oy}px)`;
+    };
+
+    const setClusterState = (i: number, count: number, bounds?: string) => {
+      const el = pinPts[i].el;
+      if (count > 1 && bounds) {
+        el.dataset.origLabel ??= el.getAttribute('aria-label') ?? '';
+        el.setAttribute('aria-label', `${count} coffee shops — zoom in`);
+        el.dataset.clusterBounds = bounds;
+        const num = el.querySelector('.pin-count text');
+        if (num) num.textContent = String(count);
+        el.classList.add('cluster');
+      } else {
+        if (el.dataset.origLabel) {
+          el.setAttribute('aria-label', el.dataset.origLabel);
+        }
+        el.classList.remove('cluster');
+      }
+    };
+
+    const updateDeclutter = () => {
+      // Chained greedy clustering on screen distance (n is tiny).
+      const used = new Set<number>();
+      const clusters: number[][] = [];
+      for (let i = 0; i < pinPts.length; i++) {
+        if (used.has(i)) continue;
+        const group = [i];
+        used.add(i);
+        let grew = true;
+        while (grew) {
+          grew = false;
+          for (let j = 0; j < pinPts.length; j++) {
+            if (used.has(j)) continue;
+            const near = group.some(
+              (m) =>
+                Math.hypot(
+                  (pinPts[m].x - pinPts[j].x) * k,
+                  (pinPts[m].y - pinPts[j].y) * k,
+                ) < CLUSTER_THRESH,
+            );
+            if (near) {
+              group.push(j);
+              used.add(j);
+              grew = true;
+            }
+          }
+        }
+        clusters.push(group);
+      }
+
+      for (const group of clusters) {
+        // Screen-space centroid of the cluster (shared pan cancels out).
+        const cx = group.reduce((a, m) => a + pinPts[m].x, 0) / group.length;
+        const cy = group.reduce((a, m) => a + pinPts[m].y, 0) / group.length;
+
+        if (group.length === 1) {
+          const m = group[0];
+          pinPts[m].el.classList.remove('clustered-hidden');
+          setClusterState(m, 1);
+          applyOffset(m, 0, 0);
+        } else if (levelIdx >= MAX_LEVEL) {
+          // Deepest zoom: can't drill further, so fan the stack out.
+          const radius = 9 + group.length * 2;
+          group.forEach((m, gi) => {
+            const el = pinPts[m].el;
+            el.classList.remove('clustered-hidden');
+            setClusterState(m, 1);
+            // Two pins fan left/right (reads best for teardrops).
+            const angle =
+              group.length === 2
+                ? gi * Math.PI
+                : -Math.PI / 2 + (gi * 2 * Math.PI) / group.length;
+            applyOffset(
+              m,
+              (cx - pinPts[m].x) * k + radius * Math.cos(angle),
+              (cy - pinPts[m].y) * k + radius * Math.sin(angle),
+            );
+          });
+        } else {
+          // Collapse the stack into one badge pin at the centroid; clicking
+          // it drills into the cluster's bounds (see the drill handler).
+          let rep = group[0];
+          let best = Infinity;
+          for (const m of group) {
+            const d = Math.hypot(pinPts[m].x - cx, pinPts[m].y - cy);
+            if (d < best) {
+              best = d;
+              rep = m;
+            }
+          }
+          const xs = group.map((m) => pinPts[m].x);
+          const ys = group.map((m) => pinPts[m].y);
+          const bounds = `${Math.min(...xs)},${Math.min(...ys)},${Math.max(...xs)},${Math.max(...ys)}`;
+          for (const m of group) {
+            const el = pinPts[m].el;
+            if (m === rep) {
+              el.classList.remove('clustered-hidden');
+              setClusterState(m, group.length, bounds);
+              applyOffset(m, (cx - pinPts[m].x) * k, (cy - pinPts[m].y) * k);
+            } else {
+              el.classList.add('clustered-hidden');
+              setClusterState(m, 1);
+              applyOffset(m, 0, 0);
+            }
+          }
+        }
+      }
+    };
+
     // Animate the view with ONE rAF loop so the map and the pin counter-scale
     // stay perfectly in sync every frame (no mid-zoom "ballooning pin").
     let raf = 0;
@@ -413,6 +546,7 @@ const shopCount = pins.length;
           ty0 + (tty - ty0) * e,
         );
         if (p < 1) raf = requestAnimationFrame(step);
+        else updateDeclutter(); // re-cluster pins for the settled zoom
       };
       raf = requestAnimationFrame(step);
     };
@@ -481,6 +615,32 @@ const shopCount = pins.length;
     bindDrill('.state.has-pin', 1.3, 26, 2); // country → state grid
     bindDrill('.county.has-pin', 1.4, 60, 3); // state → city
 
+    // Clicking a cluster badge pin zooms into that cluster's bounds, one
+    // level at a time (same zoom caps as the region drills). Registered
+    // before the collage's own pin handler, so stopImmediatePropagation
+    // keeps a cluster click from opening a single shop's collage.
+    const DRILL_MAX_K = [14, 26, 60];
+    pinEls.forEach((el) => {
+      const drill = (e: Event) => {
+        if (!el.classList.contains('cluster')) return;
+        e.stopImmediatePropagation();
+        const b = el.dataset.clusterBounds;
+        if (b) {
+          goTo(
+            frameTarget(b, 1.4, DRILL_MAX_K[Math.min(levelIdx, 2)]),
+            levelIdx + 1,
+          );
+        }
+      };
+      el.addEventListener('click', drill);
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          if (el.classList.contains('cluster')) e.preventDefault();
+          drill(e);
+        }
+      });
+    });
+
     backBtn.addEventListener('click', zoomOut);
     document.addEventListener('keydown', (e) => {
       const collageOpen =
@@ -497,6 +657,7 @@ const shopCount = pins.length;
     });
 
     setLevel(0);
+    updateDeclutter();
   }
 
   // ---- Coffee-shop collage ----
