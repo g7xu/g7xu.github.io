@@ -567,10 +567,10 @@ function initGraph() {
       d3
         .forceLink<SimNode, SimLink>(links)
         .id((d) => d.id)
-        .distance(70)
+        .distance(110)
         .strength(0.9),
     )
-    .force('charge', d3.forceManyBody().strength(-180))
+    .force('charge', d3.forceManyBody().strength(-300))
     .force('x', d3.forceX(W / 2).strength(0.35))
     .force('y', d3.forceY(H / 2).strength(0.35))
     .force(

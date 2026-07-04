@@ -194,7 +194,7 @@
 }
 
 .node-label {
-  font-size: 7px;
+  font-size: 5px;
   fill: var(--fg-muted);
   text-anchor: middle;
   pointer-events: none;
