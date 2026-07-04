@@ -514,6 +514,61 @@ let linkGroup: d3.Selection<SVGLineElement, SimLink, SVGGElement, unknown>;
 let gMain: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 let zoomBehavior: d3.ZoomBehavior<SVGSVGElement, unknown>;
 let hasAnimatedEntrance = false;
+let currentK = 1;
+
+// ── Dynamic labels ──
+// Labels keep a constant on-screen size: each <text> is counter-scaled by
+// 1/zoom, so zooming changes how much SPACE there is between labels, not how
+// big they render. Overlap is then resolved maps-style: hubs claim their
+// space first and a label is culled whenever its screen box would collide
+// with an already-placed one. Recomputed on every zoom and node movement, so
+// zooming in progressively reveals more labels as room opens up.
+const LABEL_FONT = 10; // must match .node-label font-size in learning-wiki.css
+const LABEL_GAP = 4; // px between node edge and label top
+function labelText(id: string): string {
+  return id.length > 18 ? id.slice(0, 16) + '…' : id;
+}
+
+function updateLabels() {
+  if (!nodeGroup) return;
+  const k = currentK;
+  // Node circles are obstacles too, so a label never lands on another dot.
+  const placed = simulation.nodes().map((n) => {
+    const r = nodeRadius(n.id) * k;
+    return {
+      x0: n.x! * k - r,
+      y0: n.y! * k - r,
+      x1: n.x! * k + r,
+      y1: n.y! * k + r,
+    };
+  });
+  const visible = new Set<string>();
+  // Hubs first, id as tiebreaker so culling is stable frame to frame.
+  const nodes = [...simulation.nodes()].sort(
+    (a, b) => nodeRadius(b.id) - nodeRadius(a.id) || a.id.localeCompare(b.id),
+  );
+  for (const n of nodes) {
+    // The zoom translation is common to every box, so screen-space overlap
+    // can be tested in scaled (pre-translate) coordinates.
+    const w = labelText(n.id).length * LABEL_FONT * 0.62;
+    const cx = n.x! * k;
+    const y0 = n.y! * k + nodeRadius(n.id) * k + LABEL_GAP;
+    const box = { x0: cx - w / 2, y0, x1: cx + w / 2, y1: y0 + LABEL_FONT + 4 };
+    const collides = placed.some(
+      (b) => box.x0 < b.x1 && box.x1 > b.x0 && box.y0 < b.y1 && box.y1 > b.y0,
+    );
+    if (!collides) {
+      placed.push(box);
+      visible.add(n.id);
+    }
+  }
+  nodeGroup
+    .select<SVGTextElement>('.node-label')
+    .attr('transform', `scale(${1 / k})`)
+    // With the 1/k counter-scale, attribute units are effectively screen px.
+    .attr('y', (d) => nodeRadius(d.id) * k + LABEL_GAP + LABEL_FONT)
+    .classed('culled', (d) => !visible.has(d.id));
+}
 
 function initGraph() {
   svg.selectAll('*').remove();
@@ -526,12 +581,13 @@ function initGraph() {
     .scaleExtent([0.25, 4])
     .on('zoom', (e) => {
       gMain.attr('transform', e.transform);
-      // Labels fade in as you zoom closer, like Obsidian's graph view.
-      const k: number = e.transform.k;
-      // At the fitted overview (k ≈ 1.1) Obsidian shows bare dots with only a
-      // hint of text; labels resolve as you zoom toward individual notes.
-      const labelOpacity = Math.max(0, Math.min(1, (k - 0.9) / 0.6));
+      // Labels fade in as you zoom closer, like Obsidian's graph view. Since
+      // collision culling keeps them from piling up, the overview can afford
+      // a faint hint of text; full strength arrives by ~1x.
+      currentK = e.transform.k;
+      const labelOpacity = Math.max(0, Math.min(1, (currentK - 0.55) / 0.5));
       svg.style('--label-opacity', String(labelOpacity));
+      updateLabels();
     });
 
   svg.call(zoomBehavior as any);
@@ -622,8 +678,7 @@ function initGraph() {
   nodeGroup
     .append('text')
     .attr('class', 'node-label')
-    .attr('y', (d) => nodeRadius(d.id) + 12)
-    .text((d) => (d.id.length > 18 ? d.id.slice(0, 16) + '…' : d.id));
+    .text((d) => labelText(d.id));
 
   function ticked() {
     linkGroup
@@ -632,6 +687,7 @@ function initGraph() {
       .attr('x2', (d) => (d.target as SimNode).x!)
       .attr('y2', (d) => (d.target as SimNode).y!);
     nodeGroup.attr('transform', (d) => `translate(${d.x},${d.y})`);
+    updateLabels();
   }
 
   simulation.on('tick', ticked);
@@ -663,7 +719,7 @@ function initGraph() {
 
     // Hold the labels back until the nodes have landed, then fade them up.
     const k = d3.zoomTransform(svg.node()!).k;
-    const settledLabelOpacity = Math.max(0, Math.min(1, (k - 0.9) / 0.6));
+    const settledLabelOpacity = Math.max(0, Math.min(1, (k - 0.55) / 0.5));
     svg.style('--label-opacity', '0');
 
     // Pop the circles in from r=0 with a slight overshoot, lightly staggered.

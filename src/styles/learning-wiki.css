@@ -193,14 +193,22 @@
   fill: var(--graph-accent);
 }
 
+/* Counter-scaled by 1/zoom in learning-wiki.ts, so this renders as a
+   constant 10px on screen at any zoom level. Keep in sync with LABEL_FONT. */
 .node-label {
-  font-size: 5px;
+  font-size: 10px;
   fill: var(--fg-muted);
   text-anchor: middle;
   pointer-events: none;
   user-select: none;
   opacity: var(--label-opacity, 1);
   transition: opacity 0.15s ease;
+}
+
+/* Culled by the label collision pass — a colliding label stays hidden until
+   zooming opens up room for it. */
+.node-label.culled {
+  visibility: hidden;
 }
 
 .link {
@@ -225,10 +233,11 @@
   fill: var(--graph-accent);
   transform: scale(1.2);
 }
-/* Hovered node's label always shows, even when zoomed out (Obsidian) */
+/* Hovered node's label always shows, even when zoomed out or culled (Obsidian) */
 #graph-svg.hovering .node.focus .node-label {
   opacity: 1;
   fill: var(--fg);
+  visibility: visible;
 }
 #graph-svg.hovering .link {
   stroke-opacity: 0.05;
