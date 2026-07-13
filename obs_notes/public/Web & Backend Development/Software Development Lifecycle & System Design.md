@@ -39,23 +39,12 @@ This sets the scope for how deep you go into components, storage, APIs, and scal
 
 # Documentation Framework
 
-## Product Requirements Document (PRD)
+The two planning documents are covered in depth in the [[Technical Communication Overview]] cluster:
 
-- Defines features, expected behavior, and constraints  
-- Acts as a business blueprint for engineering  
-- Example: eBay mobile app download banner  
-  - Where should the banner appear?  
-  - How often should it appear?  
-  - How will success be measured?
-
-## Technical Design Document (TDD)
-
-- Contains all technical architecture decisions  
-- Includes:
-  - Data storage and schemas  
-  - Services and APIs  
-  - Scaling strategy  
-  - Error handling & security considerations  
+- **PRD** — the business blueprint: features, expected behavior, constraints → [[Product Requirements Document (PRD)]]
+  - Example: eBay mobile app download banner — where does it appear? how often? how is success measured?
+- **Technical design doc** — the architecture decisions: data storage & schemas, services & APIs, scaling strategy, error handling & security → [[Design Doc (RFC)]]
+  - Naming note: "TDD" usually means *test-driven development* — prefer "design doc" / "tech spec" / "RFC"
 
 ---
 
@@ -264,6 +253,7 @@ SDLC provides a systematic process for building high-quality software while mana
 - Create continuous feedback loops
 
 ## Related pages
+- [[Technical Communication Overview]] — the documents (PRD, design doc/RFC) that come out of the planning phases
 - [[Deployment]]
 - [[Distributed System]]
 - [[Unit Testing]]

@@ -60,6 +60,10 @@
 
 - [[AI Data Infrastructure Overview]] — **sub-index** for the LanceDB (佘昶/Chang She) interview cluster: not a product page, but a set of ideas that bridge into existing domains — the data-as-bottleneck thesis, the "derive the tool from the workload, not the paradigm" lens (pandas → Lance), multimodal retrieval, agentic data experimentation, world models, and Lance-vs-Parquet storage.
 
+## Technical Communication
+
+- [[Technical Communication Overview]] — **sub-index** for engineering writing: how to write a PRD (Cagan's ten steps, four areas, pitfalls) and a design doc / RFC / TDD (Google's anatomy, Zhang's template & process, goals/non-goals, alternatives & trade-offs, review lifecycle), plus a cross-company survey of real RFC templates
+
 ## Personal Brand
 
 - [[Personal Brand Overview]] — **sub-index** for building a public figure across platforms (LinkedIn first; 小红书 / WeChat 公众号 planned). Nests the **LinkedIn** cluster: [[LinkedIn Networking]] (profile, connection requests, recruiter outreach, finding people, follow-up & engagement) plus the [[The strength of weak ties]] anchor.

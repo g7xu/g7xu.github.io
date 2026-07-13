@@ -51,4 +51,10 @@ export const quotes: Quote[] = [
     author: '庄子 · 秋水',
     weight: 4,
   },
+  {
+    text: '王侯将相宁有种乎！',
+    author: '陈胜',
+    source: '史记 · 陈涉世家',
+    weight: 4,
+  },
 ];
