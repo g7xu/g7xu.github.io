@@ -17,6 +17,11 @@ export const author = {
       icon: 'file',
       url: '/files/Jason Xu Resume - SDE track.pdf',
     },
+    {
+      label: 'CV',
+      icon: 'file',
+      url: '/files/Jason Xu CV.pdf',
+    },
     { label: 'Email', icon: 'email', url: 'mailto:g7xu@ucsd.edu' },
   ],
   siteTitle: 'Jason (Guoxuan) Xu',
