@@ -2,7 +2,7 @@
 
 **Scope**: CS / software-engineering (SWE) roles. **Not** focusing on MLE / ML-engineer roles for now.
 
-**Last updated**: 2026-06-21
+**Last updated**: 2026-08-02
 
 ---
 
@@ -18,8 +18,16 @@ The domain has two halves:
 Where I find and source roles.
 
 - [JobRight](https://jobright.ai/jobs/recommend) — AI-recommended job matches
-- [Simplify Summer 2026 Internships](https://github.com/SimplifyJobs/Summer2026-Internships) — community-maintained GitHub repo of internship postings
 - [LinkedIn Jobs](https://www.linkedin.com/jobs/) — general board + network
+
+### Community GitHub repos
+
+Crowdsourced internship/new-grad lists. Overlapping but not identical — worth checking more than one.
+
+- [Simplify Summer 2026 Internships](https://github.com/SimplifyJobs/Summer2026-Internships) — the original Pitt CSC + Simplify list; Summer 2026 cycle
+- [vanshb03 / Summer2027-Internships](https://github.com/vanshb03/Summer2027-Internships) — Summer 2027 only, US/Canada/remote, across SWE, quant, data science, and PM. Maintained by Vansh + the CSCareers community; new postings come in as GitHub issues
+- [sndsh404 / summer-2027-internships](https://github.com/sndsh404/summer-2027-internships) — Summer 2027 **plus off-season terms** (fall, winter, spring), US-focused; SWE, data/ML, hardware, quant, product. Solo-maintained by Sandesh Bhandari, updated daily, takes issues and PRs
+- [speedyapply / 2027-SWE-College-Jobs](https://github.com/speedyapply/2027-SWE-College-Jobs) — **internships *and* new-grad** roles, auto-refreshed daily and capped to postings from the last 120 days. Split by USA/international and by FAANG+ / quant / other, with salary data where available
 
 ## Tools
 
