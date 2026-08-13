@@ -48,7 +48,6 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))];
       (card as HTMLElement).style.display = cat === active ? '' : 'none';
     });
 
-    // Mark active sidebar item
     document.querySelectorAll('.blog-sidebar__item').forEach((item) => {
       const href = (item as HTMLAnchorElement).getAttribute('href') ?? '';
       item.classList.toggle(

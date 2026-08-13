@@ -35,7 +35,6 @@ import SidebarLayout from '../layouts/SidebarLayout.astro';
     letter-spacing: -0.02em;
     color: var(--fg);
     margin: 0;
-    /* Intro: the lead text slides in from the right. */
     animation: home-slide-right 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) both;
     animation-delay: 0.1s;
   }
@@ -71,9 +70,8 @@ import SidebarLayout from '../layouts/SidebarLayout.astro';
     font-weight: 700;
   }
 
-  /* Wide viewports: bump hero size. Supporting keeps the same left-edge
-     position as before (≈ 33% of the old 36rem container = 12rem) but is
-     now free to extend wider than the hero's right edge. */
+  /* Wide viewports: .home-hero__body indents 12rem to sit at the lead's
+     optical center, and may run past the lead's right edge. */
   @media (min-width: 900px) {
     .home-hero__lead {
       font-size: 2.5rem;

@@ -1,6 +1,6 @@
 # Personal Website
 
-An Astro-based personal website featuring data-driven content management and modern styling.
+An Astro static site featuring data-driven content management and modern styling.
 
 **Live Site:** [g7xu.github.io](https://g7xu.github.io)
 
@@ -31,6 +31,18 @@ npm run preview
 npm run clean
 ```
 
+### Quality Gates
+
+CI runs these before build — a locally-passing `npm run build` can still fail deploy:
+
+```bash
+npm run format:check   # prettier
+npm run lint           # eslint
+npm run check          # astro check (types)
+```
+
+A husky pre-commit hook runs `lint-staged` (eslint + prettier on staged files).
+
 ## Project Structure
 
 ```
@@ -39,18 +51,17 @@ npm run clean
 │   │   ├── Navbar.astro
 │   │   ├── Sidebar.astro
 │   │   ├── Footer.astro
-│   │   ├── NewsDropdown.astro
 │   │   ├── ProjectCard.astro
-│   │   ├── ResearchCard.astro
-│   │   ├── BlogCard.astro
+│   │   ├── BlogCard.astro    # Typographic row, despite the name
 │   │   ├── BlogSidebar.astro
 │   │   └── StructuredData.astro
 │   ├── content/
 │   │   └── blog/             # Blog posts (Markdown, content collection)
+│   ├── content.config.ts     # Zod schema for the blog collection
 │   ├── data/                 # Data files for dynamic content
 │   │   ├── author.ts         # Author info, social links, site metadata
-│   │   ├── projects.ts       # Featured & research projects
-│   │   ├── news.ts           # Recent news items
+│   │   ├── projects.ts       # All projects (single allProjects array)
+│   │   ├── coffeeShops.ts    # Coffee shops plotted on the /travel map
 │   │   └── quotes.ts         # Quotes rendered in the quote cloud
 │   ├── layouts/              # Page layouts
 │   │   ├── BaseLayout.astro
@@ -61,77 +72,42 @@ npm run clean
 │   │   ├── projects.astro
 │   │   ├── learning-wiki.astro
 │   │   ├── quotes.astro      # Zoomable typographic quote cloud
+│   │   ├── travel.astro      # Interactive coffee map (largest page)
 │   │   ├── blog/
-│   │   └── beyond-tech/
+│   │   └── beyond-tech/      # Unlinked from nav; mostly placeholders
+│   ├── assets/travel/        # Coffee-shop photos (optimized at build)
 │   ├── scripts/              # Client-side TypeScript
-│   │   ├── custom.ts
-│   │   ├── learning-wiki.ts
+│   │   ├── learning-wiki.ts  # Wiki graph (d3), note rendering
+│   │   ├── wiki-callouts.ts
+│   │   ├── wiki-multi-column.ts
 │   │   └── quote-cloud.ts    # Quote cloud packing, zoom/pan, animation
 │   └── styles/               # CSS stylesheets
-│       ├── global.css
+│       ├── global.css        # Tokens, theme blocks, resets, typography
 │       ├── sidebar.css
 │       ├── navbar.css
 │       ├── projects.css
 │       ├── blog.css
 │       ├── beyond-tech.css
+│       ├── learning-wiki.css
+│       ├── travel.css
 │       └── quote-cloud.css
 ├── public/                   # Static assets (served as-is)
 │   ├── images/
 │   ├── files/
-│   └── js/
-└── obs_notes/                # Obsidian vault (not part of the site)
+│   └── wiki-images/          # Generated: copied from obs_notes/attachments/
+└── obs_notes/                # Obsidian vault; public/ is rendered at /learning-wiki/
 ```
 
-## Data-Driven Content Management
+## Adding Content
 
-### Adding Projects
+See `CLAUDE.md` (Adding Content) for the current schemas — data shapes live there
+so they're documented once. Short version:
 
-Edit `src/data/projects.ts` under `featuredProjects` or `researchProjects`:
-
-```ts
-{
-  title: "Project Name",
-  description: "Project description",
-  image: "/images/project-image.png",
-  url: "https://project-url.com",
-  tags: ["Data Science", "Visualization"],
-}
-```
-
-### Adding Blog Posts
-
-Create a `.md` file in `src/content/blog/` with frontmatter:
-
-```yaml
----
-title: 'Post Title'
-excerpt: 'Short description'
-date: '2026-01-15'
-category: 'Tools'
-author:
-  name: 'Jason Xu'
-  avatar: '/images/bio-photo.png'
-draft: false
----
-```
-
-### Adding News Items
-
-Edit `src/data/news.ts` under `recentNews`.
-
-### Adding Quotes
-
-Edit `src/data/quotes.ts` — the `/quotes/` page renders them as a full-window,
-zoomable typographic "quote cloud" (pan with drag, zoom with the wheel/pinch/buttons).
-The layout auto-shrinks so every quote fits, no matter how many you add.
-
-```ts
-{
-  text: "In me the tiger sniffs the rose.",
-  author: "Siegfried Sassoon", // optional — shown on hover
-  weight: 4,                    // 1–5: bigger & more central; 5 = accent color, ≤2 = muted
-}
-```
+- **Blog post:** `.md` in `src/content/blog/`; schema in `src/content.config.ts`.
+- **Project:** entry in `allProjects` in `src/data/projects.ts`.
+- **Quote:** entry in `src/data/quotes.ts`; the `/quotes/` cloud auto-fits any count.
+- **Coffee shop:** entry in `src/data/coffeeShops.ts` + photos per
+  `src/assets/travel/README.md`.
 
 ## Deployment
 
@@ -142,7 +118,7 @@ Automatic deployment to GitHub Pages via GitHub Actions (`.github/workflows/depl
 ### Branch Strategy
 
 - `master` — production, auto-deployed
-- `feature/astro_build` — development
+- short-lived `feature/*` and `fix/*` branches for everything else
 
 ---
 

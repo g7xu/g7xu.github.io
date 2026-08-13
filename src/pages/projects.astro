@@ -80,7 +80,6 @@ const allTags = getAllTags();
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Accordion toggle
     const toggles = document.querySelectorAll('.accordion-toggle');
     toggles.forEach((toggle) => {
       toggle.addEventListener('click', () => {
@@ -88,14 +87,13 @@ const allTags = getAllTags();
         const isOpen = toggle.getAttribute('aria-expanded') === 'true';
 
         if (isOpen) {
-          // Collapse: set explicit height first, then transition to 0
+          // height:auto can't be transitioned, so pin the current height for one frame first
           content.style.height = content.scrollHeight + 'px';
           requestAnimationFrame(() => {
             content.style.height = '0';
           });
           toggle.setAttribute('aria-expanded', 'false');
         } else {
-          // Expand: transition from 0 to scrollHeight
           content.style.height = content.scrollHeight + 'px';
           toggle.setAttribute('aria-expanded', 'true');
           // After transition completes, remove fixed height so content reflows naturally
@@ -108,10 +106,9 @@ const allTags = getAllTags();
       });
     });
 
-    // Tag filtering — toggleable + multi-select.
-    // Click a tag to add it, click again to remove it. With several tags
-    // selected, a project shows if it matches ANY of them. "All" clears
-    // the selection (and is active whenever nothing is selected).
+    // Tag filtering — toggleable + multi-select. With several tags selected,
+    // a project shows if it matches ANY of them. "All" clears the selection
+    // (and is active whenever nothing is selected).
     const filterButtons = document.querySelectorAll<HTMLElement>('.tag-filter');
     const allButton = document.querySelector<HTMLElement>(
       '.tag-filter[data-tag="all"]',
@@ -152,9 +149,9 @@ const allTags = getAllTags();
         if (tag === 'all') {
           selectedTags.clear();
         } else if (selectedTags.has(tag)) {
-          selectedTags.delete(tag); // toggle off (deselect)
+          selectedTags.delete(tag);
         } else {
-          selectedTags.add(tag); // toggle on
+          selectedTags.add(tag);
         }
         applyFilter();
       });

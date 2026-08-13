@@ -9,7 +9,6 @@ export interface Project {
 }
 
 export const allProjects: Project[] = [
-  // === Building the Wheel ===
   {
     title: 'SHOPPING-CART',
     description: 'Shopping cart application powered by React and Redux Toolkit',
@@ -46,7 +45,6 @@ export const allProjects: Project[] = [
     githubUrl: 'https://github.com/g7xu/guoxuan-devKit',
   },
 
-  // === Data Science ===
   {
     title: "I'm not sure, but.. . ",
     description:

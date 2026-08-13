@@ -1,17 +1,19 @@
 export interface Quote {
-  /** The quote text itself. */
   text: string;
-  /** Attribution — shown muted, revealed on hover. Omit for anonymous. */
+  /** Attribution; rendered muted and faded in only while the quote is hovered. */
   author?: string;
-  /** 1–5: drives font size & placement priority (default 3). 5 renders in accent; ≤2 muted. */
+  /**
+   * 1–5 (default 3). The single knob per quote: heavier means larger type,
+   * wider wrap, and a spot nearer the center; 5 renders in the accent color,
+   * ≤2 muted. Equal weights place in array order, earliest nearest the center.
+   * Exact values live at SIZE in quote-cloud.ts.
+   */
   weight?: number;
-  /** Optional source (book, talk, etc.) — reserved for future use. */
+  /** Provenance for the record only — never rendered. Book, talk, or URL. */
   source?: string;
 }
 
-// Add your quotes here. The cloud auto-shrinks so they all fit, no matter how many.
-// Example:
-//   { text: 'Simplicity is the ultimate sophistication.', author: 'Leonardo da Vinci', weight: 5 },
+// The cloud rescales to fit every entry in the viewport, so length here is unbounded.
 export const quotes: Quote[] = [
   {
     text: 'In me the tiger sniffs the rose.',

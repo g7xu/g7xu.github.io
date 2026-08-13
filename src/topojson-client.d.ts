@@ -1,2 +1,2 @@
-// topojson-client ships no types; we use it with explicit `as any` casts.
+// topojson-client ships no type declarations; this shim keeps the import compiling.
 declare module 'topojson-client';

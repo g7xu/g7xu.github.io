@@ -73,7 +73,6 @@ function initQuoteCloud(
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) document.body.classList.add('qc-reduce');
 
-  // view state
   let scale = 1;
   let panX = 0;
   let panY = 0;
@@ -122,7 +121,7 @@ function initQuoteCloud(
     const ch = contentBox.maxY - contentBox.minY || 1;
     const ccx = (contentBox.minX + contentBox.maxX) / 2;
     const ccy = (contentBox.minY + contentBox.maxY) / 2;
-    // shrink so EVERYTHING fits in the window (more quotes -> smaller scale)
+    // 0.9 leaves a margin; more quotes widen contentBox, so fit shrinks
     const fit = Math.min(VW / cw, VH / ch) * 0.9;
 
     if (animate) {
@@ -322,7 +321,7 @@ function initQuoteCloud(
   stage.addEventListener('pointerup', endPointer);
   stage.addEventListener('pointercancel', endPointer);
 
-  // ---- zoom buttons (zoom toward the stage center) ----
+  // ---- zoom buttons ----
   const cx = (): number => stage.clientWidth / 2;
   const cy = (): number => stage.clientHeight / 2;
   document

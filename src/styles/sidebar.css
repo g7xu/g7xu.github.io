@@ -14,7 +14,6 @@
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 1rem;
-  /* Intro: the photo slides in from the left. */
   animation: sidebar-slide-left 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
@@ -48,11 +47,10 @@
   font-weight: 500;
   color: var(--fg-muted);
   padding: 0.2rem 0;
-  /* Intro: each social link slides in from the left, one after another. */
   animation: sidebar-slide-left 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
-/* Stagger the social links so they arrive one by one after the photo. */
+/* Stagger keyed to DOM order — reordering author.links reorders arrival. 0.13s per step. */
 .sidebar-link:nth-child(1) {
   animation-delay: 0.45s;
 }

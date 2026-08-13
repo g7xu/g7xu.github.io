@@ -39,11 +39,10 @@ const pageTitle =
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href={author.favicon} />
     <link rel="apple-touch-icon" href={author.favicon} />
 
-    <!-- Fonts: Manrope (body & headings) -->
+    <!-- Manrope: body & headings -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -51,7 +50,6 @@ const pageTitle =
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
     />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -59,7 +57,6 @@ const pageTitle =
     <meta property="og:site_name" content={author.siteTitle} />
     <meta property="og:image" content={new URL(image, Astro.site)} />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
@@ -73,8 +70,6 @@ const pageTitle =
     <slot />
     <Footer />
     <script>
-      import '../scripts/custom.ts';
-
       document.addEventListener('click', async (e) => {
         const link = (e.target as Element).closest('.copy-email');
         if (!link) return;

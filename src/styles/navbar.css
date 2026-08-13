@@ -1,5 +1,3 @@
-/* Colors come from the active theme's --nav-* tokens (see global.css), so the
-   bar adopts each page's palette and blends into it. */
 .navbar {
   position: sticky;
   top: 0;
@@ -76,7 +74,7 @@
   display: inline-flex;
   align-items: center;
   padding: 7px 11px;
-  border-bottom: none; /* no underline indicator on icon tabs */
+  border-bottom: none;
   border-radius: 999px;
   color: var(--nav-muted);
   white-space: nowrap;
@@ -91,7 +89,6 @@
   flex: none;
 }
 
-/* The label — collapsed to zero width at rest, slides open on hover. */
 .navbar-label {
   max-width: 0;
   margin-left: 0;

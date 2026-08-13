@@ -20,15 +20,13 @@ time by Astro (resized to ~300px, converted to webp, lazy-loaded), so drop in
 3. **Reference it** in `src/data/coffeeShops.ts` — set that photo's entry to:
 
    ```ts
-   { src: 'blue-bottle-sf-1.jpg', emoji: '☕', caption: 'oat cortado' }
+   { src: 'blue-bottle-sf-1.jpg', caption: 'oat cortado' }
    ```
-
-   Keep `emoji` as a fallback (shown if the file is missing).
 
 4. `npm run dev` to preview → click the shop's pin. Commit the image + the data edit.
 
 ## Notes
 
 - Photos display as a **square center-crop** (150×150), so framing isn't critical.
-- A referenced file that doesn't exist falls back to the emoji — no build error.
+- A referenced file that doesn't exist renders as an empty hue-tinted frame — no build error.
 - If a portrait shot looks sideways, re-export it (bakes in the rotation).

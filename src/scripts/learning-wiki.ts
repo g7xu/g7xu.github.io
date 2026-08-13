@@ -118,12 +118,10 @@ for (const e of edges) {
   neighbors.get(t)?.add(s);
 }
 
-// Obsidian's exact node sizing, extracted from its renderer:
-//   radius = nodeSizeMultiplier * max(8, min(3 * sqrt(weight + 1), 30))
-// The floor makes every note under ~6 links the same small dot, while hubs
-// keep growing until ~99 links — so the big hubs visibly pop. Unresolved
-// phantoms use the same floor (Obsidian fades them via color, not size).
-// SIZE_SCALE maps Obsidian's world units to our on-screen pixels.
+// The radius floor flattens every note under ~6 links into the same small
+// dot, while hubs keep growing until the cap at ~99 links — so big hubs
+// visibly pop. Unresolved phantoms get the same floor; they are faded via
+// color, not size. SIZE_SCALE converts the formula's units to screen pixels.
 const SIZE_SCALE = 0.5;
 function nodeRadius(id: string): number {
   const degree = neighbors.get(id)?.size ?? 0;
@@ -273,7 +271,6 @@ function extractMath(src: string): { text: string; blocks: ExtractedMath[] } {
     return `${MATH_OPEN}C${codeBlocks.length - 1}${MATH_CLOSE}`;
   });
 
-  // Display math: $$...$$
   text = text.replace(/\$\$([\s\S]+?)\$\$/g, (_, tex: string) => {
     blocks.push({ display: true, tex: tex.trim() });
     return `${MATH_OPEN}M${blocks.length - 1}${MATH_CLOSE}`;
@@ -288,7 +285,6 @@ function extractMath(src: string): { text: string; blocks: ExtractedMath[] } {
     },
   );
 
-  // Restore code untouched.
   text = text.replace(/C(\d+)/g, (_, i: string) => codeBlocks[Number(i)]);
 
   return { text, blocks };
@@ -336,7 +332,7 @@ function openNote(id: string) {
         const style = width ? ` style="max-width:${width}px"` : '';
         return `\n\n<img src="/wiki-images/${filename}" alt="${filename}"${style}>\n\n`;
       }
-      return ''; // strip non-image embeds
+      return '';
     },
   );
 
@@ -382,12 +378,10 @@ function openNote(id: string) {
 
   document.getElementById('note-title')!.textContent = note.id;
 
-  // 3. Pad multi-column markers with blank lines so marked treats them as
-  //    standalone blocks (otherwise paragraph continuation absorbs them).
+  // 3. Pad multi-column markers
   processed = padMultiColumnMarkers(processed);
 
-  // 4. Extract math BEFORE marked runs, so `&` and `\\` inside $$...$$ survive
-  //    HTML-escaping and CommonMark backslash-escape handling.
+  // 4. Extract math to placeholder slots
   const { text: markdownWithMathSlots, blocks: mathBlocks } =
     extractMath(processed);
 
@@ -399,7 +393,7 @@ function openNote(id: string) {
   document.getElementById('right-panel')!.classList.add('open');
 }
 
-// ── Wiki-link click handler (event delegation on note body) ──
+// ── Heading navigation used by delegated wiki-link clicks ──
 function scrollToHeading(slug: string) {
   const body = document.getElementById('note-body')!;
   const h = body.querySelector(
@@ -455,7 +449,7 @@ document.getElementById('note-body')!.addEventListener('click', (e) => {
   selectNote(targetId);
   pulseNode(targetId);
   if (heading) {
-    // Wait for markdown render, then scroll to heading.
+    // Heading offsets need layout of the just-assigned innerHTML.
     requestAnimationFrame(() => scrollToHeading(heading));
   }
 });
@@ -608,14 +602,10 @@ function initGraph() {
   document.getElementById('node-count')!.textContent =
     `${NOTES.length} notes · ${links.length} connections`;
 
-  // Mirror Obsidian's actual graph forces (obs_notes/.obsidian/graph.json:
-  // repelStrength 10, linkStrength 1, linkDistance 250, centerStrength ~0.52).
-  // Measured from the real vault render: the whole graph packs into a near
-  // perfect disc (bbox aspect ~1.03, max/median radial distance ~1.6). Two
-  // things produce that shape: GLOBAL repulsion (no distanceMax cutoff — the
-  // cutoff is what let satellite clusters drift off on long tethers) and
-  // STRONG centering, so everything gets pulled back into one round body
-  // while short strong links mesh the core.
+  // Tuned so the graph settles into one round disc (bbox aspect ~1.03):
+  // repulsion must stay GLOBAL — a distanceMax cutoff lets satellite clusters
+  // drift out on long tethers — and centering strong enough to pull them
+  // back, while short strong links mesh the core.
   simulation = d3
     .forceSimulation<SimNode, SimLink>(nodes)
     .force(
@@ -813,7 +803,7 @@ function updateGraphSelection() {
   nodeGroup.classed('selected', (d) => d.id === selectedId);
 }
 
-// Pan graph to node + play pulse ring animation
+// Centers the viewport on the node at 1.4x before ringing it.
 function pulseNode(id: string) {
   if (!nodeGroup || !gMain) return;
 
@@ -835,7 +825,6 @@ function pulseNode(id: string) {
       d3.zoomIdentity.translate(tx, ty).scale(scale),
     );
 
-  // Pulse ring: append a temporary circle that expands and fades
   const r = nodeRadius(id);
   const pulse = gMain
     .append('circle')
@@ -864,7 +853,6 @@ document
     searchQuery = this.value.trim();
     buildTree();
 
-    // Dim non-matching nodes in graph
     if (!nodeGroup) return;
     const q = searchQuery.toLowerCase();
     nodeGroup.classed(
@@ -886,8 +874,7 @@ document.getElementById('mobile-toggle')!.addEventListener('click', () => {
 const shell = document.getElementById('wiki-shell')!;
 const leftPanel = document.getElementById('left-panel')!;
 const toggleBtn = document.getElementById('sidebar-toggle')!;
-// The sidebar starts collapsed via server-rendered markup (.panel-collapsed /
-// .collapsed) so there's no open→close animation on page load.
+// Must agree with the server-rendered .collapsed markup in learning-wiki.astro.
 let sidebarOpen = false;
 
 toggleBtn.addEventListener('click', () => {
@@ -896,7 +883,8 @@ toggleBtn.addEventListener('click', () => {
   shell.classList.toggle('panel-collapsed', !sidebarOpen);
   toggleBtn.textContent = sidebarOpen ? '◀' : '▶';
   toggleBtn.title = sidebarOpen ? 'Hide sidebar' : 'Show sidebar';
-  // Re-center graph after transition
+  // Reheat once the 0.22s panel-width transition finishes so the centering
+  // forces re-fit the new width.
   setTimeout(() => {
     if (simulation) simulation.alphaTarget(0.05).restart();
   }, 250);
@@ -908,16 +896,14 @@ toggleBtn.addEventListener('click', () => {
 buildTree();
 initGraph();
 
-// Open the page named in the URL hash, if any (shared deep-link). The graph
-// runs an entrance animation, so node positions aren't final immediately —
-// defer the camera centering until they've settled.
+// Open the page named in the URL hash, if any (shared deep-link). pulseNode
+// reads live node positions, so it waits out most of the entrance ease first.
 const initialId = decodeHash();
 if (initialId && NOTES.some((n) => n.id === initialId)) {
   selectNote(initialId);
   setTimeout(() => pulseNode(initialId), 700);
 }
 
-// Re-init on resize
 window.addEventListener('resize', () => {
   if (simulation) simulation.stop();
   initGraph();
