@@ -156,6 +156,8 @@ draft: false
 
 **New news item:** Edit `src/data/news.ts` under `recentNews`.
 
+**New quote:** Edit `src/data/quotes.ts`. **Always ask Jason for the `weight` (1–5) before adding the entry — never pick one silently.** Weight is the only knob on a quote and it drives four things at once in `src/scripts/quote-cloud.ts`: base font size (`SIZE`: 1→15px … 5→42px), wrap width (`150 + weight * 40`), color (5 renders in `--accent` rust, ≤2 in `--fg-muted`), and placement — the array is sorted heaviest-first and packed along a spiral from the center outward, so heavier quotes claim the middle. Ties keep array order, so among equal weights the earliest entry sits at dead center.
+
 ## Deployment
 
 Deployment happens automatically via `.github/workflows/deploy.yml` on push to `master`.

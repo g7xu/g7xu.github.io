@@ -24,26 +24,31 @@ export const quotes: Quote[] = [
     weight: 4,
   },
   {
-    text: 'You can’t connect the dots looking forward; you can only connect them looking backward. So you have to trust that the dots will somehow connect in your future.',
-    author: 'Steve Jobs',
+    text: '没有度量的努力，叫自我感动，甚至叫自欺欺人。',
+    author: 'Chenyang Zhao',
     weight: 4,
+    source: 'https://www.linkedin.com/in/chayennezhao/',
   },
+  { text: '夫事以秘成，言以泄败。', author: '韩非子 · 说难', weight: 4 },
   {
     text: '君子应该像天宇一样运行不息，即使颠沛流离，也不屈不挠；如果你是君子，接物度要像大地一样，没有什么东西不能承载。',
     author: '邓亚萍',
     weight: 4,
   },
   {
+    text: 'Pressure is a privilege. It comes only to those who earn it.',
+    author: 'Billie Jean King',
+    weight: 4,
+  },
+  {
+    text: 'You can’t connect the dots looking forward; you can only connect them looking backward. So you have to trust that the dots will somehow connect in your future.',
+    author: 'Steve Jobs',
+    weight: 4,
+  },
+  {
     text: 'There is hope in dreams, imagination, and in the courage of those who wish to make those dreams a reality.',
     author: 'Jonas Salk',
     weight: 4,
-  },
-  { text: '夫事以秘成，言以泄败。', author: '韩非子 · 说难', weight: 4 },
-  {
-    text: '没有度量的努力，叫自我感动，甚至叫自欺欺人。',
-    author: 'Chenyang Zhao',
-    weight: 4,
-    source: 'https://www.linkedin.com/in/chayennezhao/',
   },
   { text: '莫愁前路无知己，天下谁人不识君。', author: '高适', weight: 4 },
   {
