@@ -4,7 +4,6 @@
   padding: 2rem 1.5rem;
 }
 
-/* Tag filter bar */
 .tag-filter-bar {
   display: flex;
   flex-wrap: wrap;
@@ -35,7 +34,6 @@
   border-color: var(--fg);
 }
 
-/* Section layout */
 .project-section {
   margin-bottom: 2rem;
 }
@@ -46,7 +44,6 @@
   font-size: 1.1rem;
 }
 
-/* Accordion toggle */
 .accordion-toggle {
   display: flex;
   align-items: center;
@@ -76,7 +73,6 @@
   transform: rotate(45deg);
 }
 
-/* Accordion content */
 .accordion-content {
   height: 0;
   overflow: hidden;
@@ -87,7 +83,6 @@
   margin: 0.5rem 0;
 }
 
-/* Projects grid */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
@@ -95,7 +90,6 @@
   margin-top: 0.5rem;
 }
 
-/* Card styles */
 .project-item {
   background: var(--bg);
   padding: 25px;
@@ -137,7 +131,6 @@
   flex: 1;
 }
 
-/* Project links */
 .project-links {
   display: flex;
   gap: 0.75rem;
@@ -156,7 +149,6 @@
   color: var(--link-hover);
 }
 
-/* Tag pills on cards */
 .project-tags {
   display: flex;
   flex-wrap: wrap;

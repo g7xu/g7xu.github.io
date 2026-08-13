@@ -1,10 +1,10 @@
 // Coffee shops I've worked from, plotted on the /travel map.
 // Add a shop here; drop its photos in src/assets/travel/ named <id>-<n>.jpg
-// (see src/assets/travel/README.md). Missing photos fall back to the emoji.
+// (see src/assets/travel/README.md). A missing file renders as an empty
+// hue-tinted frame — no build error.
 
 export interface Photo {
-  /** Filename of a photo in `src/assets/travel/`, e.g. "cliff-coffee-plano-1.jpg".
-   *  Resolved at build to an optimized webp. */
+  /** Filename within src/assets/travel/; resolved at build to an optimized webp. */
   src?: string;
   /** Handwritten-style caption shown under the polaroid. */
   caption?: string;
@@ -18,7 +18,7 @@ export interface CoffeeShop {
   address?: string;
   lat: number;
   lng: number;
-  /** ISO date I worked there. */
+  /** YYYY-MM-DD of the visit — not the date this entry was added. */
   date?: string;
   /** One-liner vibe / what I did there. */
   note?: string;
@@ -33,8 +33,6 @@ export const coffeeShops: CoffeeShop[] = [
     name: 'Cliff Coffee',
     city: 'Plano, TX',
     address: '6185 Assembly Park Blvd A, Plano, TX 75074',
-    // Approx coords — fine-tune via Google Maps (right-click the spot → click
-    // the coordinates to copy).
     lat: 33.0388,
     lng: -96.6628,
     date: '2026-06-21',

@@ -64,7 +64,6 @@ const boundsStr = (f: any) => {
   return [x0, y0, x1, y1].map((n) => Math.round(n)).join(',');
 };
 
-// Geometry sources for the deeper tiers.
 const statesGeo: any = feature(
   usStatesTopo as any,
   (usStatesTopo as any).objects.states,
@@ -113,7 +112,6 @@ for (const s of coffeeShops) {
   if (co) shopCountyIds.add(String(co.id));
 }
 
-// Tier 0 — countries
 const countries = countryFeatures
   .map((f: any) => ({
     name: f.properties?.name ?? '',
@@ -212,7 +210,6 @@ const shopCount = pins.length;
         aria-label="Illustrated world map with coffee-shop pins"
       >
         <g class="zoom-layer" id="zoom-layer">
-          <!-- Tier 0: countries -->
           <g class="countries">
             {
               countries.map((c: any) => (
@@ -229,7 +226,6 @@ const shopCount = pins.length;
             }
           </g>
 
-          <!-- Tier 1: US states (grid appears when zoomed into the U.S.) -->
           <g class="states">
             {
               states.map((s: any) => (
@@ -246,7 +242,6 @@ const shopCount = pins.length;
             }
           </g>
 
-          <!-- Tier 2: counties / city grid (only for visited states) -->
           <g class="counties">
             {
               counties.map((c: any) => (
@@ -261,7 +256,6 @@ const shopCount = pins.length;
             }
           </g>
 
-          <!-- Decorative sparkles -->
           <g class="sparkles" aria-hidden="true">
             {
               sparkles.map((p) => (
@@ -274,7 +268,6 @@ const shopCount = pins.length;
             }
           </g>
 
-          <!-- Pins -->
           <g class="pins">
             {
               pins.map((p, i) => (
@@ -401,11 +394,6 @@ const shopCount = pins.length;
       svg.style.setProperty('--ty', String(ty));
     };
 
-    // ── Declutter: shops too close together at the current zoom collapse ──
-    // into ONE pin with a count badge (the maps "cluster" pattern); clicking
-    // it zooms in a level. Only at the deepest level does anything still
-    // stacked (e.g. two shops on the same downtown block) fan out with a
-    // small leg instead, so every shop stays visible and clickable.
     const CLUSTER_THRESH = 22; // screen px under which pins are "stacked"
     const MAX_LEVEL = 3;
     const pinEls = Array.from(document.querySelectorAll<SVGGElement>('.pin'));
@@ -437,6 +425,11 @@ const shopCount = pins.length;
       }
     };
 
+    // Declutter: shops too close together at the current zoom collapse into
+    // ONE pin with a count badge (the maps "cluster" pattern); clicking it
+    // zooms in a level. Only at the deepest level does anything still stacked
+    // (e.g. two shops on the same downtown block) fan out with a small leg
+    // instead, so every shop stays visible and clickable.
     const updateDeclutter = () => {
       // Chained greedy clustering on screen distance (n is tiny).
       const used = new Set<number>();
@@ -496,8 +489,7 @@ const shopCount = pins.length;
             );
           });
         } else {
-          // Collapse the stack into one badge pin at the centroid; clicking
-          // it drills into the cluster's bounds (see the drill handler).
+          // Collapse the stack into one badge pin at the centroid.
           let rep = group[0];
           let best = Infinity;
           for (const m of group) {

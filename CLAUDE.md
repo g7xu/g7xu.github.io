@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-An **Astro**-based personal website, rebuilt from Jekyll + Minimal Mistakes. Deployed automatically to GitHub Pages at [g7xu.github.io](https://g7xu.github.io) via GitHub Actions from the `master` branch.
+An **Astro** static site. Deployed automatically to GitHub Pages at [g7xu.github.io](https://g7xu.github.io) via GitHub Actions from the `master` branch.
 
 ## Commands
 
@@ -25,9 +25,16 @@ npm run preview
 # Clean build artifacts
 npm run clean
 
-# Full deployment helper (build + verify)
+# CI gates — deploy runs ALL THREE before build, so run them before pushing:
+npm run format:check   # prettier
+npm run lint           # eslint
+npm run check          # astro check (types)
+
+# Clean + build + print build stats (does not deploy; push to master for that)
 bash scripts/deploy.sh
 ```
+
+A husky pre-commit hook runs `lint-staged` (eslint + prettier on staged files). `dev` and `build` first run `copy:wiki-images`, which copies `obs_notes/attachments/` into `public/wiki-images/` (gitignored).
 
 ## Architecture
 
@@ -35,33 +42,45 @@ bash scripts/deploy.sh
 
 Content is data-driven and separated from presentation:
 
-- **`src/data/author.ts`** — All author constants (name, bio, email, avatar, social links, site title/description)
-- **`src/data/projects.ts`** — All projects (featured & research). Pages import from this file.
-- **`src/data/news.ts`** — Recent news items rendered in the homepage dropdown.
+- **`src/data/author.ts`** — Author constants (name, location, email, avatar, favicon, links, site title/description)
+- **`src/data/projects.ts`** — One `allProjects: Project[]` array. Each entry: `title`, `description`, `tags`, `categories`, `githubUrl`, optional `websiteUrl` / `imageUrl`. Categories are `spotlight`, `building-the-wheel`, `full-stack-applications`, `data-science`; pages group via `getProjectsByCategory()` / `getAllTags()`.
+- **`src/data/coffeeShops.ts`** — Coffee shops plotted on the `/travel/` map; photos live in `src/assets/travel/` (see its README).
+- **`src/data/quotes.ts`** — Quotes for the `/quotes/` cloud; `weight` semantics documented on the `Quote` interface.
 - **`src/content/blog/`** — Blog posts as Markdown files with Zod-validated frontmatter.
-- **`src/content/config.ts`** — Astro content collection schema for blog posts.
+- **`src/content.config.ts`** — Astro content collection schema for blog posts.
 
 ### Pages
 
 All site pages live in `src/pages/`. Key pages:
 
-- `src/pages/index.astro` — Homepage with author sidebar and news dropdown
-- `src/pages/projects.astro` — Projects & Research grid (`/projects/`)
-- `src/pages/blog/index.astro` — Blog listing with Notion-style card grid (`/blog/`)
+- `src/pages/index.astro` — Homepage: author sidebar + a two-paragraph hero lead (no lists, no photo)
+- `src/pages/projects.astro` — Category-grouped project card grid (`/projects/`)
+- `src/pages/blog/index.astro` — Blog listing, typographic rows with a category sidebar (`/blog/`)
 - `src/pages/blog/[...slug].astro` — Dynamic blog post pages
-- `src/pages/beyond-tech/` — Personal content sub-section
-- `src/pages/learning-wiki.astro` — Learning wiki page
+- `src/pages/learning-wiki.astro` — Wiki knowledge graph (`/learning-wiki/`)
+- `src/pages/quotes.astro` — Zoomable typographic quote cloud (`/quotes/`)
+- `src/pages/travel.astro` — Interactive coffee map; the largest page in the repo (`/travel/`)
+- `src/pages/beyond-tech/` — Unlinked from the nav; mostly "coming soon" placeholders. `/travel/` superseded `beyond-tech/coffee-shops` — don't build that twice.
+
+### Client Scripts (`src/scripts/`)
+
+- `quote-cloud.ts` — Quote cloud packing, zoom/pan, entrance animation
+- `learning-wiki.ts` — d3 force graph, note rendering, search
+- `wiki-callouts.ts`, `wiki-multi-column.ts` — Obsidian-syntax renderers used by `learning-wiki.ts`
 
 ### Styling
 
 Custom styles live in `src/styles/`. Each file corresponds to a concern:
 
-- `global.css` — Resets, typography, news dropdown styles
+- `global.css` — Design tokens, per-page theme blocks, resets, typography, shared heading/email utilities
 - `sidebar.css` — Author sidebar
 - `navbar.css` — Top navigation bar
-- `projects.css` — Project & research card grids
-- `blog.css` — Notion-inspired blog styles (design tokens, card layout, post layout)
-- `beyond-tech.css` — Beyond-Tech page styles
+- `projects.css` — Project card grid + tag filter
+- `blog.css` — Blog listing and post styles
+- `learning-wiki.css` — Wiki 3-panel shell + graph (the largest stylesheet)
+- `travel.css` — Coffee map
+- `quote-cloud.css` — Quote cloud
+- `beyond-tech.css` — Beyond-Tech placeholder pages
 
 ### Components
 
@@ -70,14 +89,13 @@ Reusable Astro components in `src/components/`:
 - `Navbar.astro` — Sticky top navbar
 - `Sidebar.astro` — Author bio sidebar (used on homepage)
 - `Footer.astro` — Site footer
-- `NewsDropdown.astro` — "Recent News" toggle widget
-- `ProjectCard.astro`, `ResearchCard.astro` — Project cards
-- `BlogCard.astro`, `BlogSidebar.astro` — Blog listing components
+- `ProjectCard.astro` — Project card
+- `BlogCard.astro` — Blog listing row (typographic, despite the name), `BlogSidebar.astro` — category filter
 - `StructuredData.astro` — JSON-LD SEO schema
 
 ### Layouts
 
-- `BaseLayout.astro` — HTML shell: `<head>`, Navbar, Footer, structured data
+- `BaseLayout.astro` — HTML shell: `<head>`, Navbar, Footer, structured data. Takes a `theme` prop (see Themes).
 - `SidebarLayout.astro` — Two-column: author sidebar + main content (homepage only)
 - `BlogPostLayout.astro` — Individual blog post layout
 
@@ -86,12 +104,12 @@ Reusable Astro components in `src/components/`:
 Static files served as-is from `public/`:
 
 - `public/images/` — All site images (bio photo, project covers, etc.)
-- `public/files/` — PDF files (resume, papers)
-- `public/js/custom.js` — Custom JS (smooth scroll, hover effects, IntersectionObserver)
+- `public/files/` — PDF files (resume, CV)
+- `public/wiki-images/` — Generated on every dev/build from `obs_notes/attachments/`; gitignored
 
 ### Obsidian Notes (`obs_notes/`)
 
-This directory is an Obsidian vault for personal learning notes. Not rendered as part of the Astro site.
+An Obsidian vault, but **not inert**: `learning-wiki.astro` reads every `.md` under `obs_notes/public/` at build time and renders it at `/learning-wiki/`, and `obs_notes/attachments/` is copied into `public/wiki-images/`. Everything else in the vault is private and untracked (see `.gitignore`).
 
 ## Design System
 
@@ -107,6 +125,12 @@ The site follows a **warm, typographic, content-first developer's workshop** aes
 - `--link: #0F172A` — links match body text, underlined
 - `--link-hover: #475569`
 - `--accent: #C2410C` — warm rust, used sparingly (current-page nav indicator)
+- `--text-base: 17px`, `--leading: 1.55`, `--measure: 62ch` — layout-load-bearing
+- `--primary-color` etc. are legacy aliases consumed only by `learning-wiki.css` — don't add new consumers
+
+### Themes
+
+`BaseLayout` takes a `theme` prop (default `'workshop'`) and stamps it as `data-theme` on `<body>`. A theme block in `global.css` overrides the `--nav-*` token group so the navbar adopts the page's palette. `travel.astro` uses `theme="coffee"`, which swaps in a cream/espresso palette whose `--nav-bg` gradient mirrors the map page background. Adding a theme = one block in `global.css` + `theme="…"` on the page.
 
 ### Typography
 
@@ -118,26 +142,25 @@ The site follows a **warm, typographic, content-first developer's workshop** aes
 ### Anti-patterns (do not introduce)
 
 - No card components anywhere except the projects page (`src/pages/projects.astro` + `ProjectCard.astro` deliberately use a bordered/shadowed grid of image-led cards). Other lists stay typographic.
-- No drop shadows on content
-- No gradients
+- No drop shadows or gradients on content surfaces. Intentional exceptions: the coffee theme's nav/page gradient, and the travel map's polaroids/pins.
 - No SaaS-blue (#007acc, indigo, #3b82f6 etc.)
 - No `Inter` as a font choice
-- No hero photo on the homepage; lead with recent content
+- No hero photo on the homepage
 - No card thumbnails on blog/project lists; use typographic rows with prominent dates
 
 ### Layout patterns
 
-- Lists of content (recent posts, projects, blog index) render as `.recent-list`-style typographic rows: `<time>` left, title + description right, hairline `border-bottom`.
+- Lists of content render as typographic rows (see `.blog-list__item` in `blog.css`): `<time>` left, title + description right, hairline `border-bottom`.
 - Footer follows the two-row pattern (social row + colophon row) — see `src/components/Footer.astro`.
 
 ## Branch Strategy
 
 - `master` — production branch, auto-deployed to GitHub Pages via GitHub Actions
-- `feature/astro_build` — development branch
+- Everything else happens on short-lived `feature/*` and `fix/*` branches
 
 ## Adding Content
 
-**New blog post:** Create a `.md` file in `src/content/blog/` with this frontmatter:
+**New blog post:** Create a `.md` file in `src/content/blog/` with this frontmatter (schema: `src/content.config.ts`):
 
 ```yaml
 ---
@@ -145,18 +168,19 @@ title: 'Post Title'
 excerpt: 'Short description'
 date: '2026-01-15'
 category: 'Tools' # Tools | Engineering | Data | Life | etc.
-author:
+coverImage: '/images/blog-covers/foo.png' # optional
+author: # optional — defaults to Jason Xu + bio photo
   name: 'Jason Xu'
   avatar: '/images/bio-photo.png'
-draft: false
+draft: false # optional — defaults to false
 ---
 ```
 
-**New project:** Edit `src/data/projects.ts` under `featuredProjects` or `researchProjects`. Images go in `public/images/`.
+**New project:** Add an entry to `allProjects` in `src/data/projects.ts` (shape documented there). Images go in `public/images/`.
 
-**New news item:** Edit `src/data/news.ts` under `recentNews`.
+**New quote:** Edit `src/data/quotes.ts`. **Always ask Jason for the `weight` (1–5) before adding the entry — never pick one silently.** Weight is the only knob on a quote — size, wrap width, color, and center-proximity all follow from it; semantics are documented on the `Quote` interface.
 
-**New quote:** Edit `src/data/quotes.ts`. **Always ask Jason for the `weight` (1–5) before adding the entry — never pick one silently.** Weight is the only knob on a quote and it drives four things at once in `src/scripts/quote-cloud.ts`: base font size (`SIZE`: 1→15px … 5→42px), wrap width (`150 + weight * 40`), color (5 renders in `--accent` rust, ≤2 in `--fg-muted`), and placement — the array is sorted heaviest-first and packed along a spiral from the center outward, so heavier quotes claim the middle. Ties keep array order, so among equal weights the earliest entry sits at dead center.
+**New coffee shop:** Add an entry to `src/data/coffeeShops.ts`; photo workflow in `src/assets/travel/README.md`.
 
 ## Deployment
 

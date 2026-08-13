@@ -4,7 +4,6 @@ import '../styles/learning-wiki.css';
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Read all .md files from obs_notes/public/ at build time
 interface WikiNote {
   id: string;
   folder: string;
@@ -30,6 +29,7 @@ function walkMarkdown(root: string, dir: string, collected: WikiNote[]) {
   }
 }
 
+// Every .md under obs_notes/public/ is inlined into the page at build time.
 try {
   const publicDir = path.resolve('obs_notes/public');
   if (fs.existsSync(publicDir)) {
@@ -68,12 +68,12 @@ const notesJson = JSON.stringify(notes);
       </div>
     ) : (
       <div class="wiki-shell panel-collapsed" id="wiki-shell">
-        {/* Sidebar collapse toggle — starts collapsed (see learning-wiki.ts) */}
+        {/* .panel-collapsed / .collapsed are server-rendered so there is no
+            open→close flash on load. */}
         <button class="sidebar-toggle" id="sidebar-toggle" title="Show sidebar">
           ▶
         </button>
 
-        {/* LEFT: Folder tree */}
         <aside class="left-panel collapsed" id="left-panel">
           <div class="left-panel-header">
             <input
@@ -86,7 +86,6 @@ const notesJson = JSON.stringify(notes);
           <div class="file-tree" id="file-tree" />
         </aside>
 
-        {/* CENTER: Graph */}
         <div class="graph-panel" id="graph-panel">
           <button class="mobile-toggle" id="mobile-toggle">
             ☰
@@ -98,7 +97,6 @@ const notesJson = JSON.stringify(notes);
           </div>
         </div>
 
-        {/* RIGHT: Note content */}
         <aside class="right-panel" id="right-panel">
           <div class="right-panel-header">
             <span class="right-panel-title" id="note-title" />
