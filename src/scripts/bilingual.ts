@@ -11,10 +11,15 @@
 
 import { langFor } from '../utils/lang';
 
-/** Matches the opacity transition on `.bilingual` in global.css. */
-const FADE_MS = 120;
+/** Matches the transform/opacity transitions on `.bilingual` in global.css. */
+const LIFT_MS = 140;
+
+/** Long enough to outlast the width transition before inline styles are dropped. */
+const SETTLE_MS = 220;
 
 const SELECTOR = '.bilingual[data-alt]';
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function spanFrom(event: Event): HTMLElement | null {
   const target = event.target;
@@ -39,19 +44,55 @@ export function upgradeBilingualSpans(root: ParentNode = document): void {
   });
 }
 
+function exchange(span: HTMLElement, incoming: string): void {
+  span.dataset.alt = span.textContent ?? '';
+  span.textContent = incoming;
+  span.setAttribute('lang', langFor(incoming));
+}
+
+/**
+ * Lift the outgoing text out, exchange the text, and bring the incoming text
+ * up from below. The two languages rarely measure the same, so the span's
+ * width is animated between the measured values — otherwise the rest of the
+ * line jumps at the moment of the exchange.
+ */
 function toggle(span: HTMLElement): void {
   const alt = span.dataset.alt;
-  if (alt === undefined || span.classList.contains('is-swapping')) return;
+  if (alt === undefined || span.dataset.swapping) return;
 
-  span.classList.add('is-swapping');
-  // Timed rather than driven by transitionend, which never fires under
-  // prefers-reduced-motion and would strand the span invisible.
+  if (reducedMotion.matches) {
+    exchange(span, alt);
+    return;
+  }
+
+  span.dataset.swapping = 'true';
+  span.style.width = `${span.getBoundingClientRect().width}px`;
+  span.classList.add('is-out');
+
+  // Timed rather than driven by transitionend, which would not fire if the
+  // span were hidden mid-swap and would strand it invisible.
   setTimeout(() => {
-    span.dataset.alt = span.textContent ?? '';
-    span.textContent = alt;
-    span.setAttribute('lang', langFor(alt));
-    span.classList.remove('is-swapping');
-  }, FADE_MS);
+    span.classList.add('no-anim');
+    span.classList.remove('is-out');
+    span.classList.add('is-enter');
+    exchange(span, alt);
+
+    const held = span.style.width;
+    span.style.width = 'auto';
+    const target = span.getBoundingClientRect().width;
+    span.style.width = held;
+
+    void span.offsetWidth;
+
+    span.classList.remove('no-anim');
+    span.classList.remove('is-enter');
+    span.style.width = `${target}px`;
+
+    setTimeout(() => {
+      span.style.width = '';
+      delete span.dataset.swapping;
+    }, SETTLE_MS);
+  }, LIFT_MS);
 }
 
 const root = document.documentElement;

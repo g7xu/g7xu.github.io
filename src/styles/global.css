@@ -11,6 +11,9 @@
   --link: #0f172a;
   --link-hover: #475569;
   --accent: #c2410c;
+  /* --accent at 9% and 16% — the bilingual toggle's resting and hover wash. */
+  --accent-wash: rgba(194, 65, 12, 0.09);
+  --accent-wash-strong: rgba(194, 65, 12, 0.16);
 
   --font-sans:
     'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -190,22 +193,39 @@ pre {
    Hand-authored en/zh pairs; a click swaps the visible text with
    data-alt (see src/scripts/bilingual.ts). Both variants are plain
    text — the swap replaces textContent, so nested markup is lost.
+
+   inline-block is what lets the swap animate, and it costs the span
+   the ability to break across lines: keep phrases short enough to sit
+   on one.
    ============================================ */
 .bilingual {
   cursor: pointer;
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  border-radius: 3px;
+  display: inline-block;
+  /* Bleeds the wash past the text box so it reads as a highlighter
+     stroke rather than a tight label. */
+  --wash-bleed: 0.18em;
+  background: var(--accent-wash);
+  box-shadow: 0 0 0 var(--wash-bleed) var(--accent-wash);
+  border-radius: 2px;
   transition:
     background-color 0.15s ease,
-    opacity 0.12s ease;
+    box-shadow 0.15s ease,
+    transform 0.14s ease,
+    opacity 0.14s ease,
+    width 0.16s ease;
 }
 
 .bilingual:hover {
-  background: var(--bg-surface);
+  background: var(--accent-wash-strong);
+  box-shadow: 0 0 0 var(--wash-bleed) var(--accent-wash-strong);
+}
+
+/* The bleed is em-proportional, which at heading scale would fill a block
+   instead of marking words. */
+h1 .bilingual,
+h2 .bilingual,
+h3 .bilingual {
+  --wash-bleed: 0.07em;
 }
 
 .bilingual:focus-visible {
@@ -213,8 +233,20 @@ pre {
   outline-offset: 2px;
 }
 
-.bilingual.is-swapping {
+/* The outgoing text rises and clears; the incoming text arrives from
+   below. bilingual.ts holds each state for one frame. */
+.bilingual.is-out {
+  transform: translateY(-0.3em);
   opacity: 0;
+}
+
+.bilingual.is-enter {
+  transform: translateY(0.3em);
+  opacity: 0;
+}
+
+.bilingual.no-anim {
+  transition: none;
 }
 
 /* Manrope leads so Latin runs match body text; CJK glyphs fall through

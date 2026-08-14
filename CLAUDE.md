@@ -198,7 +198,7 @@ In Markdown (blog posts, `obs_notes/` wiki notes), write the span directly. The 
 <span class="bilingual" data-alt="中文">Chinese</span>
 ```
 
-Both variants must be plain text — swapping replaces `textContent`, so nested markup is lost. Avoid `$` inside wiki-note spans (the wiki's math extractor claims it). `role`, `tabindex`, `title`, and `lang` are added at runtime by `src/scripts/bilingual.ts`; authors never write them.
+Both variants must be plain text — swapping replaces `textContent`, so nested markup is lost. Keep phrases short enough to sit on one line: the span is `inline-block` so the swap can animate, which means it cannot break across lines. Avoid `$` inside wiki-note spans (the wiki's math extractor claims it). `role`, `tabindex`, `title`, and `lang` are added at runtime by `src/scripts/bilingual.ts`; authors never write them.
 
 **New project:** Add an entry to `allProjects` in `src/data/projects.ts` (shape documented there). Images go in `public/images/`.
 
