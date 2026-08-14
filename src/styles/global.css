@@ -11,9 +11,11 @@
   --link: #0f172a;
   --link-hover: #475569;
   --accent: #c2410c;
-  /* --accent at 9% and 16% — the bilingual toggle's resting and hover wash. */
-  --accent-wash: rgba(194, 65, 12, 0.09);
-  --accent-wash-strong: rgba(194, 65, 12, 0.16);
+  /* --fg-muted at 14% and 24% — the bilingual toggle's resting and hover mark.
+     Kept off --accent so a marked phrase reads as the page holding its own
+     text, not as a second accent competing with the nav indicator. */
+  --mark-wash: rgba(100, 116, 139, 0.14);
+  --mark-wash-strong: rgba(100, 116, 139, 0.24);
 
   --font-sans:
     'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -204,8 +206,8 @@ pre {
   /* Bleeds the wash past the text box so it reads as a highlighter
      stroke rather than a tight label. */
   --wash-bleed: 0.18em;
-  background: var(--accent-wash);
-  box-shadow: 0 0 0 var(--wash-bleed) var(--accent-wash);
+  background: var(--mark-wash);
+  box-shadow: 0 0 0 var(--wash-bleed) var(--mark-wash);
   border-radius: 2px;
   transition:
     background-color 0.15s ease,
@@ -216,8 +218,8 @@ pre {
 }
 
 .bilingual:hover {
-  background: var(--accent-wash-strong);
-  box-shadow: 0 0 0 var(--wash-bleed) var(--accent-wash-strong);
+  background: var(--mark-wash-strong);
+  box-shadow: 0 0 0 var(--wash-bleed) var(--mark-wash-strong);
 }
 
 /* The bleed is em-proportional, which at heading scale would fill a block
