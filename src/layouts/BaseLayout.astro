@@ -70,6 +70,8 @@ const pageTitle =
     <slot />
     <Footer />
     <script>
+      import '../scripts/bilingual.ts';
+
       document.addEventListener('click', async (e) => {
         const link = (e.target as Element).closest('.copy-email');
         if (!link) return;

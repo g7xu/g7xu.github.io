@@ -184,3 +184,49 @@ pre {
     opacity: 0;
   }
 }
+
+/* ============================================
+   Bilingual toggle
+   Hand-authored en/zh pairs; a click swaps the visible text with
+   data-alt (see src/scripts/bilingual.ts). Both variants are plain
+   text — the swap replaces textContent, so nested markup is lost.
+   ============================================ */
+.bilingual {
+  cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  border-radius: 3px;
+  transition:
+    background-color 0.15s ease,
+    opacity 0.12s ease;
+}
+
+.bilingual:hover {
+  background: var(--bg-surface);
+}
+
+.bilingual:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.bilingual.is-swapping {
+  opacity: 0;
+}
+
+/* Manrope leads so Latin runs match body text; CJK glyphs fall through
+   to system faces. No webfont is downloaded for Chinese. */
+:lang(zh) {
+  font-family:
+    'Manrope', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Noto Sans SC', sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bilingual {
+    transition: none;
+  }
+}

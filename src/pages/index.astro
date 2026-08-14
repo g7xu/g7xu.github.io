@@ -1,5 +1,6 @@
 ---
 import SidebarLayout from '../layouts/SidebarLayout.astro';
+import Bi from '../components/Bi.astro';
 ---
 
 <SidebarLayout
@@ -13,11 +14,13 @@ import SidebarLayout from '../layouts/SidebarLayout.astro';
       products.
     </p>
     <p class="home-hero__body">
-      This is a place where I share my projects, my learning, and my feelings —
-      keeping track of my growth. I will be interning at Samsung in the summer
-      of 2026 in Plano Texas, and studying Master of Computer Science at
-      Stanford starting Sep 2026 in Palo Alto. Love to chat or meet up for
-      career, startup ideas, projects, or <strong>FOOD!!</strong>
+      This is a place where I share my projects, my learning, and <Bi
+        en="my feelings"
+        zh="我的心事"
+      /> — keeping track of my growth. I will be interning at Samsung in the summer
+      of 2026 in Plano Texas, and studying Master of Computer Science at Stanford
+      starting Sep 2026 in Palo Alto. Love to chat or meet up for career, startup
+      ideas, projects, or <strong>FOOD!!</strong>
     </p>
   </section>
 </SidebarLayout>

@@ -5,6 +5,8 @@ const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
+    /** Other-language title; when set, the post heading becomes a bilingual toggle. */
+    titleAlt: z.string().optional(),
     excerpt: z.string(),
     date: z.string(),
     category: z.string(),
