@@ -7,7 +7,8 @@ const blog = defineCollection({
     title: z.string(),
     /** Other-language title; when set, the post heading becomes a bilingual toggle. */
     titleAlt: z.string().optional(),
-    excerpt: z.string(),
+    /** Omit on a post that is still just a title. */
+    excerpt: z.string().optional(),
     date: z.string(),
     category: z.string(),
     coverImage: z.string().optional(),
