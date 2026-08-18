@@ -372,6 +372,7 @@ body {
   z-index: 1;
   width: min(640px, 94vw);
   max-height: 88vh;
+  max-height: 88dvh;
   overflow-y: auto;
   background: linear-gradient(180deg, #fffdf8, #fbf4e7);
   border: 1px solid #e7d8bd;
@@ -442,8 +443,9 @@ body {
   z-index: 2;
 }
 .polaroid-img {
-  width: 150px;
-  height: 150px;
+  /* Shrinks just enough on phones for two polaroids per collage row. */
+  width: clamp(120px, 42vw, 150px);
+  height: clamp(120px, 42vw, 150px);
   display: grid;
   place-items: center;
   border-radius: 1px;

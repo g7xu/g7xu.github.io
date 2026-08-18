@@ -82,6 +82,14 @@ function initQuoteCloud(
     world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
   }
 
+  function setFocus(el: HTMLElement | null): void {
+    world
+      .querySelectorAll('.quote.is-focus')
+      .forEach((q) => q.classList.remove('is-focus'));
+    world.classList.toggle('has-focus', el !== null);
+    el?.classList.add('is-focus');
+  }
+
   // Keep the stage below the sticky navbar so quotes are never hidden under it.
   // (The navbar grows taller when it wraps on narrow screens, so measure it live.)
   function layoutStage(): void {
@@ -101,7 +109,11 @@ function initQuoteCloud(
     fig.style.fontWeight = String(font.weight);
     fig.style.fontStyle = font.italic ? 'italic' : 'normal';
     fig.style.fontSize = Math.round((SIZE[w] ?? SIZE[3]) * jitter) + 'px';
-    fig.style.maxWidth = Math.round(150 + w * 40) + 'px';
+    // Capped by stage width: on phones, quotes wider than the screen would
+    // drag fitAll()'s initial scale below legibility.
+    fig.style.maxWidth =
+      Math.min(Math.round(150 + w * 40), Math.round(stage.clientWidth * 0.85)) +
+      'px';
 
     const text = document.createElement('span');
     text.className = 'q-text';
@@ -214,14 +226,8 @@ function initQuoteCloud(
       box.maxX = Math.max(box.maxX, pos.x + pos.w);
       box.maxY = Math.max(box.maxY, pos.y + pos.h);
 
-      it.el.addEventListener('mouseenter', () => {
-        world.classList.add('has-focus');
-        it.el.classList.add('is-focus');
-      });
-      it.el.addEventListener('mouseleave', () => {
-        world.classList.remove('has-focus');
-        it.el.classList.remove('is-focus');
-      });
+      it.el.addEventListener('mouseenter', () => setFocus(it.el));
+      it.el.addEventListener('mouseleave', () => setFocus(null));
     }
 
     contentBox = box;
@@ -265,16 +271,30 @@ function initQuoteCloud(
   let sx = 0;
   let sy = 0;
   let pinchDist = 0;
+  // Touch has no hover, so a tap (a press that never turned into a drag or
+  // pinch) stands in for it: tap a quote to focus it, tap elsewhere to clear.
+  let tapValid = false;
+  let downX = 0;
+  let downY = 0;
 
   stage.addEventListener('pointerdown', (e: PointerEvent) => {
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    stage.setPointerCapture(e.pointerId);
+    try {
+      stage.setPointerCapture(e.pointerId);
+    } catch {
+      // The pointer can already be gone (released mid-gesture); losing
+      // capture only means move events stop at the stage boundary.
+    }
     if (pointers.size === 1) {
       dragging = true;
       sx = e.clientX - panX;
       sy = e.clientY - panY;
+      downX = e.clientX;
+      downY = e.clientY;
+      tapValid = e.pointerType !== 'mouse';
       stage.classList.add('dragging');
     } else if (pointers.size === 2) {
+      tapValid = false;
       dragging = false;
       stage.classList.remove('dragging');
       const [a, b] = [...pointers.values()];
@@ -302,6 +322,9 @@ function initQuoteCloud(
     }
 
     if (dragging) {
+      if (Math.hypot(e.clientX - downX, e.clientY - downY) > 8) {
+        tapValid = false;
+      }
       panX = e.clientX - sx;
       panY = e.clientY - sy;
       applyTransform();
@@ -318,8 +341,25 @@ function initQuoteCloud(
     if (stage.hasPointerCapture?.(e.pointerId))
       stage.releasePointerCapture(e.pointerId);
   }
-  stage.addEventListener('pointerup', endPointer);
-  stage.addEventListener('pointercancel', endPointer);
+  stage.addEventListener('pointerup', (e: PointerEvent) => {
+    const wasTap = tapValid && pointers.size === 1;
+    endPointer(e);
+    if (!wasTap) return;
+    tapValid = false;
+    // Pointer capture retargets events to the stage, so hit-test by point.
+    const hit = document
+      .elementFromPoint(e.clientX, e.clientY)
+      ?.closest('.quote');
+    if (hit instanceof HTMLElement && !hit.classList.contains('is-focus')) {
+      setFocus(hit);
+    } else {
+      setFocus(null);
+    }
+  });
+  stage.addEventListener('pointercancel', (e: PointerEvent) => {
+    tapValid = false;
+    endPointer(e);
+  });
 
   // ---- zoom buttons ----
   const cx = (): number => stage.clientWidth / 2;

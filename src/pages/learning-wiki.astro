@@ -97,6 +97,19 @@ const notesJson = JSON.stringify(notes);
           </div>
         </div>
 
+        {/* Phone fallback (≤768px, where the graph and tree panels are hidden):
+            a searchable flat note list; opening a note covers it with the
+            right panel until the ✕ returns to the list. */}
+        <div class="mobile-note-list" id="mobile-note-list">
+          <input
+            class="search-box"
+            type="text"
+            id="mobile-search"
+            placeholder="🔍  Search notes…"
+          />
+          <div class="mobile-note-items" id="mobile-note-items" />
+        </div>
+
         <aside class="right-panel" id="right-panel">
           <div class="right-panel-header">
             <span class="right-panel-title" id="note-title" />

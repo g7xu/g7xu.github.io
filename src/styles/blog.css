@@ -220,6 +220,13 @@
   font-size: 0.875em;
 }
 
+/* Long inline code spans and bare URLs may break anywhere rather than
+   push a line past the measure on narrow screens. */
+.blog-post-body code,
+.blog-post-body a {
+  overflow-wrap: anywhere;
+}
+
 .blog-post-body pre code {
   background: none;
   padding: 0;
@@ -245,7 +252,11 @@
 }
 
 .blog-post-body table {
+  /* block + auto overflow: wide tables scroll in place instead of
+     stretching the page past the viewport on phones */
+  display: block;
   width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 1.5rem 0;
 }
@@ -296,5 +307,13 @@
   .blog-list__item {
     grid-template-columns: 5.5rem 1fr;
     gap: 0.75rem;
+  }
+
+  .blog-post-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .blog-post-title {
+    font-size: 1.6rem;
   }
 }

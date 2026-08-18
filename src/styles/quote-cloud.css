@@ -103,13 +103,14 @@ body.qc-reduce .quote {
   bottom: 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
   z-index: 10;
 }
 .qc-zoom-ui button {
-  width: 34px;
-  height: 34px;
-  font-size: 18px;
+  /* 44px: minimum comfortable touch target */
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
   line-height: 1;
   color: var(--fg);
   background: var(--bg);
