@@ -3,7 +3,7 @@ import { hasHan } from '../utils/lang';
 
 interface Props {
   title: string;
-  excerpt: string;
+  excerpt?: string;
   date: string;
   category: string;
   coverImage?: string;
@@ -30,7 +30,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
     <h2 class="blog-list__title">
       <a href={`/blog/${slug}/`} lang={titleLang}>{title}</a>
     </h2>
-    <p class="blog-list__excerpt">{excerpt}</p>
+    {excerpt && <p class="blog-list__excerpt">{excerpt}</p>}
     <span class="blog-list__category">{category}</span>
   </div>
 </li>

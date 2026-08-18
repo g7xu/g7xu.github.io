@@ -8,7 +8,7 @@ interface Props {
   title: string;
   /** Other-language title; when set, the heading becomes a bilingual toggle. */
   titleAlt?: string;
-  excerpt: string;
+  excerpt?: string;
   date: string;
   category: string;
   coverImage?: string;
@@ -53,7 +53,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
           )
         }
       </h1>
-      <p class="blog-post-excerpt">{excerpt}</p>
+      {excerpt && <p class="blog-post-excerpt">{excerpt}</p>}
       <div class="blog-post-meta">
         <img src={author.avatar} alt={author.name} class="blog-post-avatar" />
         <span>{author.name}</span>
