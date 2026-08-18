@@ -565,6 +565,10 @@ function updateLabels() {
 }
 
 function initGraph() {
+  // The graph panel is display:none on phones, so it measures 0×0 — running
+  // the simulation against that box is wasted work and breaks zoomToFit.
+  if (container.clientWidth === 0 || container.clientHeight === 0) return;
+
   svg.selectAll('*').remove();
 
   const W = container.clientWidth;
@@ -860,6 +864,46 @@ document
       (d) => !!searchQuery && !d.id.toLowerCase().includes(q),
     );
   });
+
+// ─────────────────────────────────────────
+// MOBILE NOTE LIST
+// ─────────────────────────────────────────
+// The phone-width replacement for the folder tree + graph: a flat list of
+// every note, grouped under folder headings, filtered by its own search box.
+const mobileItems = document.getElementById('mobile-note-items');
+const mobileSearch = document.getElementById(
+  'mobile-search',
+) as HTMLInputElement | null;
+
+function buildMobileList() {
+  if (!mobileItems) return;
+  const q = (mobileSearch?.value ?? '').trim().toLowerCase();
+  mobileItems.replaceChildren();
+  const sorted = [...NOTES].sort(
+    (a, b) => a.folder.localeCompare(b.folder) || a.id.localeCompare(b.id),
+  );
+  let lastFolder: string | null = null;
+  for (const note of sorted) {
+    if (q && !note.id.toLowerCase().includes(q)) continue;
+    if (note.folder !== lastFolder) {
+      lastFolder = note.folder;
+      if (note.folder) {
+        const heading = document.createElement('div');
+        heading.className = 'mobile-note-folder';
+        heading.textContent = note.folder;
+        mobileItems.appendChild(heading);
+      }
+    }
+    const item = document.createElement('div');
+    item.className = 'mobile-note-item';
+    item.textContent = note.id;
+    item.addEventListener('click', () => selectNote(note.id));
+    mobileItems.appendChild(item);
+  }
+}
+
+mobileSearch?.addEventListener('input', buildMobileList);
+buildMobileList();
 
 // ─────────────────────────────────────────
 // MOBILE TOGGLE

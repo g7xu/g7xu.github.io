@@ -24,3 +24,9 @@
   color: var(--fg-muted);
   margin: 1.5rem 0;
 }
+
+@media (max-width: 600px) {
+  .beyond-tech-page {
+    padding: 1.5rem 1rem;
+  }
+}

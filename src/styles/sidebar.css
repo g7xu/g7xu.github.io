@@ -90,6 +90,27 @@
   color: var(--fg);
 }
 
+/* Stacked mode (SidebarLayout collapses to one column at this width):
+   the bio sits above the hero, so sticky is dropped and the links wrap
+   into a horizontal row like the blog sidebar's mobile chips. */
+@media (max-width: 768px) {
+  .sidebar-author {
+    position: static;
+    padding: 1rem 0 0.5rem;
+  }
+
+  .sidebar-links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 1.1rem;
+    row-gap: 0.25rem;
+  }
+
+  .sidebar-link {
+    padding: 0.5rem 0;
+  }
+}
+
 .sidebar-link__icon {
   display: flex;
   align-items: center;
