@@ -6,6 +6,8 @@
 .wiki-shell {
   display: flex;
   height: calc(100vh - 60px);
+  /* dvh tracks the real visible height under mobile URL-bar chrome */
+  height: calc(100dvh - 60px);
   overflow: hidden;
 }
 
@@ -373,7 +375,11 @@
   font-size: 0.8rem;
 }
 .md-body table {
+  /* block + auto overflow: wide tables scroll in place instead of
+     stretching the note past the panel on phones */
+  display: block;
   width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 0.75em 0;
   font-size: 0.875rem;
@@ -476,14 +482,23 @@
   align-items: center;
   justify-content: center;
   height: calc(100vh - 60px);
+  height: calc(100dvh - 60px);
   text-align: center;
   color: var(--secondary-color);
   font-size: 1rem;
   padding: 2rem;
 }
 
+.mobile-note-list {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .left-panel {
+    display: none;
+  }
+  /* Toggles a panel that is display:none at this width — dead control. */
+  .sidebar-toggle {
     display: none;
   }
   .left-panel.mobile-open {
@@ -516,20 +531,42 @@
   .graph-panel {
     display: none;
   }
+  /* The reader takes the whole screen when open and yields fully to the
+     note list when closed (its desktop width transition would leave a
+     zero-width flex item in the row). */
   .right-panel {
-    width: 100% !important;
-    min-width: 0 !important;
+    display: none;
     border: none;
   }
   .right-panel.open {
+    display: flex;
     width: 100% !important;
+    min-width: 0 !important;
+  }
+  .wiki-shell:has(> .right-panel.open) .mobile-note-list {
+    display: none;
   }
   .mobile-note-list {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     padding: 1rem;
+    gap: 0.75rem;
+  }
+  .mobile-note-items {
+    display: flex;
+    flex-direction: column;
     gap: 0.5rem;
     overflow-y: auto;
+  }
+  .mobile-note-folder {
+    margin-top: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--secondary-color);
   }
   .mobile-note-item {
     padding: 0.75rem 1rem;
