@@ -11,6 +11,11 @@
   --link: #0f172a;
   --link-hover: #475569;
   --accent: #c2410c;
+  /* --fg-muted at 14% and 24% — the bilingual toggle's resting and hover mark.
+     Kept off --accent so a marked phrase reads as the page holding its own
+     text, not as a second accent competing with the nav indicator. */
+  --mark-wash: rgba(100, 116, 139, 0.14);
+  --mark-wash-strong: rgba(100, 116, 139, 0.24);
 
   --font-sans:
     'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -182,5 +187,92 @@ pre {
   }
   100% {
     opacity: 0;
+  }
+}
+
+/* ============================================
+   Bilingual toggle
+   Hand-authored en/zh pairs; a click swaps the visible text with
+   data-alt (see src/scripts/bilingual.ts). Both variants are plain
+   text — the swap replaces textContent, so nested markup is lost.
+
+   inline-block is what lets the swap animate, and it costs the span
+   the ability to break across lines: keep phrases short enough to sit
+   on one.
+   ============================================ */
+.bilingual {
+  cursor: pointer;
+  display: inline-block;
+  /* The swap pins then animates the span's width; without nowrap the
+     incoming text wraps inside the still-too-narrow box for a beat. */
+  white-space: nowrap;
+  /* Bleeds the wash past the text box so it reads as a highlighter
+     stroke rather than a tight label. */
+  --wash-bleed: 0.18em;
+  background: var(--mark-wash);
+  box-shadow: 0 0 0 var(--wash-bleed) var(--mark-wash);
+  border-radius: 2px;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.14s ease,
+    opacity 0.14s ease,
+    width 0.16s ease;
+}
+
+.bilingual:hover {
+  background: var(--mark-wash-strong);
+  box-shadow: 0 0 0 var(--wash-bleed) var(--mark-wash-strong);
+}
+
+/* The bleed is em-proportional, which at heading scale would fill a block
+   instead of marking words. */
+h1 .bilingual,
+h2 .bilingual,
+h3 .bilingual {
+  --wash-bleed: 0.07em;
+}
+
+.bilingual:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The outgoing text rises and clears; the incoming text arrives from
+   below. bilingual.ts holds each state for one frame. */
+.bilingual.is-out {
+  transform: translateY(-0.3em);
+  opacity: 0;
+}
+
+.bilingual.is-enter {
+  transform: translateY(0.3em);
+  opacity: 0;
+}
+
+.bilingual.no-anim {
+  transition: none;
+}
+
+/* While the width is mid-animation the incoming text can be wider than
+   the box; clipping turns that overhang into a wipe reveal. clip-path
+   rather than overflow: hidden — the latter moves an inline-block's
+   baseline to its bottom edge, bouncing the whole line during the swap.
+   Scoped to the swap so the resting wash bleed is never clipped. */
+.bilingual[data-swapping] {
+  clip-path: inset(0);
+}
+
+/* Manrope leads so Latin runs match body text; CJK glyphs fall through
+   to system faces. No webfont is downloaded for Chinese. */
+:lang(zh) {
+  font-family:
+    'Manrope', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Noto Sans SC', sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bilingual {
+    transition: none;
   }
 }

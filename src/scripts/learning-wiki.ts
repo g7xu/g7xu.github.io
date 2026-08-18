@@ -6,6 +6,7 @@ import {
   multiColumnExtension,
   padMultiColumnMarkers,
 } from './wiki-multi-column';
+import { upgradeBilingualSpans } from './bilingual';
 
 marked.setOptions({ breaks: true });
 marked.use({ extensions: [calloutExtension, multiColumnExtension] });
@@ -389,7 +390,9 @@ function openNote(id: string) {
   html = addHeadingIds(html);
   html = restoreMath(html, mathBlocks);
 
-  document.getElementById('note-body')!.innerHTML = html;
+  const noteBody = document.getElementById('note-body')!;
+  noteBody.innerHTML = html;
+  upgradeBilingualSpans(noteBody);
   document.getElementById('right-panel')!.classList.add('open');
 }
 

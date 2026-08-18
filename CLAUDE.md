@@ -64,6 +64,7 @@ All site pages live in `src/pages/`. Key pages:
 
 ### Client Scripts (`src/scripts/`)
 
+- `bilingual.ts` — Click-to-switch en/zh text spans; loaded globally from `BaseLayout`
 - `quote-cloud.ts` — Quote cloud packing, zoom/pan, entrance animation
 - `learning-wiki.ts` — d3 force graph, note rendering, search
 - `wiki-callouts.ts`, `wiki-multi-column.ts` — Obsidian-syntax renderers used by `learning-wiki.ts`
@@ -92,6 +93,11 @@ Reusable Astro components in `src/components/`:
 - `ProjectCard.astro` — Project card
 - `BlogCard.astro` — Blog listing row (typographic, despite the name), `BlogSidebar.astro` — category filter
 - `StructuredData.astro` — JSON-LD SEO schema
+- `Bi.astro` — Bilingual en/zh toggle span (see Adding Content)
+
+### Utils (`src/utils/`)
+
+- `lang.ts` — Han-script detection and `lang` tagging; DOM-free so both build-time templates and `bilingual.ts` can import it
 
 ### Layouts
 
@@ -165,6 +171,7 @@ The site follows a **warm, typographic, content-first developer's workshop** aes
 ```yaml
 ---
 title: 'Post Title'
+titleAlt: '文章标题' # optional — makes the post heading a bilingual toggle
 excerpt: 'Short description'
 date: '2026-01-15'
 category: 'Tools' # Tools | Engineering | Data | Life | etc.
@@ -175,6 +182,23 @@ author: # optional — defaults to Jason Xu + bio photo
 draft: false # optional — defaults to false
 ---
 ```
+
+**New bilingual text:** Any text on the site can be a click-to-switch en/zh pair. Both variants are written by hand — nothing is machine-translated — and each span picks its own default language, so a Chinese-default span is fine on an otherwise English page.
+
+In `.astro` pages, use the component; `initial` chooses the default:
+
+```astro
+<Bi en="my feelings" zh="我的心事" />
+<Bi en="Be a Fanatic" zh="做一个狂热的人" initial="zh" />
+```
+
+In Markdown (blog posts, `obs_notes/` wiki notes), write the span directly. The visible text is the default; `data-alt` holds the other variant:
+
+```html
+<span class="bilingual" data-alt="中文">Chinese</span>
+```
+
+Both variants must be plain text — swapping replaces `textContent`, so nested markup is lost. Keep phrases short enough to sit on one line: the span is `inline-block` so the swap can animate, which means it cannot break across lines. Avoid `$` inside wiki-note spans (the wiki's math extractor claims it). `role`, `tabindex`, `title`, and `lang` are added at runtime by `src/scripts/bilingual.ts`; authors never write them.
 
 **New project:** Add an entry to `allProjects` in `src/data/projects.ts` (shape documented there). Images go in `public/images/`.
 

@@ -1,9 +1,13 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Bi from '../components/Bi.astro';
+import { hasHan } from '../utils/lang';
 import '../styles/blog.css';
 
 interface Props {
   title: string;
+  /** Other-language title; when set, the heading becomes a bilingual toggle. */
+  titleAlt?: string;
   excerpt: string;
   date: string;
   category: string;
@@ -11,7 +15,12 @@ interface Props {
   author: { name: string; avatar: string };
 }
 
-const { title, excerpt, date, category, coverImage, author } = Astro.props;
+const { title, titleAlt, excerpt, date, category, coverImage, author } =
+  Astro.props;
+
+// Frontmatter names neither title by language, so the Han test decides which
+// side of the toggle each one feeds.
+const titleIsChinese = hasHan(title);
 
 const formattedDate = new Date(date).toLocaleDateString('en-US', {
   year: 'numeric',
@@ -31,7 +40,19 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
     }
     <header class="blog-post-header">
       <span class="blog-post-category">{category}</span>
-      <h1 class="blog-post-title">{title}</h1>
+      <h1 class="blog-post-title">
+        {
+          titleAlt ? (
+            <Bi
+              en={titleIsChinese ? titleAlt : title}
+              zh={titleIsChinese ? title : titleAlt}
+              initial={titleIsChinese ? 'zh' : 'en'}
+            />
+          ) : (
+            title
+          )
+        }
+      </h1>
       <p class="blog-post-excerpt">{excerpt}</p>
       <div class="blog-post-meta">
         <img src={author.avatar} alt={author.name} class="blog-post-avatar" />

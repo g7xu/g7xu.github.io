@@ -1,4 +1,6 @@
 ---
+import { hasHan } from '../utils/lang';
+
 interface Props {
   title: string;
   excerpt: string;
@@ -11,6 +13,10 @@ interface Props {
 
 const { title, excerpt, date, category, slug } = Astro.props;
 
+// The listing shows a post's default-language title without a toggle; tagging
+// it keeps Chinese titles on the CJK stack and out of an English screen reader.
+const titleLang = hasHan(title) ? 'zh-Hans' : undefined;
+
 const formattedDate = new Date(date).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'short',
@@ -22,7 +28,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
   <time datetime={date} class="blog-list__date">{formattedDate}</time>
   <div class="blog-list__body">
     <h2 class="blog-list__title">
-      <a href={`/blog/${slug}/`}>{title}</a>
+      <a href={`/blog/${slug}/`} lang={titleLang}>{title}</a>
     </h2>
     <p class="blog-list__excerpt">{excerpt}</p>
     <span class="blog-list__category">{category}</span>

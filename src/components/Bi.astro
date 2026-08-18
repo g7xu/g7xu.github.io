@@ -1,0 +1,17 @@
+---
+interface Props {
+  en: string;
+  zh: string;
+  /** Which variant is visible before the reader clicks. */
+  initial?: 'en' | 'zh';
+}
+
+const { en, zh, initial = 'en' } = Astro.props;
+
+const showsChinese = initial === 'zh';
+const visible = showsChinese ? zh : en;
+const alt = showsChinese ? en : zh;
+const lang = showsChinese ? 'zh-Hans' : 'en';
+---
+
+<span class="bilingual" lang={lang} data-alt={alt}>{visible}</span>
