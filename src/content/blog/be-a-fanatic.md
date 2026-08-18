@@ -12,4 +12,4 @@ draft: false
 
 有些话我只想用中文说。
 
-Some things I can only say in <span class="bilingual" data-alt="中文">Chinese</span>, and some only in English. This post is where I start writing both.
+Some things I can only say in Chinese, and some only in English. This post is where I start writing both.
