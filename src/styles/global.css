@@ -203,6 +203,9 @@ pre {
 .bilingual {
   cursor: pointer;
   display: inline-block;
+  /* The swap pins then animates the span's width; without nowrap the
+     incoming text wraps inside the still-too-narrow box for a beat. */
+  white-space: nowrap;
   /* Bleeds the wash past the text box so it reads as a highlighter
      stroke rather than a tight label. */
   --wash-bleed: 0.18em;
@@ -249,6 +252,15 @@ h3 .bilingual {
 
 .bilingual.no-anim {
   transition: none;
+}
+
+/* While the width is mid-animation the incoming text can be wider than
+   the box; clipping turns that overhang into a wipe reveal. clip-path
+   rather than overflow: hidden — the latter moves an inline-block's
+   baseline to its bottom edge, bouncing the whole line during the swap.
+   Scoped to the swap so the resting wash bleed is never clipped. */
+.bilingual[data-swapping] {
+  clip-path: inset(0);
 }
 
 /* Manrope leads so Latin runs match body text; CJK glyphs fall through
