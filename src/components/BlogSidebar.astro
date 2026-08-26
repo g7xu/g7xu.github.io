@@ -1,29 +1,54 @@
 ---
 interface Props {
   categories: string[];
-  activeCategory: string | null;
+  formats: ReadonlyArray<'essay' | 'note' | 'seed'>;
 }
 
-const { categories, activeCategory } = Astro.props;
+const { categories, formats } = Astro.props;
+
+const formatLabels = {
+  essay: 'Essays',
+  note: 'Notes',
+  seed: 'Seeds',
+};
 ---
 
 <aside class="blog-sidebar">
-  <h3 class="blog-sidebar__heading">Categories</h3>
+  <h3 class="blog-sidebar__heading">Browse</h3>
   <ul class="blog-sidebar__list">
     <li>
       <a
         href="/blog/"
-        class={`blog-sidebar__item${!activeCategory ? ' blog-sidebar__item--active' : ''}`}
+        class="blog-sidebar__item blog-sidebar__item--active"
+        data-filter-all
       >
-        All Posts
+        All writing
       </a>
     </li>
+    {
+      formats.map((format) => (
+        <li>
+          <a
+            href={`/blog/?format=${format}`}
+            class="blog-sidebar__item"
+            data-filter-format={format}
+          >
+            {formatLabels[format]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h3 class="blog-sidebar__heading blog-sidebar__heading--secondary">Topics</h3>
+  <ul class="blog-sidebar__list">
     {
       categories.map((cat) => (
         <li>
           <a
             href={`/blog/?category=${encodeURIComponent(cat)}`}
-            class={`blog-sidebar__item${activeCategory === cat ? ' blog-sidebar__item--active' : ''}`}
+            class="blog-sidebar__item"
+            data-filter-category={cat}
           >
             {cat}
           </a>

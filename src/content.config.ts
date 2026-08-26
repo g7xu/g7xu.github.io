@@ -9,6 +9,8 @@ const blog = defineCollection({
     titleAlt: z.string().optional(),
     /** Omit on a post that is still just a title. */
     excerpt: z.string().optional(),
+    /** Essays are long-form; notes and seeds keep lightweight writing first-class. */
+    format: z.enum(['essay', 'note', 'seed']).default('essay'),
     date: z.string(),
     category: z.string(),
     coverImage: z.string().optional(),

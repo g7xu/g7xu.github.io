@@ -46,7 +46,7 @@ Content is data-driven and separated from presentation:
 - **`src/data/projects.ts`** — One `allProjects: Project[]` array. Each entry: `title`, `description`, `tags`, `categories`, `githubUrl`, optional `websiteUrl` / `imageUrl`. Categories are `spotlight`, `building-the-wheel`, `full-stack-applications`, `data-science`; pages group via `getProjectsByCategory()` / `getAllTags()`.
 - **`src/data/coffeeShops.ts`** — Coffee shops plotted on the `/travel/` map; photos live in `src/assets/travel/` (see its README).
 - **`src/data/quotes.ts`** — Quotes for the `/quotes/` cloud; `weight` semantics documented on the `Quote` interface.
-- **`src/content/blog/`** — Blog posts as Markdown files with Zod-validated frontmatter.
+- **`src/content/blog/`** — Essays, notes, and seeds as Markdown files with Zod-validated frontmatter.
 - **`src/content.config.ts`** — Astro content collection schema for blog posts.
 
 ### Pages
@@ -173,6 +173,7 @@ The site follows a **warm, typographic, content-first developer's workshop** aes
 title: 'Post Title'
 titleAlt: '文章标题' # optional — makes the post heading a bilingual toggle
 excerpt: 'Short description'
+format: essay # essay (default) | note | seed
 date: '2026-01-15'
 category: 'Tools' # Tools | Engineering | Data | Life | etc.
 coverImage: '/images/blog-covers/foo.png' # optional
@@ -182,6 +183,11 @@ author: # optional — defaults to Jason Xu + bio photo
 draft: false # optional — defaults to false
 ---
 ```
+
+`essay` is for long-form writing and can use an `excerpt`. A `note` renders its
+Markdown body directly in the listing, which is ideal for a sentence or short
+thought. A `seed` needs only a title and receives a minimal permalink page; use
+it for an idea you may expand later.
 
 **New bilingual text:** Any text on the site can be a click-to-switch en/zh pair. Both variants are written by hand — nothing is machine-translated — and each span picks its own default language, so a Chinese-default span is fine on an otherwise English page.
 
