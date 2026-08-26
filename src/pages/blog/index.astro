@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import BlogSidebar from '../../components/BlogSidebar.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import '../../styles/blog.css';
 
 const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
@@ -10,25 +10,39 @@ const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 
 const categories = [...new Set(allPosts.map((p) => p.data.category))];
+const formats = ['essay', 'note'] as const;
+
+// Notes render their Markdown body directly in the feed, so a one-sentence
+// thought never has to pretend to be an article summary.
+const posts = await Promise.all(
+  allPosts.map(async (post) => ({
+    post,
+    Content:
+      post.data.format === 'note' ? (await render(post)).Content : undefined,
+  })),
+);
 ---
 
-<BaseLayout title="Blog" description="Writing on tools, engineering, and data.">
+<BaseLayout title="Writing" description="Essays, notes, and ideas in progress.">
   <div class="blog-page">
-    <BlogSidebar categories={categories} activeCategory={null} />
+    <BlogSidebar categories={categories} formats={formats} />
     <div class="blog-main">
-      <h1 class="blog-page__title">Blog</h1>
+      <h1 class="blog-page__title">Writing</h1>
       <ul class="blog-list" id="blog-grid">
         {
-          allPosts.map((post) => (
+          posts.map(({ post, Content }) => (
             <BlogCard
               title={post.data.title}
               excerpt={post.data.excerpt}
+              format={post.data.format}
               date={post.data.date}
               category={post.data.category}
               coverImage={post.data.coverImage}
               slug={post.id}
               author={post.data.author}
-            />
+            >
+              {Content && <Content />}
+            </BlogCard>
           ))
         }
       </ul>
@@ -37,23 +51,41 @@ const categories = [...new Set(allPosts.map((p) => p.data.category))];
 </BaseLayout>
 
 <script>
-  // Client-side category filter: reads ?category= param and shows/hides cards
+  // Client-side filters keep the static listing fast while supporting both
+  // a writing format and a topic at once.
   const params = new URLSearchParams(window.location.search);
-  const active = params.get('category');
+  const activeCategory = params.get('category');
+  const activeFormat = params.get('format');
+  const hasActiveFilter = Boolean(activeCategory || activeFormat);
 
-  if (active) {
-    const grid = document.getElementById('blog-grid');
-    grid?.querySelectorAll('.blog-list__item').forEach((card) => {
-      const cat = (card as HTMLElement).dataset.category;
-      (card as HTMLElement).style.display = cat === active ? '' : 'none';
+  const grid = document.getElementById('blog-grid');
+  grid?.querySelectorAll('.blog-list__item').forEach((card) => {
+    const item = card as HTMLElement;
+    const matchesCategory =
+      !activeCategory || item.dataset.category === activeCategory;
+    const matchesFormat = !activeFormat || item.dataset.format === activeFormat;
+    item.style.display = matchesCategory && matchesFormat ? '' : 'none';
+  });
+
+  document
+    .querySelectorAll<HTMLElement>('[data-filter-all]')
+    .forEach((item) => {
+      item.classList.toggle('blog-sidebar__item--active', !hasActiveFilter);
     });
-
-    document.querySelectorAll('.blog-sidebar__item').forEach((item) => {
-      const href = (item as HTMLAnchorElement).getAttribute('href') ?? '';
+  document
+    .querySelectorAll<HTMLElement>('[data-filter-category]')
+    .forEach((item) => {
       item.classList.toggle(
         'blog-sidebar__item--active',
-        href.includes(`category=${encodeURIComponent(active)}`),
+        item.dataset.filterCategory === activeCategory,
       );
     });
-  }
+  document
+    .querySelectorAll<HTMLElement>('[data-filter-format]')
+    .forEach((item) => {
+      item.classList.toggle(
+        'blog-sidebar__item--active',
+        item.dataset.filterFormat === activeFormat,
+      );
+    });
 </script>

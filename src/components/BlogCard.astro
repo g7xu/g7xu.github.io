@@ -4,6 +4,7 @@ import { hasHan } from '../utils/lang';
 interface Props {
   title: string;
   excerpt?: string;
+  format: 'essay' | 'note';
   date: string;
   category: string;
   coverImage?: string;
@@ -11,7 +12,8 @@ interface Props {
   author: { name: string; avatar: string };
 }
 
-const { title, excerpt, date, category, slug } = Astro.props;
+const { title, excerpt, format, date, category, slug } = Astro.props;
+const hasNoteContent = Astro.slots.has('default');
 
 // The listing shows a post's default-language title without a toggle; tagging
 // it keeps Chinese titles on the CJK stack and out of an English screen reader.
@@ -24,13 +26,35 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
 });
 ---
 
-<li class="blog-list__item" data-category={category}>
+<li
+  class={`blog-list__item blog-list__item--${format}`}
+  data-category={category}
+  data-format={format}
+>
   <time datetime={date} class="blog-list__date">{formattedDate}</time>
   <div class="blog-list__body">
     <h2 class="blog-list__title">
       <a href={`/blog/${slug}/`} lang={titleLang}>{title}</a>
     </h2>
-    {excerpt && <p class="blog-list__excerpt">{excerpt}</p>}
-    <span class="blog-list__category">{category}</span>
+    {
+      format === 'essay' && excerpt && (
+        <p class="blog-list__excerpt">{excerpt}</p>
+      )
+    }
+    {
+      format === 'note' && hasNoteContent && (
+        <a
+          class="blog-list__note"
+          href={`/blog/${slug}/`}
+          aria-label={`Read note: ${title}`}
+        >
+          <slot />
+        </a>
+      )
+    }
+    <div class="blog-list__meta">
+      <span class="blog-list__category">{category}</span>
+      {format !== 'essay' && <span class="blog-list__format">{format}</span>}
+    </div>
   </div>
 </li>

@@ -9,13 +9,14 @@ interface Props {
   /** Other-language title; when set, the heading becomes a bilingual toggle. */
   titleAlt?: string;
   excerpt?: string;
+  format: 'essay' | 'note';
   date: string;
   category: string;
   coverImage?: string;
   author: { name: string; avatar: string };
 }
 
-const { title, titleAlt, excerpt, date, category, coverImage, author } =
+const { title, titleAlt, excerpt, format, date, category, coverImage, author } =
   Astro.props;
 
 // Frontmatter names neither title by language, so the Han test decides which
@@ -30,7 +31,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
 ---
 
 <BaseLayout title={title} description={excerpt} image={coverImage}>
-  <article class="blog-post-container">
+  <article class={`blog-post-container blog-post-container--${format}`}>
     {
       coverImage && (
         <div class="blog-post-cover">
@@ -39,7 +40,9 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
       )
     }
     <header class="blog-post-header">
-      <span class="blog-post-category">{category}</span>
+      <span class="blog-post-category">
+        {format === 'essay' ? category : `Note · ${category}`}
+      </span>
       <h1 class="blog-post-title">
         {
           titleAlt ? (
@@ -53,14 +56,18 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
           )
         }
       </h1>
-      {excerpt && <p class="blog-post-excerpt">{excerpt}</p>}
+      {
+        format === 'essay' && excerpt && (
+          <p class="blog-post-excerpt">{excerpt}</p>
+        )
+      }
       <div class="blog-post-meta">
         <img src={author.avatar} alt={author.name} class="blog-post-avatar" />
         <span>{author.name}</span>
         <time datetime={date}>{formattedDate}</time>
       </div>
     </header>
-    <div class="blog-post-body">
+    <div class={`blog-post-body blog-post-body--${format}`}>
       <slot />
     </div>
   </article>
