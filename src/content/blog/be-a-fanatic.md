@@ -7,4 +7,4 @@ category: 'Life'
 draft: false
 ---
 
-Be extremely passionate about one thing—one niche—and master it, so you can stand out and create real value for the people affected by it; in other words, don't be a generalist.
+You have to be extremely passionate about one thing and one niche, so you can master it and stand out from others within your limited lifetime. And that is how one individual can creating impact for others.
