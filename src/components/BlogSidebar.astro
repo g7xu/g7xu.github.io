@@ -1,7 +1,7 @@
 ---
 interface Props {
   categories: string[];
-  formats: ReadonlyArray<'essay' | 'note' | 'seed'>;
+  formats: ReadonlyArray<'essay' | 'note'>;
 }
 
 const { categories, formats } = Astro.props;
@@ -9,7 +9,6 @@ const { categories, formats } = Astro.props;
 const formatLabels = {
   essay: 'Essays',
   note: 'Notes',
-  seed: 'Seeds',
 };
 ---
 

@@ -10,7 +10,7 @@ const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 
 const categories = [...new Set(allPosts.map((p) => p.data.category))];
-const formats = ['essay', 'note', 'seed'] as const;
+const formats = ['essay', 'note'] as const;
 
 // Notes render their Markdown body directly in the feed, so a one-sentence
 // thought never has to pretend to be an article summary.

@@ -4,7 +4,7 @@ import { hasHan } from '../utils/lang';
 interface Props {
   title: string;
   excerpt?: string;
-  format: 'essay' | 'note' | 'seed';
+  format: 'essay' | 'note';
   date: string;
   category: string;
   coverImage?: string;
@@ -13,6 +13,7 @@ interface Props {
 }
 
 const { title, excerpt, format, date, category, slug } = Astro.props;
+const hasNoteContent = Astro.slots.has('default');
 
 // The listing shows a post's default-language title without a toggle; tagging
 // it keeps Chinese titles on the CJK stack and out of an English screen reader.
@@ -41,7 +42,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
       )
     }
     {
-      format === 'note' && (
+      format === 'note' && hasNoteContent && (
         <a
           class="blog-list__note"
           href={`/blog/${slug}/`}
