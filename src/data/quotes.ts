@@ -50,23 +50,23 @@ export const quotes: Quote[] = [
   {
     text: 'You can’t connect the dots looking forward; you can only connect them looking backward. So you have to trust that the dots will somehow connect in your future.',
     author: 'Steve Jobs',
-    weight: 4,
+    weight: 3,
   },
   {
     text: 'There is hope in dreams, imagination, and in the courage of those who wish to make those dreams a reality.',
     author: 'Jonas Salk',
-    weight: 4,
+    weight: 2,
   },
   { text: '莫愁前路无知己，天下谁人不识君。', author: '高适', weight: 4 },
   {
     text: '井蛙不可以语于海者，拘于虚也；夏虫不可以语于冰者，笃于时也。',
     author: '庄子 · 秋水',
-    weight: 4,
+    weight: 2,
   },
   {
     text: '王侯将相宁有种乎！',
     author: '陈胜',
     source: '史记 · 陈涉世家',
-    weight: 4,
+    weight: 1,
   },
 ];
