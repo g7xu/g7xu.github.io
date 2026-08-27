@@ -16,9 +16,14 @@ export interface Quote {
 // The cloud rescales to fit every entry in the viewport, so length here is unbounded.
 export const quotes: Quote[] = [
   {
+    text: '人生・工作的结果 = 思维方式 × 热情 × 能力',
+    author: 'Kazuo Inamori (稻盛和夫)',
+    weight: 4,
+  },
+  {
     text: 'In me the tiger sniffs the rose.',
     author: 'Siegfried Sassoon',
-    weight: 4,
+    weight: 5,
   },
   {
     text: '真正的强大不是对抗，而是允许发生。允许遗憾愚蠢，丑恶，虚伪，允许付出没有回报。',
