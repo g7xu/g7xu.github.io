@@ -12,9 +12,11 @@ import {
   geoCentroid,
 } from 'd3-geo';
 import { feature } from 'topojson-client';
-import worldTopo from 'world-atlas/countries-110m.json';
-import usStatesTopo from 'us-atlas/states-10m.json';
-import usCountiesTopo from 'us-atlas/counties-10m.json';
+import type { GeometryCollection, Topology } from 'topojson-specification';
+import type { Feature, Geometry } from 'geojson';
+import worldTopoJson from 'world-atlas/countries-110m.json';
+import usStatesTopoJson from 'us-atlas/states-10m.json';
+import usCountiesTopoJson from 'us-atlas/counties-10m.json';
 
 // Eager-import every photo so a filename string in coffeeShops.ts resolves to
 // an optimized image at build time (no per-photo ESM import by hand).
@@ -46,38 +48,58 @@ const resolvePhoto = (src?: string): string | undefined =>
 const WIDTH = 975;
 const HEIGHT = 610;
 
-const worldGeo: any = feature(
-  worldTopo as any,
-  (worldTopo as any).objects.countries,
-);
-const countryFeatures = worldGeo.features.filter(
-  (f: any) => f.properties?.name !== 'Antarctica',
+// The atlas JSON files are typed structurally by the bundler (e.g. `type:
+// string`), so they are asserted to the TopoJSON shapes their docs promise.
+type NamedProps = { name: string };
+type Region = Feature<Geometry, NamedProps>;
+type AtlasTopology<K extends string> = Topology<
+  Record<K, GeometryCollection<NamedProps>>
+>;
+const worldTopo = worldTopoJson as unknown as AtlasTopology<'countries'>;
+const usStatesTopo = usStatesTopoJson as unknown as AtlasTopology<'states'>;
+const usCountiesTopo =
+  usCountiesTopoJson as unknown as AtlasTopology<'counties'>;
+
+const worldGeo = feature(worldTopo, worldTopo.objects.countries);
+const countryFeatures: Region[] = worldGeo.features.filter(
+  (f) => f.properties.name !== 'Antarctica',
 );
 const projection = geoNaturalEarth1().fitSize([WIDTH, HEIGHT], {
   type: 'FeatureCollection',
   features: countryFeatures,
-} as any);
+});
 const pathGen = geoPath(projection);
 
-const boundsStr = (f: any) => {
+const boundsStr = (f: Region) => {
   const [[x0, y0], [x1, y1]] = pathGen.bounds(f);
   return [x0, y0, x1, y1].map((n) => Math.round(n)).join(',');
 };
 
-const statesGeo: any = feature(
-  usStatesTopo as any,
-  (usStatesTopo as any).objects.states,
-);
-const countiesGeo: any = feature(
-  usCountiesTopo as any,
-  (usCountiesTopo as any).objects.counties,
-);
+const stateFeatures: Region[] = feature(
+  usStatesTopo,
+  usStatesTopo.objects.states,
+).features;
+const countyFeatures: Region[] = feature(
+  usCountiesTopo,
+  usCountiesTopo.objects.counties,
+).features;
+
+// County FIPS ids start with their state's two-digit FIPS, which is how a
+// county is matched to its state below.
+const stateIdOf = (county: Region) => String(county.id).slice(0, 2);
+const countiesByState = new Map<string, Region[]>();
+for (const county of countyFeatures) {
+  const stateId = stateIdOf(county);
+  const bucket = countiesByState.get(stateId);
+  if (bucket) bucket.push(county);
+  else countiesByState.set(stateId, [county]);
+}
 
 // Which regions actually contain a shop — only these are clickable/zoomable.
 // Coastal points (e.g. La Jolla) can fall just outside a simplified polygon,
 // so if nothing contains the point we snap it to the nearest region.
-const nearest = (features: any[], pt: [number, number]) => {
-  let best: any = null;
+const nearest = (features: Region[], pt: [number, number]) => {
+  let best: Region | null = null;
   let bestD = Infinity;
   for (const f of features) {
     const d = geoDistance(geoCentroid(f), pt);
@@ -88,70 +110,73 @@ const nearest = (features: any[], pt: [number, number]) => {
   }
   return best;
 };
-const containingOrNearest = (features: any[], pt: [number, number]) =>
-  features.find((f: any) => geoContains(f, pt)) ?? nearest(features, pt);
+const containingOrNearest = (features: Region[], pt: [number, number]) =>
+  features.find((f) => geoContains(f, pt)) ?? nearest(features, pt);
 
 const shopCountryNames = new Set<string>();
 const shopStateIds = new Set<string>();
 const shopCountyIds = new Set<string>();
 for (const s of coffeeShops) {
   const pt: [number, number] = [s.lng, s.lat];
-  const c = countryFeatures.find((f: any) => geoContains(f, pt));
-  if (c) shopCountryNames.add(c.properties?.name ?? '');
-  const st = containingOrNearest(statesGeo.features, pt);
+  const c = countryFeatures.find((f) => geoContains(f, pt));
+  if (c) shopCountryNames.add(c.properties.name);
+  const st = containingOrNearest(stateFeatures, pt);
   const stId = st ? String(st.id) : '';
   if (st) shopStateIds.add(stId);
   // Match the county within the shop's state (fast + avoids cross-state snaps).
-  const stateCounties = countiesGeo.features.filter(
-    (f: any) => String(f.id).slice(0, 2) === stId,
-  );
   const co = containingOrNearest(
-    stateCounties.length ? stateCounties : countiesGeo.features,
+    countiesByState.get(stId) ?? countyFeatures,
     pt,
   );
   if (co) shopCountyIds.add(String(co.id));
 }
 
+interface MapRegion {
+  id: string;
+  name: string;
+  d: string;
+  bounds: string;
+  hasPin: boolean;
+}
+const toMapRegion = (f: Region, hasPin: boolean): MapRegion => ({
+  id: String(f.id),
+  name: f.properties.name,
+  d: pathGen(f) ?? '',
+  bounds: boundsStr(f),
+  hasPin,
+});
+const withPath = (r: MapRegion) => r.d !== '';
+
 const countries = countryFeatures
-  .map((f: any) => ({
-    name: f.properties?.name ?? '',
-    d: pathGen(f) ?? '',
-    bounds: boundsStr(f),
-    hasPin: shopCountryNames.has(f.properties?.name ?? ''),
-  }))
-  .filter((c: any) => c.d);
+  .map((f) => toMapRegion(f, shopCountryNames.has(f.properties.name)))
+  .filter(withPath);
 
 // Tier 1 — US states (the grid revealed when you zoom into the U.S.)
-const states = statesGeo.features
-  .map((f: any) => ({
-    id: String(f.id),
-    name: f.properties?.name ?? '',
-    d: pathGen(f) ?? '',
-    bounds: boundsStr(f),
-    hasPin: shopStateIds.has(String(f.id)),
-  }))
-  .filter((s: any) => s.d);
-
-// Project each shop (works for any lng/lat on Earth).
-const pins = coffeeShops
-  .map((s) => {
-    const xy = projection([s.lng, s.lat]);
-    return xy ? { ...s, x: xy[0], y: xy[1] } : null;
-  })
-  .filter((p): p is NonNullable<typeof p> => p !== null);
+const states = stateFeatures
+  .map((f) => toMapRegion(f, shopStateIds.has(String(f.id))))
+  .filter(withPath);
 
 // Tier 2 — counties (the "city grid"), scoped to states that actually have shops
 // so the page stays light. Auto-expands as shops in new states are added.
-const counties = countiesGeo.features
-  .filter((f: any) => shopStateIds.has(String(f.id).slice(0, 2)))
-  .map((f: any) => ({
-    id: String(f.id),
-    name: f.properties?.name ?? '',
-    d: pathGen(f) ?? '',
-    bounds: boundsStr(f),
-    hasPin: shopCountyIds.has(String(f.id)),
-  }))
-  .filter((c: any) => c.d);
+const counties = [...shopStateIds]
+  .flatMap((stateId) => countiesByState.get(stateId) ?? [])
+  .map((f) => toMapRegion(f, shopCountyIds.has(String(f.id))))
+  .filter(withPath);
+
+// Project each shop (works for any lng/lat on Earth). Photo filenames are
+// resolved here once so the template never re-runs the lookup.
+const pins = coffeeShops.flatMap((s) => {
+  const xy = projection([s.lng, s.lat]);
+  if (!xy) return [];
+  return [
+    {
+      ...s,
+      x: xy[0],
+      y: xy[1],
+      photos: s.photos.map((ph) => ({ ...ph, url: resolvePhoto(ph.src) })),
+    },
+  ];
+});
 
 const tilt = (n: number) => (((n * 37) % 13) - 6) * 0.9;
 
@@ -212,7 +237,7 @@ const shopCount = pins.length;
         <g class="zoom-layer" id="zoom-layer">
           <g class="countries">
             {
-              countries.map((c: any) => (
+              countries.map((c) => (
                 <path
                   d={c.d}
                   class={`country${c.hasPin ? ' has-pin' : ''}`}
@@ -228,7 +253,7 @@ const shopCount = pins.length;
 
           <g class="states">
             {
-              states.map((s: any) => (
+              states.map((s) => (
                 <path
                   d={s.d}
                   class={`state${s.hasPin ? ' has-pin' : ''}`}
@@ -244,7 +269,7 @@ const shopCount = pins.length;
 
           <g class="counties">
             {
-              counties.map((c: any) => (
+              counties.map((c) => (
                 <path
                   d={c.d}
                   class={`county${c.hasPin ? ' has-pin' : ''}`}
@@ -342,9 +367,9 @@ const shopCount = pins.length;
                 style={`--tilt:${tilt(i + p.name.length)}deg`}
               >
                 <div class="polaroid-img" style={`--hue:${p.hue}`}>
-                  {resolvePhoto(ph.src) && (
+                  {ph.url && (
                     <img
-                      src={resolvePhoto(ph.src)}
+                      src={ph.url}
                       alt={ph.caption ?? p.name}
                       width="300"
                       height="300"
