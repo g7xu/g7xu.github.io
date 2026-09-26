@@ -62,11 +62,6 @@ if (NOTES.length === 0) {
   throw new Error('No wiki notes found');
 }
 
-// Catalogue notes that link to most of the vault. They stay readable as
-// pages but are left out of the graph: a node attached to everything drags
-// every topic cluster into one blob and hides the real link structure.
-const GRAPH_HUBS = new Set(['index', 'log']);
-
 // ── Wiki-link edges extracted from note content. Targets that don't match
 //    any note become pale "unresolved" phantom nodes, like Obsidian. ──
 function extractGraph(notes: WikiNote[]): {
@@ -78,7 +73,6 @@ function extractGraph(notes: WikiNote[]): {
   const seen = new Set<string>();
   const unresolved = new Set<string>();
   notes.forEach((note) => {
-    if (GRAPH_HUBS.has(note.id)) return;
     const matches = note.content.matchAll(/(?<!!)\[\[([^\]]+)\]\]/g);
     for (const m of matches) {
       // Strip alias: [[Note|Display]] -> "Note"
@@ -87,7 +81,7 @@ function extractGraph(notes: WikiNote[]): {
       if (target.startsWith('#')) continue;
       // Strip heading anchor: [[Note#Heading]] -> "Note"
       target = target.split('#')[0].trim();
-      if (!target || target === note.id || GRAPH_HUBS.has(target)) continue;
+      if (!target || target === note.id) continue;
       const key = [note.id, target].sort().join('||');
       if (seen.has(key)) continue;
       seen.add(key);
@@ -604,7 +598,7 @@ function initGraph() {
   gMain = svg.append('g');
 
   const nodes: SimNode[] = [
-    ...NOTES.filter((n) => !GRAPH_HUBS.has(n.id)).map((n) => ({ ...n })),
+    ...NOTES.map((n) => ({ ...n })),
     ...unresolvedIds.map((id) => ({
       id,
       folder: '',
@@ -615,7 +609,7 @@ function initGraph() {
   const links: SimLink[] = edges.map((e) => ({ ...e }));
 
   document.getElementById('node-count')!.textContent =
-    `${nodes.filter((n) => !n.unresolved).length} notes · ${links.length} connections`;
+    `${NOTES.length} notes · ${links.length} connections`;
 
   // Balanced like Obsidian's graph view: repulsion and long links let each
   // topic cluster settle as its own constellation, and centering is only
