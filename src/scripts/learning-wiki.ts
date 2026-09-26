@@ -62,6 +62,11 @@ if (NOTES.length === 0) {
   throw new Error('No wiki notes found');
 }
 
+// Catalogue notes that link to most of the vault. They stay readable as
+// pages but are left out of the graph: a node attached to everything drags
+// every topic cluster into one blob and hides the real link structure.
+const GRAPH_HUBS = new Set(['index', 'log']);
+
 // ── Wiki-link edges extracted from note content. Targets that don't match
 //    any note become pale "unresolved" phantom nodes, like Obsidian. ──
 function extractGraph(notes: WikiNote[]): {
@@ -73,6 +78,7 @@ function extractGraph(notes: WikiNote[]): {
   const seen = new Set<string>();
   const unresolved = new Set<string>();
   notes.forEach((note) => {
+    if (GRAPH_HUBS.has(note.id)) return;
     const matches = note.content.matchAll(/(?<!!)\[\[([^\]]+)\]\]/g);
     for (const m of matches) {
       // Strip alias: [[Note|Display]] -> "Note"
@@ -81,7 +87,7 @@ function extractGraph(notes: WikiNote[]): {
       if (target.startsWith('#')) continue;
       // Strip heading anchor: [[Note#Heading]] -> "Note"
       target = target.split('#')[0].trim();
-      if (!target || target === note.id) continue;
+      if (!target || target === note.id || GRAPH_HUBS.has(target)) continue;
       const key = [note.id, target].sort().join('||');
       if (seen.has(key)) continue;
       seen.add(key);
@@ -567,6 +573,12 @@ function updateLabels() {
     .classed('culled', (d) => !visible.has(d.id));
 }
 
+// Labels fade in as you zoom closer, like Obsidian's graph view: the fitted
+// overview is pure shape, text starts past 1x and is fully legible by 1.5x.
+function labelOpacityAt(k: number): number {
+  return Math.max(0, Math.min(1, (k - 1.0) / 0.5));
+}
+
 function initGraph() {
   // The graph panel is display:none on phones, so it measures 0×0 — running
   // the simulation against that box is wasted work and breaks zoomToFit.
@@ -582,12 +594,8 @@ function initGraph() {
     .scaleExtent([0.25, 4])
     .on('zoom', (e) => {
       gMain.attr('transform', e.transform);
-      // Labels fade in as you zoom closer, like Obsidian's graph view. Since
-      // collision culling keeps them from piling up, the overview can afford
-      // a faint hint of text; full strength arrives by ~1x.
       currentK = e.transform.k;
-      const labelOpacity = Math.max(0, Math.min(1, (currentK - 0.55) / 0.5));
-      svg.style('--label-opacity', String(labelOpacity));
+      svg.style('--label-opacity', String(labelOpacityAt(currentK)));
       updateLabels();
     });
 
@@ -596,7 +604,7 @@ function initGraph() {
   gMain = svg.append('g');
 
   const nodes: SimNode[] = [
-    ...NOTES.map((n) => ({ ...n })),
+    ...NOTES.filter((n) => !GRAPH_HUBS.has(n.id)).map((n) => ({ ...n })),
     ...unresolvedIds.map((id) => ({
       id,
       folder: '',
@@ -607,12 +615,13 @@ function initGraph() {
   const links: SimLink[] = edges.map((e) => ({ ...e }));
 
   document.getElementById('node-count')!.textContent =
-    `${NOTES.length} notes · ${links.length} connections`;
+    `${nodes.filter((n) => !n.unresolved).length} notes · ${links.length} connections`;
 
-  // Tuned so the graph settles into one round disc (bbox aspect ~1.03):
-  // repulsion must stay GLOBAL — a distanceMax cutoff lets satellite clusters
-  // drift out on long tethers — and centering strong enough to pull them
-  // back, while short strong links mesh the core.
+  // Balanced like Obsidian's graph view: repulsion and long links let each
+  // topic cluster settle as its own constellation, and centering is only
+  // strong enough to keep orphans and satellite clusters within the frame.
+  // Vertical centering is the stronger of the two so a chain of clusters
+  // lays out along the wide axis of the panel instead of stacking.
   simulation = d3
     .forceSimulation<SimNode, SimLink>(nodes)
     .force(
@@ -620,12 +629,12 @@ function initGraph() {
       d3
         .forceLink<SimNode, SimLink>(links)
         .id((d) => d.id)
-        .distance(110)
-        .strength(0.9),
+        .distance(45)
+        .strength(0.6),
     )
-    .force('charge', d3.forceManyBody().strength(-300))
-    .force('x', d3.forceX(W / 2).strength(0.35))
-    .force('y', d3.forceY(H / 2).strength(0.35))
+    .force('charge', d3.forceManyBody().strength(-260))
+    .force('x', d3.forceX(W / 2).strength(0.05))
+    .force('y', d3.forceY(H / 2).strength(0.14))
     .force(
       'collide',
       d3.forceCollide<SimNode>().radius((d) => nodeRadius(d.id) + 3),
@@ -715,8 +724,7 @@ function initGraph() {
     }));
 
     // Hold the labels back until the nodes have landed, then fade them up.
-    const k = d3.zoomTransform(svg.node()!).k;
-    const settledLabelOpacity = Math.max(0, Math.min(1, (k - 0.55) / 0.5));
+    const settledLabelOpacity = labelOpacityAt(d3.zoomTransform(svg.node()!).k);
     svg.style('--label-opacity', '0');
 
     // Pop the circles in from r=0 with a slight overshoot, lightly staggered.
