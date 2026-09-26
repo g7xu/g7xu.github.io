@@ -26,3 +26,5 @@ obs_notes/*
 !obs_notes/public/**
 !obs_notes/attachments/
 !obs_notes/attachments/**
+# Playwright MCP browser-tool scratch output (snapshots, screenshots)
+.playwright-mcp/
