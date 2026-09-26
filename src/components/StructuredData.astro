@@ -1,7 +1,12 @@
 ---
 import { author } from '../data/author';
 
-const siteUrl = 'https://g7xu.github.io';
+const siteUrl = Astro.site!.origin;
+
+// Every external profile in the author's link list doubles as a sameAs entry.
+const profileUrls = author.links
+  .map((link) => link.url)
+  .filter((url) => url.startsWith('http'));
 
 const personSchema = {
   '@context': 'https://schema.org',
@@ -20,10 +25,7 @@ const personSchema = {
     '@type': 'Organization',
     name: 'University of California San Diego',
   },
-  sameAs: [
-    'https://github.com/g7xu',
-    'https://www.linkedin.com/in/guoxuan-xu-30a572269/',
-  ],
+  sameAs: profileUrls,
 };
 
 const websiteSchema = {

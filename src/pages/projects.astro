@@ -79,9 +79,32 @@ const allTags = getAllTags();
 </BaseLayout>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggles = document.querySelectorAll('.accordion-toggle');
-    toggles.forEach((toggle) => {
+  // ── Card click-through ──
+  // The card is one big link target, but the GitHub / Website anchors inside
+  // it must keep their own destinations, so anchor clicks are left alone.
+  const grid = document.querySelector<HTMLElement>('.projects-page');
+  const openCard = (card: HTMLElement) => {
+    const url = card.dataset.url;
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+  };
+  grid?.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (target.closest('a')) return;
+    const card = target.closest<HTMLElement>('.project-item');
+    if (card) openCard(card);
+  });
+  grid?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = (e.target as Element).closest<HTMLElement>('.project-item');
+    if (!card || card !== e.target) return;
+    e.preventDefault();
+    openCard(card);
+  });
+
+  // ── Accordion sections ──
+  document
+    .querySelectorAll<HTMLElement>('.accordion-toggle')
+    .forEach((toggle) => {
       toggle.addEventListener('click', () => {
         const content = toggle.nextElementSibling as HTMLElement;
         const isOpen = toggle.getAttribute('aria-expanded') === 'true';
@@ -106,57 +129,53 @@ const allTags = getAllTags();
       });
     });
 
-    // Tag filtering — toggleable + multi-select. With several tags selected,
-    // a project shows if it matches ANY of them. "All" clears the selection
-    // (and is active whenever nothing is selected).
-    const filterButtons = document.querySelectorAll<HTMLElement>('.tag-filter');
-    const allButton = document.querySelector<HTMLElement>(
-      '.tag-filter[data-tag="all"]',
-    );
-    const projectItems = document.querySelectorAll('.project-item');
-    const sections = document.querySelectorAll('.project-section');
-    const selectedTags = new Set<string>();
+  // ── Tag filtering ──
+  // Toggleable + multi-select. With several tags selected, a project shows if
+  // it matches ANY of them. "All" clears the selection (and is active whenever
+  // nothing is selected).
+  const filterButtons = document.querySelectorAll<HTMLElement>('.tag-filter');
+  const allButton = document.querySelector<HTMLElement>(
+    '.tag-filter[data-tag="all"]',
+  );
+  const sections = document.querySelectorAll<HTMLElement>('.project-section');
+  const cards = Array.from(
+    document.querySelectorAll<HTMLElement>('.project-item'),
+    (el) => ({
+      el,
+      tags: JSON.parse(el.dataset.tags ?? '[]') as string[],
+    }),
+  );
+  const selectedTags = new Set<string>();
 
-    const applyFilter = () => {
-      // Reflect selection state on the buttons.
-      filterButtons.forEach((b) => {
-        const tag = b.getAttribute('data-tag')!;
-        b.classList.toggle('active', selectedTags.has(tag));
-      });
-      allButton?.classList.toggle('active', selectedTags.size === 0);
-
-      projectItems.forEach((item) => {
-        const tags: string[] = JSON.parse(
-          item.getAttribute('data-tags') || '[]',
-        );
-        const visible =
-          selectedTags.size === 0 || tags.some((t) => selectedTags.has(t));
-        (item as HTMLElement).style.display = visible ? '' : 'none';
-      });
-
-      sections.forEach((section) => {
-        const visibleCards = section.querySelectorAll(
-          '.project-item:not([style*="display: none"])',
-        );
-        (section as HTMLElement).style.display =
-          visibleCards.length === 0 ? 'none' : '';
-      });
-    };
-
-    filterButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const tag = btn.getAttribute('data-tag')!;
-        if (tag === 'all') {
-          selectedTags.clear();
-        } else if (selectedTags.has(tag)) {
-          selectedTags.delete(tag);
-        } else {
-          selectedTags.add(tag);
-        }
-        applyFilter();
-      });
+  const applyFilter = () => {
+    filterButtons.forEach((b) => {
+      b.classList.toggle('active', selectedTags.has(b.dataset.tag ?? ''));
     });
+    allButton?.classList.toggle('active', selectedTags.size === 0);
 
-    applyFilter();
+    for (const { el, tags } of cards) {
+      el.hidden =
+        selectedTags.size > 0 && !tags.some((t) => selectedTags.has(t));
+    }
+    sections.forEach((section) => {
+      section.hidden =
+        section.querySelector('.project-item:not([hidden])') === null;
+    });
+  };
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag ?? '';
+      if (tag === 'all') {
+        selectedTags.clear();
+      } else if (selectedTags.has(tag)) {
+        selectedTags.delete(tag);
+      } else {
+        selectedTags.add(tag);
+      }
+      applyFilter();
+    });
   });
+
+  applyFilter();
 </script>

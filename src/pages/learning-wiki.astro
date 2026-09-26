@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/learning-wiki.css';
+// Same KaTeX release as the renderer in learning-wiki.ts; fonts ship with it.
+import 'katex/dist/katex.min.css';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -43,11 +45,6 @@ const notesJson = JSON.stringify(notes);
 ---
 
 <BaseLayout title="Learning Wiki">
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
-    slot="head"
-  />
   <style is:global>
     html,
     body {

@@ -90,6 +90,13 @@
   margin-top: 0.5rem;
 }
 
+/* The flex/grid display rules would otherwise defeat the hidden attribute
+   that the tag filter toggles. */
+.project-section[hidden],
+.project-item[hidden] {
+  display: none;
+}
+
 .project-item {
   background: var(--bg);
   padding: 25px;

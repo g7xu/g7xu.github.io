@@ -37,9 +37,7 @@ const posts = await Promise.all(
               format={post.data.format}
               date={post.data.date}
               category={post.data.category}
-              coverImage={post.data.coverImage}
               slug={post.id}
-              author={post.data.author}
             >
               {Content && <Content />}
             </BlogCard>

@@ -39,7 +39,9 @@ const FONTS: FontVariant[] = [
   { family: "'Manrope', sans-serif", weight: 700, italic: false },
 ];
 
+const DEFAULT_WEIGHT = 3;
 const SIZE: Record<number, number> = { 1: 15, 2: 18, 3: 23, 4: 30, 5: 42 }; // weight -> base px
+const weightOf = (q: Quote): number => q.weight ?? DEFAULT_WEIGHT;
 
 // small deterministic pseudo-random so the layout is stable (no Math.random)
 function rng(seed: number): number {
@@ -100,7 +102,7 @@ function initQuoteCloud(
 
   function buildEl(q: Quote, i: number): HTMLElement {
     const fig = document.createElement('figure');
-    const w = q.weight ?? 3;
+    const w = weightOf(q);
     const font = FONTS[Math.floor(rng(i + 1) * FONTS.length)];
     const jitter = 0.82 + rng(i + 40) * 0.5; // 0.82–1.32 size variety
     fig.className =
@@ -108,7 +110,8 @@ function initQuoteCloud(
     fig.style.fontFamily = font.family;
     fig.style.fontWeight = String(font.weight);
     fig.style.fontStyle = font.italic ? 'italic' : 'normal';
-    fig.style.fontSize = Math.round((SIZE[w] ?? SIZE[3]) * jitter) + 'px';
+    fig.style.fontSize =
+      Math.round((SIZE[w] ?? SIZE[DEFAULT_WEIGHT]) * jitter) + 'px';
     // Capped by stage width: on phones, quotes wider than the screen would
     // drag fitAll()'s initial scale below legibility.
     fig.style.maxWidth =
@@ -170,7 +173,7 @@ function initQuoteCloud(
       w: 0,
       h: 0,
       el: buildEl(q, i),
-    })).sort((a, b) => (b.q.weight ?? 3) - (a.q.weight ?? 3));
+    })).sort((a, b) => weightOf(b.q) - weightOf(a.q));
 
     // measure each at its real wrapped size
     for (const it of items) {
@@ -378,14 +381,16 @@ function initQuoteCloud(
   // it only waits for fonts already in use, and nothing uses the display fonts until pack()
   // appends quotes — so it resolves with fallback metrics, then the real (wider) fonts swap
   // in and break the packing. Force-load every variant first, then pack.
-  function ready(): Promise<unknown> {
-    if (!document.fonts) return Promise.resolve();
-    const loads = FONTS.map((f) =>
-      document.fonts
-        .load(`${f.italic ? 'italic ' : ''}${f.weight} 40px ${f.family}`)
-        .catch(() => {}),
+  async function ready(): Promise<void> {
+    if (!document.fonts) return;
+    await Promise.all(
+      FONTS.map((f) =>
+        document.fonts
+          .load(`${f.italic ? 'italic ' : ''}${f.weight} 40px ${f.family}`)
+          .catch(() => {}),
+      ),
     );
-    return Promise.all(loads).then(() => document.fonts.ready);
+    await document.fonts.ready;
   }
   layoutStage();
   ready().then(() => pack(true));

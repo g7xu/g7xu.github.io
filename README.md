@@ -113,8 +113,6 @@ so they're documented once. Short version:
 
 Automatic deployment to GitHub Pages via GitHub Actions (`.github/workflows/deploy.yml`) on push to `master`.
 
-**One-time setup:** In GitHub repo Settings > Pages > Source, set to "GitHub Actions".
-
 ### Branch Strategy
 
 - `master` — production, auto-deployed

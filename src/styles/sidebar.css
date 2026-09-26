@@ -117,3 +117,8 @@
   flex-shrink: 0;
   color: inherit;
 }
+
+.sidebar-link__icon svg {
+  width: 16px;
+  height: 16px;
+}

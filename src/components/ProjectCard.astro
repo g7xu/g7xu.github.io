@@ -12,7 +12,7 @@ const primaryUrl = project.websiteUrl || project.githubUrl;
 <div
   class="project-item"
   data-tags={JSON.stringify(project.tags)}
-  onclick={`window.open('${primaryUrl}', '_blank')`}
+  data-url={primaryUrl}
   role="button"
   tabindex="0"
 >
@@ -24,22 +24,12 @@ const primaryUrl = project.websiteUrl || project.githubUrl;
   <h3>{project.title}</h3>
   <p class="description">{project.description}</p>
   <div class="project-links">
-    <a
-      href={project.githubUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      onclick="event.stopPropagation()"
-    >
+    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
       GitHub
     </a>
     {
       project.websiteUrl && (
-        <a
-          href={project.websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onclick="event.stopPropagation()"
-        >
+        <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
           Website
         </a>
       )

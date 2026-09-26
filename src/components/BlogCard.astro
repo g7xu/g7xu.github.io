@@ -7,9 +7,7 @@ interface Props {
   format: 'essay' | 'note';
   date: string;
   category: string;
-  coverImage?: string;
   slug: string;
-  author: { name: string; avatar: string };
 }
 
 const { title, excerpt, format, date, category, slug } = Astro.props;

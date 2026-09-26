@@ -62,13 +62,19 @@ if (NOTES.length === 0) {
   throw new Error('No wiki notes found');
 }
 
+const NOTE_BY_ID = new Map(NOTES.map((n) => [n.id, n]));
+
+const noteTitle = document.getElementById('note-title')!;
+const noteBody = document.getElementById('note-body')!;
+const rightPanel = document.getElementById('right-panel')!;
+const fileTree = document.getElementById('file-tree')!;
+
 // ── Wiki-link edges extracted from note content. Targets that don't match
 //    any note become pale "unresolved" phantom nodes, like Obsidian. ──
 function extractGraph(notes: WikiNote[]): {
   edges: SimLink[];
   unresolvedIds: string[];
 } {
-  const ids = new Set(notes.map((n) => n.id));
   const edges: SimLink[] = [];
   const seen = new Set<string>();
   const unresolved = new Set<string>();
@@ -85,7 +91,7 @@ function extractGraph(notes: WikiNote[]): {
       const key = [note.id, target].sort().join('||');
       if (seen.has(key)) continue;
       seen.add(key);
-      if (!ids.has(target)) unresolved.add(target);
+      if (!NOTE_BY_ID.has(target)) unresolved.add(target);
       edges.push({ source: note.id, target });
     }
   });
@@ -124,9 +130,15 @@ for (const e of edges) {
 // visibly pop. Unresolved phantoms get the same floor; they are faded via
 // color, not size. SIZE_SCALE converts the formula's units to screen pixels.
 const SIZE_SCALE = 0.5;
+const RADIUS_BY_ID = new Map<string, number>();
+for (const [id, hood] of neighbors) {
+  RADIUS_BY_ID.set(
+    id,
+    SIZE_SCALE * Math.max(8, Math.min(3 * Math.sqrt(hood.size + 1), 30)),
+  );
+}
 function nodeRadius(id: string): number {
-  const degree = neighbors.get(id)?.size ?? 0;
-  return SIZE_SCALE * Math.max(8, Math.min(3 * Math.sqrt(degree + 1), 30));
+  return RADIUS_BY_ID.get(id) ?? SIZE_SCALE * 8;
 }
 
 // ─────────────────────────────────────────
@@ -165,6 +177,7 @@ function buildFolderTree(notes: WikiNote[]): FolderNode {
   return root;
 }
 
+const FOLDER_TREE = buildFolderTree(NOTES);
 const collapsedFolders = new Set<string>();
 
 // Start with every folder collapsed.
@@ -174,20 +187,18 @@ function collectFolderPaths(folder: FolderNode, out: Set<string>) {
     collectFolderPaths(child, out);
   }
 }
-collectFolderPaths(buildFolderTree(NOTES), collapsedFolders);
+collectFolderPaths(FOLDER_TREE, collapsedFolders);
 
-function collectMatchingNotes(
-  folder: FolderNode,
-  query: string,
-  out: WikiNote[],
-) {
-  const q = query.toLowerCase();
-  for (const n of folder.notes) {
-    if (!query || n.id.toLowerCase().includes(q)) out.push(n);
-  }
-  for (const child of folder.folders.values()) {
-    collectMatchingNotes(child, query, out);
-  }
+/** `query` is already lower-cased; empty matches everything. */
+function noteMatches(note: WikiNote, query: string): boolean {
+  return !query || note.id.toLowerCase().includes(query);
+}
+
+function folderHasMatch(folder: FolderNode, query: string): boolean {
+  return (
+    folder.notes.some((n) => noteMatches(n, query)) ||
+    [...folder.folders.values()].some((child) => folderHasMatch(child, query))
+  );
 }
 
 function renderFolder(
@@ -201,9 +212,7 @@ function renderFolder(
   const notes = [...folder.notes].sort((a, b) => a.id.localeCompare(b.id));
 
   for (const child of folders) {
-    const matches: WikiNote[] = [];
-    collectMatchingNotes(child, query, matches);
-    if (query && matches.length === 0) continue;
+    if (query && !folderHasMatch(child, query)) continue;
 
     const wrap = document.createElement('div');
     wrap.className = 'tree-folder';
@@ -227,7 +236,7 @@ function renderFolder(
   }
 
   for (const note of notes) {
-    if (query && !note.id.toLowerCase().includes(query.toLowerCase())) continue;
+    if (!noteMatches(note, query)) continue;
     const item = document.createElement('div');
     item.className = 'tree-note' + (note.id === selectedId ? ' active' : '');
     item.dataset.id = note.id;
@@ -239,10 +248,8 @@ function renderFolder(
 }
 
 function buildTree() {
-  const tree = document.getElementById('file-tree')!;
-  while (tree.firstChild) tree.removeChild(tree.firstChild);
-  const root = buildFolderTree(NOTES);
-  renderFolder(root, tree, searchQuery);
+  fileTree.replaceChildren();
+  renderFolder(FOLDER_TREE, fileTree, searchQuery.toLowerCase());
 }
 
 // ─────────────────────────────────────────
@@ -308,11 +315,11 @@ function restoreMath(html: string, blocks: ExtractedMath[]): string {
 // ─────────────────────────────────────────
 // RIGHT PANEL — Note content
 // ─────────────────────────────────────────
-function openNote(id: string) {
-  const note = NOTES.find((n) => n.id === id);
-  if (!note) return;
+const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp']);
 
-  const noteIds = new Set(NOTES.map((n) => n.id));
+function openNote(id: string) {
+  const note = NOTE_BY_ID.get(id);
+  if (!note) return;
 
   // 1. Convert image embeds (![[...]]) to <img> tags, strip non-image embeds
   let processed = note.content.replace(
@@ -321,15 +328,8 @@ function openNote(id: string) {
       const parts = inner.split('|');
       const filename = parts[0].trim();
       const width = parts[1]?.trim();
-      const ext = filename.split('.').pop()?.toLowerCase();
-      if (
-        ext === 'png' ||
-        ext === 'jpg' ||
-        ext === 'jpeg' ||
-        ext === 'gif' ||
-        ext === 'svg' ||
-        ext === 'webp'
-      ) {
+      const ext = filename.split('.').pop()?.toLowerCase() ?? '';
+      if (IMAGE_EXTENSIONS.has(ext)) {
         const style = width ? ` style="max-width:${width}px"` : '';
         return `\n\n<img src="/wiki-images/${filename}" alt="${filename}"${style}>\n\n`;
       }
@@ -365,7 +365,7 @@ function openNote(id: string) {
         return `<a class="wiki-link heading-link" data-heading="${slug}" title="Jump to: ${headingPart}">${display}</a>`;
       }
 
-      const exists = noteIds.has(cleanTarget);
+      const exists = NOTE_BY_ID.has(cleanTarget);
       const cls = exists ? 'wiki-link' : 'wiki-link unresolved';
       const dataAttrs = exists
         ? `data-note-id="${cleanTarget}"${headingPart ? ` data-heading="${slugifyHeading(headingPart)}"` : ''}`
@@ -377,7 +377,7 @@ function openNote(id: string) {
     },
   );
 
-  document.getElementById('note-title')!.textContent = note.id;
+  noteTitle.textContent = note.id;
 
   // 3. Pad multi-column markers
   processed = padMultiColumnMarkers(processed);
@@ -390,16 +390,14 @@ function openNote(id: string) {
   html = addHeadingIds(html);
   html = restoreMath(html, mathBlocks);
 
-  const noteBody = document.getElementById('note-body')!;
   noteBody.innerHTML = html;
   upgradeBilingualSpans(noteBody);
-  document.getElementById('right-panel')!.classList.add('open');
+  rightPanel.classList.add('open');
 }
 
 // ── Heading navigation used by delegated wiki-link clicks ──
 function scrollToHeading(slug: string) {
-  const body = document.getElementById('note-body')!;
-  const h = body.querySelector(
+  const h = noteBody.querySelector(
     `[id="${CSS.escape(slug)}"]`,
   ) as HTMLElement | null;
   if (!h) return;
@@ -431,7 +429,7 @@ function highlightSection(heading: HTMLElement) {
   }, 1600);
 }
 
-document.getElementById('note-body')!.addEventListener('click', (e) => {
+noteBody.addEventListener('click', (e) => {
   const link = (e.target as HTMLElement).closest('.wiki-link:not(.unresolved)');
   if (!link) return;
   e.preventDefault();
@@ -458,7 +456,7 @@ document.getElementById('note-body')!.addEventListener('click', (e) => {
 });
 
 function closeNote() {
-  document.getElementById('right-panel')!.classList.remove('open');
+  rightPanel.classList.remove('open');
   selectedId = null;
   buildTree();
   updateGraphSelection();
@@ -485,18 +483,22 @@ function selectNote(id: string) {
   }
 }
 
-// React to shared links, manual URL edits, and browser back/forward.
-window.addEventListener('hashchange', () => {
-  if (suppressHashUpdate) return;
+/** Opens the note the URL hash names, if it is a real note that is not already open. */
+function openFromHash(pulseDelayMs = 0) {
   const id = decodeHash();
   if (!id) {
     if (selectedId !== null) closeNote();
     return;
   }
-  if (id !== selectedId && NOTES.some((n) => n.id === id)) {
-    selectNote(id);
-    pulseNode(id);
-  }
+  if (id === selectedId || !NOTE_BY_ID.has(id)) return;
+  selectNote(id);
+  if (pulseDelayMs > 0) setTimeout(() => pulseNode(id), pulseDelayMs);
+  else pulseNode(id);
+}
+
+// React to shared links, manual URL edits, and browser back/forward.
+window.addEventListener('hashchange', () => {
+  if (!suppressHashUpdate) openFromHash();
 });
 
 // ─────────────────────────────────────────
@@ -508,7 +510,7 @@ const container = document.getElementById('graph-panel')!;
 let simulation: d3.Simulation<SimNode, SimLink>;
 let nodeGroup: d3.Selection<SVGGElement, SimNode, SVGGElement, unknown>;
 let linkGroup: d3.Selection<SVGLineElement, SimLink, SVGGElement, unknown>;
-let gMain: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+let gMain: d3.Selection<SVGGElement, unknown, HTMLElement, unknown>;
 let zoomBehavior: d3.ZoomBehavior<SVGSVGElement, unknown>;
 let hasAnimatedEntrance = false;
 let currentK = 1;
@@ -522,6 +524,15 @@ let currentK = 1;
 // zooming in progressively reveals more labels as room opens up.
 const LABEL_FONT = 10; // must match .node-label font-size in learning-wiki.css
 const LABEL_GAP = 4; // px between node edge and label top
+const LABEL_CHAR_WIDTH = LABEL_FONT * 0.62; // average glyph advance at LABEL_FONT
+
+// Labels fade in as you zoom closer, like Obsidian's graph view. Since
+// collision culling keeps them from piling up, the overview can afford a
+// faint hint of text; full strength arrives by ~1x.
+function labelOpacityAt(k: number): number {
+  return Math.max(0, Math.min(1, (k - 0.55) / 0.5));
+}
+
 function labelText(id: string): string {
   return id.length > 18 ? id.slice(0, 16) + '…' : id;
 }
@@ -547,7 +558,7 @@ function updateLabels() {
   for (const n of nodes) {
     // The zoom translation is common to every box, so screen-space overlap
     // can be tested in scaled (pre-translate) coordinates.
-    const w = labelText(n.id).length * LABEL_FONT * 0.62;
+    const w = labelText(n.id).length * LABEL_CHAR_WIDTH;
     const cx = n.x! * k;
     const y0 = n.y! * k + nodeRadius(n.id) * k + LABEL_GAP;
     const box = { x0: cx - w / 2, y0, x1: cx + w / 2, y1: y0 + LABEL_FONT + 4 };
@@ -582,16 +593,12 @@ function initGraph() {
     .scaleExtent([0.25, 4])
     .on('zoom', (e) => {
       gMain.attr('transform', e.transform);
-      // Labels fade in as you zoom closer, like Obsidian's graph view. Since
-      // collision culling keeps them from piling up, the overview can afford
-      // a faint hint of text; full strength arrives by ~1x.
       currentK = e.transform.k;
-      const labelOpacity = Math.max(0, Math.min(1, (currentK - 0.55) / 0.5));
-      svg.style('--label-opacity', String(labelOpacity));
+      svg.style('--label-opacity', String(labelOpacityAt(currentK)));
       updateLabels();
     });
 
-  svg.call(zoomBehavior as any);
+  svg.call(zoomBehavior);
 
   gMain = svg.append('g');
 
@@ -715,8 +722,7 @@ function initGraph() {
     }));
 
     // Hold the labels back until the nodes have landed, then fade them up.
-    const k = d3.zoomTransform(svg.node()!).k;
-    const settledLabelOpacity = Math.max(0, Math.min(1, (k - 0.55) / 0.5));
+    const settledLabelOpacity = labelOpacityAt(d3.zoomTransform(svg.node()!).k);
     svg.style('--label-opacity', '0');
 
     // Pop the circles in from r=0 with a slight overshoot, lightly staggered.
@@ -778,7 +784,7 @@ function zoomToFit(W: number, H: number) {
   const tx = W / 2 - (scale * (minX + maxX)) / 2;
   const ty = H / 2 - (scale * (minY + maxY)) / 2;
   svg.call(
-    zoomBehavior.transform as any,
+    zoomBehavior.transform,
     d3.zoomIdentity.translate(tx, ty).scale(scale),
   );
 }
@@ -828,7 +834,7 @@ function pulseNode(id: string) {
     .transition()
     .duration(500)
     .call(
-      zoomBehavior.transform as any,
+      zoomBehavior.transform,
       d3.zoomIdentity.translate(tx, ty).scale(scale),
     );
 
@@ -854,19 +860,15 @@ function pulseNode(id: string) {
 // ─────────────────────────────────────────
 // SEARCH
 // ─────────────────────────────────────────
-document
-  .getElementById('search')!
-  .addEventListener('input', function (this: HTMLInputElement) {
-    searchQuery = this.value.trim();
-    buildTree();
+const searchInput = document.getElementById('search') as HTMLInputElement;
+searchInput.addEventListener('input', () => {
+  searchQuery = searchInput.value.trim();
+  buildTree();
 
-    if (!nodeGroup) return;
-    const q = searchQuery.toLowerCase();
-    nodeGroup.classed(
-      'search-dim',
-      (d) => !!searchQuery && !d.id.toLowerCase().includes(q),
-    );
-  });
+  if (!nodeGroup) return;
+  const q = searchQuery.toLowerCase();
+  nodeGroup.classed('search-dim', (d) => !noteMatches(d, q));
+});
 
 // ─────────────────────────────────────────
 // MOBILE NOTE LIST
@@ -909,18 +911,16 @@ mobileSearch?.addEventListener('input', buildMobileList);
 buildMobileList();
 
 // ─────────────────────────────────────────
-// MOBILE TOGGLE
-// ─────────────────────────────────────────
-document.getElementById('mobile-toggle')!.addEventListener('click', () => {
-  document.getElementById('left-panel')!.classList.toggle('mobile-open');
-});
-
-// ─────────────────────────────────────────
-// SIDEBAR TOGGLE
+// SIDEBAR TOGGLES (desktop collapse + phone drawer)
 // ─────────────────────────────────────────
 const shell = document.getElementById('wiki-shell')!;
 const leftPanel = document.getElementById('left-panel')!;
 const toggleBtn = document.getElementById('sidebar-toggle')!;
+
+document.getElementById('mobile-toggle')!.addEventListener('click', () => {
+  leftPanel.classList.toggle('mobile-open');
+});
+
 // Must agree with the server-rendered .collapsed markup in learning-wiki.astro.
 let sidebarOpen = false;
 
@@ -945,13 +945,15 @@ initGraph();
 
 // Open the page named in the URL hash, if any (shared deep-link). pulseNode
 // reads live node positions, so it waits out most of the entrance ease first.
-const initialId = decodeHash();
-if (initialId && NOTES.some((n) => n.id === initialId)) {
-  selectNote(initialId);
-  setTimeout(() => pulseNode(initialId), 700);
-}
+openFromHash(700);
 
+// A resize drag fires dozens of events; rebuilding the graph (300 settle
+// ticks) on each one would freeze the page, so wait for the size to hold.
+let resizeTimer = 0;
 window.addEventListener('resize', () => {
-  if (simulation) simulation.stop();
-  initGraph();
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(() => {
+    if (simulation) simulation.stop();
+    initGraph();
+  }, 150);
 });
