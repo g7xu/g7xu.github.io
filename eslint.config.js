@@ -5,7 +5,7 @@ import tsparser from '@typescript-eslint/parser';
 export default [
   ...eslintPluginAstro.configs.recommended,
   {
-    ignores: ['dist/', '.astro/', 'node_modules/', 'obs_notes/'],
+    ignores: ['dist/', '.astro/', 'node_modules/', 'obs_notes/', '.claude/'],
   },
   {
     files: ['src/**/*.ts'],
@@ -16,7 +16,14 @@ export default [
       parser: tsparser,
     },
     rules: {
-      '@typescript-eslint/no-explicit-any': 'warn',
+      ...tseslint.configs.recommended.rules,
+    },
+  },
+  {
+    // Astro generates this file with a triple-slash reference to its own types.
+    files: ['src/env.d.ts'],
+    rules: {
+      '@typescript-eslint/triple-slash-reference': 'off',
     },
   },
 ];

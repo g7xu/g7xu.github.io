@@ -26,3 +26,5 @@ obs_notes/*
 !obs_notes/public/**
 !obs_notes/attachments/
 !obs_notes/attachments/**
+# Browser-automation artifacts (Playwright MCP screenshots / snapshots)
+.playwright-mcp/
