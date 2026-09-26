@@ -1,7 +1,7 @@
 
 **Summary**: Root map of the wiki. Each domain links to its **sub-index** (a per-domain map). *(Pilot: Computer Vision is now delegated to its sub-index — the other domains are still listed inline below, for comparison.)*
 
-**Last updated**: 2026-06-09
+**Last updated**: 2026-09-25
 
 ---
 
@@ -24,6 +24,7 @@
 
 - [[Dynamic Programming]] — thinking process and patterns for DP problems
 - [[Linked List]] — interview strategy: fast/slow pointers, dummy head, in-place reversal, split & merge
+- [[Minimum Spanning Tree]] — the cut property, Prim's vs. Kruskal's, and why dense graphs want the no-heap O(V²) scan
 
 ## Web & Backend Development
 
@@ -36,11 +37,12 @@
 - [[React Programming Language]] — why React and core front-end concepts
 - [[Deployment]] — web servers, containerization, and shipping applications
 - [[Distributed System]] — definition and core concepts of distributed systems
+- [[DynamoDB]] — deep dive: data model, partition/sort keys, GSI vs. LSI, consistency modes, DAX, Streams, and when not to use it
 - [[Software Development Lifecycle & System Design]] — system design approach and SDLC
 - [[Git — Version Control Overview]] — core advantages and version-control workflow
 - [[Unit Testing]] — why and how to test software
 
-## Agent Engineering *(pending review — in inbox/)*
+## Agent Engineering *(LangGraph sub-cluster still pending review — in inbox/)*
 
 - [[Agent Engineering Overview]] — **sub-index** for engineering agentic systems: building software *with* coding agents (harness design, generator–evaluator loops, context management, legibility, entropy control — from OpenAI's Codex case study + Anthropic's long-running-app experiment) **and** building agent applications with the **LangGraph** framework (a nested sub-index covering graph primitives, state/reducers, agents, memory, human-in-the-loop, multi-agent control, and deployment)
 
@@ -52,7 +54,7 @@
 
 - [[Personal Finance Overview]] — **sub-index** for the whole Personal Finance cluster: the r/personalfinance "Prime Directive" ordered priority list, one page per step (budgeting → emergency fund → match → debt → retirement → other goals)
 
-## Health & Metabolism *(pending review - in inbox/)*
+## Health & Metabolism
 
 - [[Health & Metabolism Overview]] - sub-index for the Glucose Revolution cluster: the science of glucose & spikes, their short/long-term effects, and the 10 food hacks.
 
@@ -67,3 +69,11 @@
 ## Personal Brand
 
 - [[Personal Brand Overview]] — **sub-index** for building a public figure across platforms (LinkedIn first; 小红书 / WeChat 公众号 planned). Nests the **LinkedIn** cluster: [[LinkedIn Networking]] (profile, connection requests, recruiter outreach, finding people, follow-up & engagement) plus the [[The strength of weak ties]] anchor.
+
+## Physical Training *(pending review - in inbox/)*
+
+- [[Physical Training Overview]] - sub-index for the Starting Strength: Basic Barbell Training, 3rd Edition cluster.
+
+## Organizational Learning *(pending review - in inbox/)*
+
+- [[Organizational Learning Overview]] - sub-index for the 复盘+ 把经验转化为能力 cluster.

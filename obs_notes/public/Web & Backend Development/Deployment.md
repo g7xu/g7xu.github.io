@@ -189,3 +189,5 @@ the point of interconnection between a computer/server and a private or public n
 - [[Distributed System]]
 - [[Software Development Lifecycle & System Design]]
 - [[MAVEN Java Dev Op]]
+- [[DynamoDB]] — the AWS database service, next to EC2 and S3 here
+- [[System Design (Interview Cheat Sheet)]] — S3 as the blob-storage building block

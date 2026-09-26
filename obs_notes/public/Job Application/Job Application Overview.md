@@ -2,7 +2,7 @@
 
 **Scope**: CS / software-engineering (SWE) roles. **Not** focusing on MLE / ML-engineer roles for now.
 
-**Last updated**: 2026-08-02
+**Last updated**: 2026-09-25
 
 ---
 
@@ -51,6 +51,7 @@ The coding/skills side. See [[Technical Interview Checklist]] for the in-intervi
 ## Cheat sheets
 
 - [[Operating Systems (Interview Cheat Sheet)]] — OS concepts (user/kernel mode, process lifecycle)
+- [[System Design (Interview Cheat Sheet)]] — key technologies (relational / NoSQL / blob / search databases, API gateway, load balancer, queues); the [[DynamoDB]] deep dive lives in Web & Backend Development
 
 ## Company research & interview practice
 
@@ -94,3 +95,4 @@ Write the answer so it reads like a real person wrote it:
 - [[Technical Interview Checklist]]
 - [[Behavioral Interview (BQ)]]
 - [[Operating Systems (Interview Cheat Sheet)]]
+- [[System Design (Interview Cheat Sheet)]]

@@ -65,3 +65,4 @@ Most applications stay in **user mode** and they are restricted from accessing h
 
 ## Related pages
 - [[Technical Interview Checklist]]
+- [[System Design (Interview Cheat Sheet)]]

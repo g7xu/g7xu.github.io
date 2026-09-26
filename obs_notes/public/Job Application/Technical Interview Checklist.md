@@ -40,3 +40,4 @@ A mental model, I personal has when doing a problem solving (classic coding) int
 
 ## Related pages
 - [[Operating Systems (Interview Cheat Sheet)]]
+- [[System Design (Interview Cheat Sheet)]]

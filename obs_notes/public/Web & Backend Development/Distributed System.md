@@ -70,3 +70,5 @@ It is extremely important to implement **Logging**, **Monitoring**, and **Tracin
 ## Related pages
 - [[Deployment]]
 - [[Software Development Lifecycle & System Design]]
+- [[System Design (Interview Cheat Sheet)]] — the interview view of the same building blocks (API gateway, load balancer, queues)
+- [[DynamoDB]] — one distributed database in depth: replication, consistency modes, partitioning

@@ -256,5 +256,6 @@ SDLC provides a systematic process for building high-quality software while mana
 - [[Technical Communication Overview]] — the documents (PRD, design doc/RFC) that come out of the planning phases
 - [[Deployment]]
 - [[Distributed System]]
+- [[System Design (Interview Cheat Sheet)]] — the key technologies to reach for in the "define data storage" and "plan for scaling" steps
 - [[Unit Testing]]
 - [[Git — Version Control Overview]]
