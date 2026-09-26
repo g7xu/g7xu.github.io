@@ -620,8 +620,8 @@ function initGraph() {
   // Balanced like Obsidian's graph view: repulsion and long links let each
   // topic cluster settle as its own constellation, and centering is only
   // strong enough to keep orphans and satellite clusters within the frame.
-  // Vertical centering is the stronger of the two so a chain of clusters
-  // lays out along the wide axis of the panel instead of stacking.
+  // Centering is equal on both axes so the outline stays round; biasing one
+  // axis flattens the layout into a band.
   simulation = d3
     .forceSimulation<SimNode, SimLink>(nodes)
     .force(
@@ -633,8 +633,8 @@ function initGraph() {
         .strength(0.6),
     )
     .force('charge', d3.forceManyBody().strength(-260))
-    .force('x', d3.forceX(W / 2).strength(0.05))
-    .force('y', d3.forceY(H / 2).strength(0.14))
+    .force('x', d3.forceX(W / 2).strength(0.1))
+    .force('y', d3.forceY(H / 2).strength(0.1))
     .force(
       'collide',
       d3.forceCollide<SimNode>().radius((d) => nodeRadius(d.id) + 3),
