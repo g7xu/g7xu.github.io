@@ -3,7 +3,11 @@ import { getCollection, render } from 'astro:content';
 import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  // Notes live entirely in the listing; only essays get a page of their own.
+  const posts = await getCollection(
+    'blog',
+    ({ data }) => !data.draft && data.format === 'essay',
+  );
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -18,7 +22,6 @@ const { Content } = await render(post);
   title={post.data.title}
   titleAlt={post.data.titleAlt}
   excerpt={post.data.excerpt}
-  format={post.data.format}
   date={post.data.date}
   category={post.data.category}
   coverImage={post.data.coverImage}

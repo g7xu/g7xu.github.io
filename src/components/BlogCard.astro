@@ -32,7 +32,15 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
   <time datetime={date} class="blog-list__date">{formattedDate}</time>
   <div class="blog-list__body">
     <h2 class="blog-list__title">
-      <a href={`/blog/${slug}/`} lang={titleLang}>{title}</a>
+      {
+        format === 'essay' ? (
+          <a href={`/blog/${slug}/`} lang={titleLang}>
+            {title}
+          </a>
+        ) : (
+          <span lang={titleLang}>{title}</span>
+        )
+      }
     </h2>
     {
       format === 'essay' && excerpt && (
@@ -41,13 +49,9 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
     }
     {
       format === 'note' && hasNoteContent && (
-        <a
-          class="blog-list__note"
-          href={`/blog/${slug}/`}
-          aria-label={`Read note: ${title}`}
-        >
+        <div class="blog-list__note">
           <slot />
-        </a>
+        </div>
       )
     }
     <div class="blog-list__meta">

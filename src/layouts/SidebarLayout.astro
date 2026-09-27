@@ -36,6 +36,15 @@ const { title, description } = Astro.props;
     align-items: start;
   }
 
+  /* Two-column mode: the row fills the first screen (navbar is 60px) and
+     both columns sit at its vertical middle. */
+  @media (min-width: 769px) {
+    .layout-with-sidebar {
+      min-height: calc(100vh - 60px);
+      align-items: center;
+    }
+  }
+
   .main-content {
     min-width: 0;
   }

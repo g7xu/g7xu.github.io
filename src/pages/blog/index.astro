@@ -23,11 +23,11 @@ const posts = await Promise.all(
 );
 ---
 
-<BaseLayout title="Writing" description="Essays, notes, and ideas in progress.">
+<BaseLayout title="Blog" description="Essays, notes, and ideas in progress.">
   <div class="blog-page">
     <BlogSidebar categories={categories} formats={formats} />
     <div class="blog-main">
-      <h1 class="blog-page__title">Writing</h1>
+      <h1 class="blog-page__title">Blog</h1>
       <ul class="blog-list" id="blog-grid">
         {
           posts.map(({ post, Content }) => (

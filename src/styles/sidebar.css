@@ -66,6 +66,9 @@
 .sidebar-link:nth-child(5) {
   animation-delay: 0.97s;
 }
+.sidebar-link:nth-child(6) {
+  animation-delay: 1.1s;
+}
 
 @keyframes sidebar-slide-left {
   from {

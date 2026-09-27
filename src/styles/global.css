@@ -11,6 +11,7 @@
   --link: #0f172a;
   --link-hover: #475569;
   --accent: #c2410c;
+  --accent-ink: #2f5f8f; /* quotes theme + anything that points at it */
   /* --fg-muted at 14% and 24% — the bilingual toggle's resting and hover mark.
      Kept off --accent so a marked phrase reads as the page holding its own
      text, not as a second accent competing with the nav indicator. */
@@ -44,6 +45,15 @@
   --nav-accent: var(--accent); /* #c2410c rust */
   --nav-accent-soft: rgba(194, 65, 12, 0.12);
   --nav-border: var(--border); /* hairline */
+}
+
+/* Quotes: same slate surface as the workshop, but the accent shifts from
+   rust to an ink blue. --accent is overridden too, since the cloud's
+   highlighted quotes read it directly. */
+[data-theme='quotes'] {
+  --accent: var(--accent-ink);
+  --nav-accent: var(--accent-ink);
+  --nav-accent-soft: rgba(47, 95, 143, 0.12);
 }
 
 [data-theme='coffee'] {

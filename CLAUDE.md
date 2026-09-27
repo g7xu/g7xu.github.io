@@ -41,7 +41,7 @@ Values live in the stylesheet; these are the roles.
 
 ### Themes
 
-`BaseLayout` takes a `theme` prop (default `'workshop'`) and stamps it as `data-theme` on `<body>`. A theme block in `global.css` overrides the `--nav-*` token group so the navbar adopts the page's palette. `travel.astro` uses `theme="coffee"`, a cream/espresso palette whose `--nav-bg` gradient mirrors the map background. Adding a theme = one block in `global.css` + `theme="…"` on the page.
+`BaseLayout` takes a `theme` prop (default `'workshop'`) and stamps it as `data-theme` on `<body>`. A theme block in `global.css` overrides the `--nav-*` token group so the navbar adopts the page's palette. `travel.astro` uses `theme="coffee"`, a cream/espresso palette whose `--nav-bg` gradient mirrors the map background. `quotes.astro` uses `theme="quotes"`, which keeps the slate surface but swaps the accent (nav pill and highlighted quotes) from rust to ink blue. Adding a theme = one block in `global.css` + `theme="…"` on the page.
 
 ### Typography
 
@@ -86,7 +86,7 @@ category: 'Tools'
 ---
 ```
 
-`essay` is long-form and can use an `excerpt`. A `note` renders its Markdown body directly in the listing, for a sentence or short thought.
+`essay` is long-form, can use an `excerpt`, and gets its own page. A `note` is plain text that lives only in the listing: its Markdown body renders inline, nothing links out, and no page is built for it.
 
 **New bilingual text:** any text can be a click-to-switch en/zh pair; both variants are hand-written, never machine-translated. In `.astro` files use `<Bi en="…" zh="…" initial="zh" />`; in Markdown write `<span class="bilingual" data-alt="中文">Chinese</span>`, where the visible text is the default language. Constraints the mechanism imposes (details at the top of `src/scripts/bilingual.ts`):
 

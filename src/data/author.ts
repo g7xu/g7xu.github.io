@@ -1,7 +1,7 @@
 export const author = {
   name: 'Guoxuan Xu',
   displayName: 'Jason (Guoxuan) Xu',
-  location: 'San Diego, CA',
+  location: 'Stanford, CA',
   email: 'g7xu@ucsd.edu',
   avatar: '/images/bio-photo.png',
   favicon: '/images/bharal.png',
@@ -12,6 +12,7 @@ export const author = {
       icon: 'linkedin',
       url: 'https://www.linkedin.com/in/guoxuan-xu-30a572269/',
     },
+    { label: 'X', icon: 'x', url: 'https://x.com/guoxuan_xu' },
     {
       label: 'Resume',
       icon: 'file',

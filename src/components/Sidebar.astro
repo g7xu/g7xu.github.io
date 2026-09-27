@@ -44,10 +44,8 @@ import { socialIcon } from '../data/socialIcons';
           <a
             href={link.url}
             class="sidebar-link"
-            target={link.url.startsWith('http') ? '_blank' : undefined}
-            rel={
-              link.url.startsWith('http') ? 'noopener noreferrer' : undefined
-            }
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <span class="sidebar-link__icon" set:html={socialIcon(link.icon)} />
             <span>{link.label}</span>

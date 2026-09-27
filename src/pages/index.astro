@@ -35,20 +35,75 @@ const projectSections = [
 >
   <section class="home-hero">
     <p class="home-hero__lead">
-      Hi, I am Jason. I care about writing good code, building meaningful
-      products, and speaking with users who are impacted by my code and use my
-      products.
+      Hi, I am Jason. I love programming, doing ML stuff, shipping product,
+      drinking coffee<a
+        class="home-hero__icon home-hero__coffee"
+        href="/travel/"
+        aria-label="See my coffee map"
+        title="Coffee map"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            class="home-hero__steam"
+            d="M7.5 3.5c0 .9-.8 1.2-.8 2.2M11 3.5c0 .9-.8 1.2-.8 2.2"></path>
+          <path d="M4 9h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"></path>
+          <path d="M16 10.5h2a2.5 2.5 0 0 1 0 5h-2"></path>
+        </svg>
+      </a>, and reading<a
+        class="home-hero__icon home-hero__book"
+        href="/quotes/"
+        aria-label="See my quotes"
+        title="Quotes"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 6.5C10.5 5.6 8.6 5 6.5 5 5.2 5 4.4 5.2 4 5.4v12.2c.4-.2 1.2-.4 2.5-.4 2.1 0 4 .6 5.5 1.5"
+          ></path>
+          <path
+            class="home-hero__page"
+            d="M12 6.5C13.5 5.6 15.4 5 17.5 5c1.3 0 2.1.2 2.5.4v12.2c-.4-.2-1.2-.4-2.5-.4-2.1 0-4 .6-5.5 1.5"
+          ></path>
+          <path d="M12 6.5v12.7"></path>
+        </svg>
+      </a>.
     </p>
     <p class="home-hero__body">
-      This is a place where I share my projects, my learning, and my feelings —
-      keeping track of my growth. I will be interning at Samsung in the summer
-      of 2026 in Plano Texas, and studying Master of Computer Science at
-      Stanford starting Sep 2026 in Palo Alto. Love to chat or meet up for
-      career, startup ideas, projects, or <strong>FOOD!!</strong>
+      I am currently doing Master of Computer Science at Stanford. Let's
+      connect!
     </p>
   </section>
 
-  <div class="home-projects" slot="full-width">
+  <a class="home-scroll" href="#projects" aria-label="Scroll to projects">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.7"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 9l6 6 6-6"></path>
+    </svg>
+  </a>
+
+  <div class="home-projects" id="projects" slot="full-width">
     {
       projectSections.map(({ heading, projects, collapsible }, i) => (
         <section class="project-section" style={`--i: ${i}`}>
@@ -98,6 +153,16 @@ const projectSections = [
     openCard(card);
   });
 
+  // ── Scroll hint ──
+  // Fixed to the bottom of the first screen; fades out once the user has
+  // started scrolling, since at that point it has done its job.
+  const scrollHint = document.querySelector<HTMLElement>('.home-scroll');
+  const updateScrollHint = () => {
+    scrollHint?.classList.toggle('home-scroll--hidden', window.scrollY > 40);
+  };
+  updateScrollHint();
+  window.addEventListener('scroll', updateScrollHint, { passive: true });
+
   // ── Accordion sections ──
   document
     .querySelectorAll<HTMLElement>('.accordion-toggle')
@@ -129,7 +194,7 @@ const projectSections = [
 
 <style>
   .home-hero {
-    padding-top: 3rem;
+    padding-top: 0;
   }
 
   .home-hero__lead {
@@ -164,15 +229,132 @@ const projectSections = [
     }
   }
 
+  /* Only shown in two-column mode, where the hero fills the first screen
+     and the projects sit below the fold. */
+  .home-scroll {
+    display: none;
+    position: fixed;
+    left: 50%;
+    bottom: 1.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--fg-muted);
+    transform: translateX(-50%);
+    transition:
+      opacity 0.3s ease,
+      color 0.2s ease;
+    animation: home-scroll-bounce 1.8s ease-in-out infinite;
+    animation-delay: 1.4s;
+  }
+
+  .home-scroll svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .home-scroll:hover {
+    color: var(--fg);
+  }
+
+  .home-scroll--hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (min-width: 769px) {
+    .home-scroll {
+      display: block;
+    }
+  }
+
+  @keyframes home-scroll-bounce {
+    0%,
+    100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      transform: translateX(-50%) translateY(6px);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .home-hero__lead,
-    .home-hero__body {
+    .home-hero__body,
+    .home-hero__steam,
+    .home-hero__page,
+    .home-scroll {
       animation: none;
     }
   }
 
-  .home-hero__body strong {
-    font-weight: 700;
+  /* Inline icon links in the lead: the mug goes to the coffee map and the
+     book to the quotes page. Each idles on a small loop (steam, page
+     flutter) and tips toward the cursor on hover. */
+  .home-hero__icon {
+    display: inline-block;
+    width: 0.95em;
+    height: 0.95em;
+    margin-left: 0.15em;
+    vertical-align: -0.1em;
+    color: var(--accent);
+    text-decoration: none;
+    transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+
+  .home-hero__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .home-hero__icon:hover,
+  .home-hero__icon:focus-visible {
+    transform: rotate(-12deg) translateY(-0.05em);
+    color: var(--link-hover);
+  }
+
+  .home-hero__book {
+    color: var(--accent-ink);
+  }
+
+  .home-hero__page {
+    transform-box: fill-box;
+    transform-origin: 0% 50%;
+    animation: home-page-flutter 3s ease-in-out infinite;
+    animation-delay: 0.8s;
+  }
+
+  @keyframes home-page-flutter {
+    0%,
+    100% {
+      transform: scaleX(1);
+    }
+    50% {
+      transform: scaleX(0.55) skewY(-6deg);
+    }
+  }
+
+  .home-hero__steam {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: home-steam 2.4s ease-in-out infinite;
+  }
+
+  @keyframes home-steam {
+    0% {
+      opacity: 0.35;
+      transform: translateY(0.6px) scaleY(0.85);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-0.9px) scaleY(1.1);
+    }
+    100% {
+      opacity: 0.35;
+      transform: translateY(0.6px) scaleY(0.85);
+    }
   }
 
   /* Wide viewports: .home-hero__body indents 12rem to sit at the lead's
