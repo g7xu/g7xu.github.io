@@ -1,0 +1,7 @@
+{
+  // Both keys point the editor at the project's TypeScript so diagnostics
+  // match `astro check` / CI. VS Code reads the new key; the Astro extension
+  // still reads the deprecated one.
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

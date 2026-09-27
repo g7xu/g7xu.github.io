@@ -2,11 +2,10 @@
 interface NavItem {
   label: string;
   href: string;
-  icon: 'projects' | 'blog' | 'wiki' | 'coffee' | 'book';
+  icon: 'blog' | 'wiki' | 'coffee' | 'book';
 }
 
 const navItems: NavItem[] = [
-  { label: 'Projects', href: '/projects/', icon: 'projects' },
   { label: 'Blog', href: '/blog/', icon: 'blog' },
   { label: 'Learning Wiki', href: '/learning-wiki/', icon: 'wiki' },
   { label: 'Coffee Map', href: '/travel/', icon: 'coffee' },
@@ -37,14 +36,6 @@ const currentPath = Astro.url.pathname;
               stroke-linejoin="round"
               aria-hidden="true"
             >
-              {item.icon === 'projects' && (
-                <>
-                  <rect x="4" y="4" width="6.5" height="6.5" rx="1.4" />
-                  <rect x="13.5" y="4" width="6.5" height="6.5" rx="1.4" />
-                  <rect x="4" y="13.5" width="6.5" height="6.5" rx="1.4" />
-                  <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.4" />
-                </>
-              )}
               {item.icon === 'blog' && (
                 <>
                   <path d="M4 20l.9-3.6L15 6.3a1.8 1.8 0 0 1 2.5 0l.3.3a1.8 1.8 0 0 1 0 2.5L7.6 19.1 4 20Z" />

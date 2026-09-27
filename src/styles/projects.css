@@ -1,47 +1,78 @@
-.projects-page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
+/* Project sections on the homepage. These cards are the site's one
+   deliberate exception to the "no cards" rule (see CLAUDE.md). */
+.home-projects {
+  margin: 2rem 0;
 }
 
-.tag-filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-}
-
-.tag-filter {
-  padding: 0.35rem 0.85rem;
-  border: 1px solid var(--border);
-  border-radius: 2rem;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: inherit;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tag-filter:hover {
-  border-color: var(--fg);
-  color: var(--fg);
-}
-
-.tag-filter.active {
-  background: var(--fg);
-  color: var(--bg);
-  border-color: var(--fg);
-}
-
+/* Entrance: sections arrive after the hero (which finishes ~1.1s in),
+   staggered by --i (set inline), and each section's cards fade up in DOM
+   order after it. Fill-mode is `backwards`, not `both`: a forwards fill
+   would pin `transform: none` and defeat the card hover lift. */
 .project-section {
-  margin-bottom: 2rem;
+  --section-delay: calc(0.45s + var(--i, 0) * 0.12s);
+  margin-bottom: 2.5rem;
+  animation: projects-slide-right 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+  animation-delay: var(--section-delay);
+}
+
+.project-item {
+  animation: projects-fade-up 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+  animation-delay: calc(var(--section-delay) + 0.1s);
+}
+
+.project-item:nth-child(2) {
+  animation-delay: calc(var(--section-delay) + 0.17s);
+}
+.project-item:nth-child(3) {
+  animation-delay: calc(var(--section-delay) + 0.24s);
+}
+.project-item:nth-child(4) {
+  animation-delay: calc(var(--section-delay) + 0.31s);
+}
+.project-item:nth-child(5) {
+  animation-delay: calc(var(--section-delay) + 0.38s);
+}
+.project-item:nth-child(n + 6) {
+  animation-delay: calc(var(--section-delay) + 0.45s);
+}
+
+@keyframes projects-slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes projects-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-section,
+  .project-item {
+    animation: none;
+  }
 }
 
 .project-section h2 {
   margin: 0;
   display: inline;
   font-size: 1.1rem;
+}
+
+.project-section hr {
+  margin: 0.5rem 0;
 }
 
 .accordion-toggle {
@@ -79,22 +110,11 @@
   transition: height 0.35s ease;
 }
 
-.project-section hr {
-  margin: 0.5rem 0;
-}
-
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
   gap: 20px;
   margin-top: 0.5rem;
-}
-
-/* The flex/grid display rules would otherwise defeat the hidden attribute
-   that the tag filter toggles. */
-.project-section[hidden],
-.project-item[hidden] {
-  display: none;
 }
 
 .project-item {
@@ -156,26 +176,11 @@
   color: var(--link-hover);
 }
 
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: 0.5rem;
-}
-
-.tag-pill {
-  font-size: 0.75rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 1rem;
-  background: var(--bg-surface);
-  color: var(--fg-muted);
-}
-
-/* Phones: tighten padding and force a single, full-width column so the
-   18em card minimum never overflows a narrow screen (issue #41). */
+/* Phones: force a single, full-width column so the 18em card minimum never
+   overflows a narrow screen (issue #41). */
 @media (max-width: 600px) {
-  .projects-page {
-    padding: 1.5rem 1rem;
+  .home-projects {
+    margin: 1.5rem 0;
   }
 
   .projects-grid {

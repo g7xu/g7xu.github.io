@@ -3,7 +3,7 @@
 // (see src/assets/travel/README.md). A missing file renders as an empty
 // hue-tinted frame — no build error.
 
-export interface Photo {
+interface Photo {
   /** Filename within src/assets/travel/; resolved at build to an optimized webp. */
   src?: string;
   /** Handwritten-style caption shown under the polaroid. */
