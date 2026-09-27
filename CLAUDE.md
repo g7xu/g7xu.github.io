@@ -21,9 +21,7 @@ Content is data-driven (`src/data/*.ts`, `src/content/blog/`) and separated from
 
 - **`obs_notes/` is not inert.** `learning-wiki.astro` reads every `.md` under `obs_notes/public/` at build time and renders it at `/learning-wiki/`. Everything else in the vault is private and untracked (see `.gitignore`).
 - **`BlogCard.astro` renders a typographic row**, not a card, despite the name.
-- **`/travel/` superseded `beyond-tech/coffee-shops`.** `src/pages/beyond-tech/` is unlinked from the nav and mostly placeholders; don't build the coffee map twice.
 - **`src/utils/lang.ts` must stay DOM-free**: both build-time templates and the client script `bilingual.ts` import it.
-- **`--primary-color` and friends in `global.css` are legacy aliases** consumed only by `learning-wiki.css`. Don't add new consumers.
 - `BaseLayout.astro` is the HTML shell (head, Navbar, Footer, JSON-LD) and takes a `theme` prop (see Themes). `bilingual.ts` is loaded globally from it.
 
 ## Design System
@@ -54,7 +52,7 @@ Values live in the stylesheet; these are the roles.
 
 ### Anti-patterns (do not introduce)
 
-- No card components anywhere except the projects page (`projects.astro` + `ProjectCard.astro` deliberately use a bordered/shadowed grid of image-led cards). Other lists stay typographic.
+- No card components anywhere except the project sections on the homepage (`index.astro` + `ProjectCard.astro` deliberately use a bordered/shadowed grid of image-led cards). Other lists stay typographic.
 - No drop shadows or gradients on content surfaces. Intentional exceptions: the coffee theme's nav/page gradient, and the travel map's polaroids/pins.
 - No SaaS-blue (#007acc, indigo, #3b82f6 etc.)
 - No `Inter` as a font choice
