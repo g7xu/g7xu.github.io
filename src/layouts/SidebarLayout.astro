@@ -20,6 +20,9 @@ const { title, description } = Astro.props;
       <slot />
     </main>
   </div>
+  <div class="layout-full-width">
+    <slot name="full-width" />
+  </div>
 </BaseLayout>
 
 <style>
@@ -37,6 +40,15 @@ const { title, description } = Astro.props;
     min-width: 0;
   }
 
+  /* Same container as the grid, so full-width content aligns with the
+     sidebar's left edge and the main column's right edge. Horizontal
+     padding only, so the wrapper collapses to nothing when the slot is empty. */
+  .layout-full-width {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
   @media (max-width: 768px) {
     .layout-with-sidebar {
       grid-template-columns: 1fr;
@@ -45,6 +57,10 @@ const { title, description } = Astro.props;
 
     .author-sidebar {
       order: -1;
+    }
+
+    .layout-full-width {
+      padding: 0 1rem;
     }
   }
 </style>

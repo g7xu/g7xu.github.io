@@ -9,13 +9,7 @@ const { project } = Astro.props;
 const primaryUrl = project.websiteUrl || project.githubUrl;
 ---
 
-<div
-  class="project-item"
-  data-tags={JSON.stringify(project.tags)}
-  data-url={primaryUrl}
-  role="button"
-  tabindex="0"
->
+<div class="project-item" data-url={primaryUrl} role="button" tabindex="0">
   {
     project.imageUrl && (
       <img src={project.imageUrl} alt={project.title} loading="lazy" />
@@ -34,8 +28,5 @@ const primaryUrl = project.websiteUrl || project.githubUrl;
         </a>
       )
     }
-  </div>
-  <div class="project-tags">
-    {project.tags.map((tag) => <span class="tag-pill">{tag}</span>)}
   </div>
 </div>

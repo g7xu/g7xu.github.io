@@ -69,12 +69,10 @@ A husky pre-commit hook runs `lint-staged` (eslint + prettier on staged files).
 │   │   └── BlogPostLayout.astro
 │   ├── pages/                # File-based routing
 │   │   ├── index.astro
-│   │   ├── projects.astro
 │   │   ├── learning-wiki.astro
 │   │   ├── quotes.astro      # Zoomable typographic quote cloud
 │   │   ├── travel.astro      # Interactive coffee map (largest page)
-│   │   ├── blog/
-│   │   └── beyond-tech/      # Unlinked from nav; mostly placeholders
+│   │   └── blog/
 │   ├── assets/travel/        # Coffee-shop photos (optimized at build)
 │   ├── scripts/              # Client-side TypeScript
 │   │   ├── learning-wiki.ts  # Wiki graph (d3), note rendering
@@ -87,7 +85,6 @@ A husky pre-commit hook runs `lint-staged` (eslint + prettier on staged files).
 │       ├── navbar.css
 │       ├── projects.css
 │       ├── blog.css
-│       ├── beyond-tech.css
 │       ├── learning-wiki.css
 │       ├── travel.css
 │       └── quote-cloud.css

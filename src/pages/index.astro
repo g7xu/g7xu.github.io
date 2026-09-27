@@ -1,5 +1,32 @@
 ---
 import SidebarLayout from '../layouts/SidebarLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getProjectsByCategory } from '../data/projects';
+import '../styles/projects.css';
+
+// Spotlight is always open; the other sections start collapsed.
+const projectSections = [
+  {
+    heading: 'Spotlight',
+    projects: getProjectsByCategory('spotlight'),
+    collapsible: false,
+  },
+  {
+    heading: 'Building the Wheel',
+    projects: getProjectsByCategory('building-the-wheel'),
+    collapsible: true,
+  },
+  {
+    heading: 'Full-Stack Applications',
+    projects: getProjectsByCategory('full-stack-applications'),
+    collapsible: true,
+  },
+  {
+    heading: 'Data Science',
+    projects: getProjectsByCategory('data-science'),
+    collapsible: true,
+  },
+];
 ---
 
 <SidebarLayout
@@ -20,7 +47,85 @@ import SidebarLayout from '../layouts/SidebarLayout.astro';
       career, startup ideas, projects, or <strong>FOOD!!</strong>
     </p>
   </section>
+
+  <div class="home-projects" slot="full-width">
+    {
+      projectSections.map(({ heading, projects, collapsible }, i) => (
+        <section class="project-section" style={`--i: ${i}`}>
+          {collapsible ? (
+            <button class="accordion-toggle" aria-expanded="false">
+              <span class="accordion-arrow" />
+              <h2>{heading}</h2>
+            </button>
+          ) : (
+            <>
+              <h2>{heading}</h2>
+              <hr />
+            </>
+          )}
+          <div class={collapsible ? 'accordion-content' : undefined}>
+            <div class="projects-grid">
+              {projects.map((project) => (
+                <ProjectCard project={project} />
+              ))}
+            </div>
+          </div>
+        </section>
+      ))
+    }
+  </div>
 </SidebarLayout>
+
+<script>
+  // The card is one big link target, but the GitHub / Website anchors inside
+  // it must keep their own destinations, so anchor clicks are left alone.
+  const root = document.querySelector<HTMLElement>('.home-projects');
+  const openCard = (card: HTMLElement) => {
+    const url = card.dataset.url;
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+  };
+  root?.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (target.closest('a')) return;
+    const card = target.closest<HTMLElement>('.project-item');
+    if (card) openCard(card);
+  });
+  root?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = (e.target as Element).closest<HTMLElement>('.project-item');
+    if (!card || card !== e.target) return;
+    e.preventDefault();
+    openCard(card);
+  });
+
+  // ── Accordion sections ──
+  document
+    .querySelectorAll<HTMLElement>('.accordion-toggle')
+    .forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const content = toggle.nextElementSibling as HTMLElement;
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+        if (isOpen) {
+          // height:auto can't be transitioned, so pin the current height for one frame first
+          content.style.height = content.scrollHeight + 'px';
+          requestAnimationFrame(() => {
+            content.style.height = '0';
+          });
+          toggle.setAttribute('aria-expanded', 'false');
+        } else {
+          content.style.height = content.scrollHeight + 'px';
+          toggle.setAttribute('aria-expanded', 'true');
+          // After transition completes, remove fixed height so content reflows naturally
+          const onEnd = () => {
+            content.style.height = 'auto';
+            content.removeEventListener('transitionend', onEnd);
+          };
+          content.addEventListener('transitionend', onEnd);
+        }
+      });
+    });
+</script>
 
 <style>
   .home-hero {
