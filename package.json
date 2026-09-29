@@ -27,13 +27,13 @@
   "dependencies": {
     "astro": "^7.3.5",
     "d3": "^7.9.0",
-    "katex": "^0.18.7",
+    "katex": "^0.18.9",
     "marked": "^18.0.14"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
     "@types/d3": "^7.4.3",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.3",
     "@types/topojson-client": "^3.1.5",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
