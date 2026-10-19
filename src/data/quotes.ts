@@ -69,4 +69,10 @@ export const quotes: Quote[] = [
     source: '史记 · 陈涉世家',
     weight: 1,
   },
+  {
+    text: 'Talk is cheap. Show me the code.',
+    author: 'Linus Torvalds',
+    weight: 4,
+    source: 'linux-kernel mailing list, 25 Aug 2000',
+  },
 ];
