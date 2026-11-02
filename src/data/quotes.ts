@@ -75,4 +75,11 @@ export const quotes: Quote[] = [
     weight: 4,
     source: 'linux-kernel mailing list, 25 Aug 2000',
   },
+  {
+    text: 'The wind of freedom blows.',
+    author: 'Ulrich von Hutten · Stanford motto',
+    weight: 1,
+    source: 'Stanford University motto, "Die Luft der Freiheit weht"',
+  },
+  { text: 'A friend to all is a friend to none.', weight: 3 },
 ];
