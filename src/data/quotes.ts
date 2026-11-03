@@ -81,5 +81,9 @@ export const quotes: Quote[] = [
     weight: 1,
     source: 'Stanford University motto, "Die Luft der Freiheit weht"',
   },
-  { text: 'A friend to all is a friend to none.', weight: 3 },
+  {
+    text: 'A friend to all is a friend to none.',
+    author: 'Aristotle',
+    weight: 3,
+  },
 ];
