@@ -1,6 +1,6 @@
 ---
 import { author } from '../data/author';
-import { firstScreenSwarm, scrolledSwarm } from '../data/swarm';
+import { headerSwarm, pageSwarm } from '../data/swarm';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import StructuredData from '../components/StructuredData.astro';
@@ -42,9 +42,9 @@ const SWARM_GATE = `try {
 } catch (_) {}`;
 
 // Shell is the custom element on swarm pages and nothing at all elsewhere.
-// The footer gets a swarm of its own so the cursors come back for it.
+// The header gets a swarm of its own so it is built last of all.
 const Shell = swarm ? 'cursor-swarm' : Fragment;
-const FooterShell = swarm ? 'cursor-swarm' : Fragment;
+const HeaderShell = swarm ? 'cursor-swarm' : Fragment;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pageTitle =
@@ -92,13 +92,20 @@ const pageTitle =
     {swarm && <script is:inline set:html={SWARM_GATE} />}
   </head>
   <body data-theme={theme}>
-    <Shell {...swarm ? firstScreenSwarm : {}}>
-      <Navbar />
+    <Shell {...swarm ? pageSwarm : {}}>
+      <HeaderShell {...swarm ? headerSwarm : {}}>
+        <Navbar />
+      </HeaderShell>
       <slot />
-      <FooterShell {...swarm ? scrolledSwarm : {}}>
-        <Footer />
-      </FooterShell>
+      <Footer />
     </Shell>
+    {
+      swarm && (
+        <button class="swarm-skip" type="button">
+          Skip the intro
+        </button>
+      )
+    }
     <script>
       import '../scripts/bilingual.ts';
 

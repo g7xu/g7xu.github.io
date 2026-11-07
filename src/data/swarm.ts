@@ -1,8 +1,8 @@
 /**
- * The cursor crowd that builds the home page on a first visit. One
- * <cursor-swarm> per screen-sized region (first screen, projects, footer),
- * so the cursors finish, leave, and come back when the next region scrolls
- * into view. The gate, play-once and skip logic live in scripts/swarm.ts.
+ * The cursor crowd that builds the home page on a first visit, as a tour
+ * that pans the window down the page (scripts/swarm.ts). One <cursor-swarm>
+ * wraps the whole page and builds whatever the window shows as it moves; a
+ * second, small one wraps the header and is built last.
  */
 
 /**
@@ -31,25 +31,28 @@ export const SWARM_CREW = [
 const crowd = {
   cursors: '6',
   colors: '#c2410c,#2f5f8f,#8a7359,#475569,#3a2a1d,#9a3412',
-  // Build the whole region at once; with 'viewport' a region that is taller
-  // than the screen never finishes and the cursors hover idle instead.
-  scope: 'all',
-  linger: '1800',
+  // Build only what is on screen, so nothing is finished before the pan
+  // brings it into view; the cursors speed up if the window outruns them.
+  scope: 'viewport',
+  // Brisk, so a region is built in roughly the time it crosses the screen.
+  speed: '1.7',
+  linger: '1200',
+  trigger: 'manual',
 };
 
-/** The region that is on screen at load. scripts/swarm.ts starts it. */
-export const firstScreenSwarm = { ...crowd, trigger: 'manual' };
+/** The whole page. Its cursor layer spans the page, so nothing clips them. */
+export const pageSwarm = crowd;
 
 /**
- * A region below the fold. scripts/swarm.ts starts it on its first visible
- * pixel. Not the element's own trigger="visible": that waits for the region
- * to reach 12% into the viewport, which a short last region such as the
- * footer never does on a tall screen, so it would stay hidden for good.
- * `data-swarm-ignore` keeps the enclosing first-screen swarm from treating
- * it as content of its own.
+ * The header. It stays untouched during the pan, because a sticky bar being
+ * drawn while the page moves under it looks wrong, and is built last, once
+ * the window is back at the top. `data-swarm-ignore` keeps the page swarm
+ * off it; the class gives it its sticky box and room for its cursors
+ * (styles/swarm.css).
  */
-export const scrolledSwarm = {
+export const headerSwarm = {
   ...crowd,
-  trigger: 'manual',
   'data-swarm-ignore': true,
+  'data-swarm-at-end': true,
+  class: 'swarm-header',
 };
