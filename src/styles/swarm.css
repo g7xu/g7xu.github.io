@@ -33,15 +33,53 @@ cursor-swarm cursor-swarm > * {
   pointer-events: auto;
 }
 
+/* The tour drives the window; the visitor only watches. overflow: hidden
+   stops wheel and key scrolling but still lets scripts/swarm.ts scroll, and
+   touch-action covers phones, where overflow alone does not. */
+html.swarm-live {
+  overflow: hidden;
+}
+html.swarm-live body {
+  touch-action: none;
+}
+
+/* The one control that stays usable during the tour. It sits outside the
+   swarm element so the cursors never try to build it, and above the cursor
+   layer (which sits at z-index 2147483000). */
+.swarm-skip {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 2147483001;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--fg-muted);
+  font: 500 0.85rem/1.2 var(--font-sans);
+  cursor: pointer;
+}
+.swarm-skip:hover,
+.swarm-skip:focus-visible {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+html:not(.swarm-live) .swarm-skip {
+  display: none;
+}
+
 /* The page's own entrance animations would reveal elements on their own
-   schedule, ahead of the cursor that is supposed to build them. */
-html.swarm-live .navbar-inner,
-html.swarm-live .sidebar-avatar,
-html.swarm-live .sidebar-location,
-html.swarm-live .sidebar-link,
-html.swarm-live .home-hero__lead,
-html.swarm-live .home-hero__body,
-html.swarm-live .project-section,
-html.swarm-live .project-item {
+   schedule, ahead of the cursor that is supposed to build them. They stay
+   off after the tour too (swarm-done), because switching an animation from
+   none back to its keyframes restarts it, and the page would slide in a
+   second time the moment it was handed back. */
+html:is(.swarm-live, .swarm-done) .navbar-inner,
+html:is(.swarm-live, .swarm-done) .sidebar-avatar,
+html:is(.swarm-live, .swarm-done) .sidebar-location,
+html:is(.swarm-live, .swarm-done) .sidebar-link,
+html:is(.swarm-live, .swarm-done) .home-hero__lead,
+html:is(.swarm-live, .swarm-done) .home-hero__body,
+html:is(.swarm-live, .swarm-done) .project-section,
+html:is(.swarm-live, .swarm-done) .project-item {
   animation: none;
 }

@@ -1,8 +1,9 @@
 /**
  * The cursor crowd that builds the home page on a first visit. One
  * <cursor-swarm> per screen-sized region (first screen, projects, footer),
- * so the cursors finish, leave, and come back when the next region scrolls
- * into view. The gate, play-once and skip logic live in scripts/swarm.ts.
+ * so the cursors finish, leave, and come back as the tour scrolls the window
+ * to the next region. The gate, play-once, tour and skip logic live in
+ * scripts/swarm.ts.
  */
 
 /**
@@ -34,19 +35,22 @@ const crowd = {
   // Build the whole region at once; with 'viewport' a region that is taller
   // than the screen never finishes and the cursors hover idle instead.
   scope: 'all',
-  linger: '1800',
+  // Brisk: the tour pans the window at a fixed pace (scripts/swarm.ts), so a
+  // region has to be built in roughly the time it takes to cross the screen.
+  speed: '1.7',
+  linger: '1200',
 };
 
 /** The region that is on screen at load. scripts/swarm.ts starts it. */
 export const firstScreenSwarm = { ...crowd, trigger: 'manual' };
 
 /**
- * A region below the fold. scripts/swarm.ts starts it on its first visible
- * pixel. Not the element's own trigger="visible": that waits for the region
- * to reach 12% into the viewport, which a short last region such as the
- * footer never does on a tall screen, so it would stay hidden for good.
- * `data-swarm-ignore` keeps the enclosing first-screen swarm from treating
- * it as content of its own.
+ * A region below the fold. scripts/swarm.ts scrolls the window to it and
+ * starts it once the previous region has finished. Not the element's own
+ * trigger="visible": that waits for the region to reach 12% into the
+ * viewport, which a short last region such as the footer never does on a
+ * tall screen, so it would stay hidden for good. `data-swarm-ignore` keeps
+ * the enclosing first-screen swarm from treating it as content of its own.
  */
 export const scrolledSwarm = {
   ...crowd,

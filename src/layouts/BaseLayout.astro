@@ -99,6 +99,13 @@ const pageTitle =
         <Footer />
       </FooterShell>
     </Shell>
+    {
+      swarm && (
+        <button class="swarm-skip" type="button">
+          Skip the intro
+        </button>
+      )
+    }
     <script>
       import '../scripts/bilingual.ts';
 
