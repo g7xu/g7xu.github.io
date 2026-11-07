@@ -3,6 +3,7 @@ import SidebarLayout from '../layouts/SidebarLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { getProjectsByCategory } from '../data/projects';
 import '../styles/projects.css';
+import '../styles/swarm.css';
 
 // Spotlight is always open; the other sections start collapsed.
 const projectSections = [
@@ -32,6 +33,7 @@ const projectSections = [
 <SidebarLayout
   title="Home"
   description="Personal website of Guoxuan Xu, Data Science student at UC San Diego."
+  swarm
 >
   <section class="home-hero">
     <p class="home-hero__lead">
@@ -89,7 +91,12 @@ const projectSections = [
     </p>
   </section>
 
-  <a class="home-scroll" href="#projects" aria-label="Scroll to projects">
+  <a
+    class="home-scroll"
+    href="#projects"
+    aria-label="Scroll to projects"
+    data-swarm-ignore
+  >
     <svg
       viewBox="0 0 24 24"
       fill="none"
@@ -118,7 +125,10 @@ const projectSections = [
               <hr />
             </>
           )}
-          <div class={collapsible ? 'accordion-content' : undefined}>
+          <div
+            class={collapsible ? 'accordion-content' : undefined}
+            data-swarm-ignore={collapsible || undefined}
+          >
             <div class="projects-grid">
               {projects.map((project) => (
                 <ProjectCard project={project} />
@@ -132,6 +142,8 @@ const projectSections = [
 </SidebarLayout>
 
 <script>
+  import '../scripts/swarm.ts';
+
   // The card is one big link target, but the GitHub / Website anchors inside
   // it must keep their own destinations, so anchor clicks are left alone.
   const root = document.querySelector<HTMLElement>('.home-projects');

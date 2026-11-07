@@ -1,0 +1,26 @@
+/* ============================================
+   First-visit swarm (see src/scripts/swarm.ts).
+   Every rule is scoped to html.swarm-live, which exists only for the one
+   page view where the cursors actually build the page.
+   ============================================ */
+
+/* No flash of finished content between first paint and the moment the
+   element takes over hiding (swarmstart). Both classes come from the gate;
+   swarm.ts drops swarm-arming at swarmstart. Without JS neither class is
+   ever set, so content stays visible. */
+html.swarm-arming cursor-swarm > * {
+  visibility: hidden;
+}
+
+/* The page's own entrance animations would reveal elements on their own
+   schedule, ahead of the cursor that is supposed to build them. */
+html.swarm-live .navbar-inner,
+html.swarm-live .sidebar-avatar,
+html.swarm-live .sidebar-location,
+html.swarm-live .sidebar-link,
+html.swarm-live .home-hero__lead,
+html.swarm-live .home-hero__body,
+html.swarm-live .project-section,
+html.swarm-live .project-item {
+  animation: none;
+}

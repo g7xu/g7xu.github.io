@@ -6,12 +6,14 @@ import '../styles/sidebar.css';
 interface Props {
   title?: string;
   description?: string;
+  /** Passed through to BaseLayout. */
+  swarm?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, swarm = false } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} swarm={swarm}>
   <div class="layout-with-sidebar">
     <aside class="author-sidebar">
       <Sidebar />

@@ -12,6 +12,13 @@ interface Props {
   image?: string;
   /** Per-page color theme (sets `data-theme` on <body>). See global.css. */
   theme?: string;
+  /**
+   * Wrap the whole page in <cursor-swarm> so a crowd of cursors builds it on
+   * the visitor's first view. The page must also import `scripts/swarm.ts`
+   * and `styles/swarm.css`; this layout only renders the element and decides,
+   * before paint, whether it will run.
+   */
+  swarm?: boolean;
 }
 
 const {
@@ -19,7 +26,36 @@ const {
   description = author.siteDescription,
   image = '/images/bio-photo.png',
   theme = 'workshop',
+  swarm = false,
 } = Astro.props;
+
+// Runs inline in <head>, before first paint: html.swarm-live gates every
+// swarm style and the module script, so the first-visit / reduced-motion
+// decision cannot wait for a module that loads after the page has rendered.
+// `?swarm` in the URL forces a run. Blocked storage means no swarm at all.
+const SWARM_GATE = `try {
+  var forced = location.search.indexOf('swarm') !== -1;
+  var seen = localStorage.getItem('swarm-seen');
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if ((forced || !seen) && !still) document.documentElement.classList.add('swarm-live', 'swarm-arming');
+} catch (_) {}`;
+
+// Shell is the custom element on swarm pages and nothing at all elsewhere.
+const Shell = swarm ? 'cursor-swarm' : Fragment;
+// Six agents in the workshop palette: rust, ink, coffee, slate, espresso, dark rust.
+const swarmAttrs = swarm
+  ? {
+      trigger: 'manual',
+      cursors: '6',
+      // 'all', not 'viewport': the whole page wraps one element, so with
+      // 'viewport' the below-the-fold tasks keep the run open and the cursors
+      // hover idle instead of finishing, flocking to the pointer and leaving.
+      scope: 'all',
+      linger: '1800',
+      names: 'ada,bo,cy,di,eli,fay',
+      colors: '#c2410c,#2f5f8f,#8a7359,#475569,#3a2a1d,#9a3412',
+    }
+  : {};
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pageTitle =
@@ -64,11 +100,14 @@ const pageTitle =
 
     <StructuredData />
     <slot name="head" />
+    {swarm && <script is:inline set:html={SWARM_GATE} />}
   </head>
   <body data-theme={theme}>
-    <Navbar />
-    <slot />
-    <Footer />
+    <Shell {...swarmAttrs}>
+      <Navbar />
+      <slot />
+      <Footer />
+    </Shell>
     <script>
       import '../scripts/bilingual.ts';
 
