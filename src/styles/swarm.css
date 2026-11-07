@@ -1,7 +1,8 @@
 /* ============================================
-   First-visit swarm (see src/scripts/swarm.ts).
+   First-visit swarm tour (see src/scripts/swarm.ts).
    Every rule is scoped to html.swarm-live, which exists only for the one
-   page view where the cursors actually build the page.
+   page view where the cursors actually build the page, or to the class the
+   tour leaves behind (swarm-done).
    ============================================ */
 
 /* No flash of finished content between first paint and the moment the
@@ -12,27 +13,6 @@ html.swarm-arming cursor-swarm > * {
   visibility: hidden;
 }
 
-/* cursor-swarm clips its cursors to the element's box and flies them in from
-   30px outside it, so a region that is narrower than the viewport, or that
-   has a gap to its neighbour, makes cursors pop in at its edge. The nested
-   regions sit in normal flow at full width; this stretches each one upward
-   over the gap above it (negative margin, equal padding: the content does
-   not move) and keeps child margins inside the box. Only the margin box
-   grows, so scripts/swarm.ts watches the content, not the element, to decide
-   when a region has scrolled into view. */
-cursor-swarm cursor-swarm {
-  display: flow-root;
-  margin-top: -40vh;
-  padding-top: 40vh;
-  /* The stretched box lies over the region above it. Clicks must fall
-     through its empty padding to the toggles and cards underneath, while
-     its own content stays clickable. */
-  pointer-events: none;
-}
-cursor-swarm cursor-swarm > * {
-  pointer-events: auto;
-}
-
 /* The tour drives the window; the visitor only watches. overflow: hidden
    stops wheel and key scrolling but still lets scripts/swarm.ts scroll, and
    touch-action covers phones, where overflow alone does not. */
@@ -41,6 +21,26 @@ html.swarm-live {
 }
 html.swarm-live body {
   touch-action: none;
+}
+
+/* The header's own swarm. Two things about its box:
+   - A sticky element only sticks within its parent, and this wrapper is the
+     navbar's parent, so the wrapper takes over the sticking (same offset and
+     layer as .navbar in navbar.css).
+   - cursor-swarm clips its cursors to the element's box, and a 60px bar
+     leaves them no room to fly in or gather. Padding extends the box down
+     over the first screen without moving anything (the negative margin
+     gives the space back), and clicks fall through that empty padding. */
+.swarm-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding-bottom: 45vh;
+  margin-bottom: -45vh;
+  pointer-events: none;
+}
+.swarm-header > * {
+  pointer-events: auto;
 }
 
 /* The one control that stays usable during the tour. It sits outside the

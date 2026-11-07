@@ -3,11 +3,11 @@
  * visitor, once, as a guided tour. Whether it runs at all is decided before
  * first paint by the inline gate in BaseLayout, which sets `html.swarm-live`
  * only when the visitor has not seen it and allows motion. This module does
- * the rest: define the element, lock the page, start the first screen, pan
- * the window slowly down to the end of the page while each later region
- * starts as it comes into view, wait for the last cursors to leave, glide
- * back to the top, and hand the page back. The visitor watches; Escape or
- * the Skip button ends the tour on the finished page.
+ * the rest: define the element, lock the page, start the page swarm, pan the
+ * window slowly down to the end of the page while the swarm builds whatever
+ * the window shows, wait for its cursors to leave, glide back to the top,
+ * build the header last, and hand the page back. The visitor watches;
+ * Escape or the Skip button ends the tour on the finished page.
  *
  * The element is defined only on a live visit. Once defined, <cursor-swarm>
  * hides its content as soon as it connects, even with trigger="manual", so on
@@ -26,8 +26,9 @@ export const SWARM_SEEN_KEY = 'swarm-seen';
 const PAN_PX_PER_S = 70;
 const PAN_MIN_S = 12;
 const PAN_MAX_S = 30;
-/** A region starts once its content is this far up from the bottom edge. */
-const REGION_LEAD_PX = 80;
+/** How long to wait at the bottom for the page swarm to finish on its own
+ * before finishing it for it, in case some task never became buildable. */
+const SETTLE_MS = 8000;
 
 const root = document.documentElement;
 const easeInOut = (t: number) =>
@@ -69,11 +70,8 @@ function glideTo(top: number, tour: Tour): Promise<void> {
   });
 }
 
-/**
- * Pan from the top to the end of the page at a steady pace, starting each
- * region in `pending` the moment its content rises into view.
- */
-function panDown(pending: Set<CursorSwarm>, tour: Tour): Promise<void> {
+/** Pan from the top to the end of the page at a steady pace. */
+function panDown(tour: Tour): Promise<void> {
   return new Promise((resolve) => {
     const end = root.scrollHeight - innerHeight;
     const seconds = Math.min(
@@ -85,14 +83,6 @@ function panDown(pending: Set<CursorSwarm>, tour: Tour): Promise<void> {
       if (tour.cancelled) return resolve();
       const t = Math.min(1, (now - t0) / (seconds * 1000));
       scrollTo(0, end * easeEnds(t));
-      const reach = innerHeight - REGION_LEAD_PX;
-      for (const el of pending) {
-        const content = el.firstElementChild ?? el;
-        if (content.getBoundingClientRect().top <= reach) {
-          pending.delete(el);
-          el.play();
-        }
-      }
       if (t < 1) requestAnimationFrame(step);
       else resolve();
     };
@@ -104,6 +94,17 @@ function ended(el: CursorSwarm): Promise<void> {
   return new Promise((resolve) => {
     if (el.state === 'done') resolve();
     else el.addEventListener('swarmend', () => resolve(), { once: true });
+  });
+}
+
+/** Resolve when `el` ends, or finish it after `ms` if it has not. */
+function endedWithin(el: CursorSwarm, ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => el.finish(), ms);
+    ended(el).then(() => {
+      clearTimeout(timer);
+      resolve();
+    });
   });
 }
 
@@ -120,24 +121,24 @@ async function run() {
     // Private mode or blocked storage: the swarm simply plays again next time.
   }
 
-  // The same crew works every region of this page view.
+  // The same crew works the whole page view.
   const crew = pickCrew(swarms[0].cursors);
   for (const el of swarms) el.names = crew;
 
-  // The outermost swarm is the first screen; the nested ones are the regions
-  // below the fold, visited in page order.
-  const first = swarms.find((el) => !el.parentElement?.closest('cursor-swarm'));
-  if (!first) return;
-  const later = swarms.filter((el) => el !== first);
+  // The outermost swarm is the page; the nested ones are built last, after
+  // the window is back at the top (data/swarm.ts).
+  const page = swarms.find((el) => !el.parentElement?.closest('cursor-swarm'));
+  if (!page) return;
+  const atEnd = swarms.filter((el) => el !== page);
   const skipButton = document.querySelector<HTMLElement>('.swarm-skip');
   const tour: Tour = { cancelled: false };
 
   // While the tour runs the page is inert: no focus, no clicks, no key
   // scrolling. Pointer position still reaches the cursors through window
   // events, so the finale can gather around it.
-  first.inert = true;
+  page.inert = true;
   const unlock = () => {
-    first.inert = false;
+    page.inert = false;
     root.classList.replace('swarm-live', 'swarm-done');
     skipButton?.remove();
   };
@@ -155,7 +156,7 @@ async function run() {
 
   // Each element hides its own content on the frame after it connects; the
   // arming class (swarm.css) covers the gap until then, and comes off one
-  // frame after the first region starts so the later regions are hidden too.
+  // frame after the page swarm starts so the header is hidden too.
   document.addEventListener(
     'swarmstart',
     () => {
@@ -164,15 +165,15 @@ async function run() {
     { once: true },
   );
 
-  first.play();
-  const pending = new Set(later);
-  await panDown(pending, tour);
+  page.play();
+  await panDown(tour);
   if (tour.cancelled) return;
-  // A region the pan never reached (a page shorter than the window) starts now.
-  for (const el of pending) el.play();
-  await Promise.all(swarms.map(ended));
+  await endedWithin(page, SETTLE_MS);
   if (tour.cancelled) return;
   await glideTo(0, tour);
+  if (tour.cancelled) return;
+  for (const el of atEnd) el.play();
+  await Promise.all(atEnd.map(ended));
   if (!tour.cancelled) unlock();
 }
 
