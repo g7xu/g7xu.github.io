@@ -1,16 +1,24 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Sidebar from '../components/Sidebar.astro';
+import { scrolledSwarm } from '../data/swarm';
 import '../styles/sidebar.css';
 
 interface Props {
   title?: string;
   description?: string;
-  /** Passed through to BaseLayout. */
+  /**
+   * Passed through to BaseLayout; also gives the full-width slot a swarm of
+   * its own, so the cursors come back for it when it scrolls into view.
+   */
   swarm?: boolean;
 }
 
 const { title, description, swarm = false } = Astro.props;
+
+// The swarm element must be as wide as the viewport (styles/swarm.css says
+// why), so it wraps the full-width container rather than sitting inside it.
+const FullWidthShell = swarm ? 'cursor-swarm' : Fragment;
 ---
 
 <BaseLayout title={title} description={description} swarm={swarm}>
@@ -22,9 +30,11 @@ const { title, description, swarm = false } = Astro.props;
       <slot />
     </main>
   </div>
-  <div class="layout-full-width">
-    <slot name="full-width" />
-  </div>
+  <FullWidthShell {...swarm ? scrolledSwarm : {}}>
+    <div class="layout-full-width">
+      <slot name="full-width" />
+    </div>
+  </FullWidthShell>
 </BaseLayout>
 
 <style>

@@ -115,7 +115,14 @@ const projectSections = [
       projectSections.map(({ heading, projects, collapsible }, i) => (
         <section class="project-section" style={`--i: ${i}`}>
           {collapsible ? (
-            <button class="accordion-toggle" aria-expanded="false">
+            // "skip": the toggle paints nothing of its own, so a cursor
+            // dragging a box around it would be drawing an invisible frame.
+            // Its heading gets typed instead.
+            <button
+              class="accordion-toggle"
+              aria-expanded="false"
+              data-swarm="skip"
+            >
               <span class="accordion-arrow" />
               <h2>{heading}</h2>
             </button>

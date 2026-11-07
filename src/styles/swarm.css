@@ -12,6 +12,20 @@ html.swarm-arming cursor-swarm > * {
   visibility: hidden;
 }
 
+/* cursor-swarm clips its cursors to the element's box and flies them in from
+   30px outside it, so a region that is narrower than the viewport, or that
+   has a gap to its neighbour, makes cursors pop in at its edge. The nested
+   regions sit in normal flow at full width; this stretches each one upward
+   over the gap above it (negative margin, equal padding: the content does
+   not move) and keeps child margins inside the box. Only the margin box
+   grows, so scripts/swarm.ts watches the content, not the element, to decide
+   when a region has scrolled into view. */
+cursor-swarm cursor-swarm {
+  display: flow-root;
+  margin-top: -40vh;
+  padding-top: 40vh;
+}
+
 /* The page's own entrance animations would reveal elements on their own
    schedule, ahead of the cursor that is supposed to build them. */
 html.swarm-live .navbar-inner,
