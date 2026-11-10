@@ -1,40 +1,22 @@
 import * as d3 from 'd3';
 import { marked } from 'marked';
-import katex from 'katex';
 import { calloutExtension } from './wiki-callouts';
 import {
   multiColumnExtension,
   padMultiColumnMarkers,
 } from './wiki-multi-column';
 import { upgradeBilingualSpans } from './bilingual';
+import {
+  addHeadingIds,
+  convertWikiSyntax,
+  extractGraph,
+  extractMath,
+  restoreMath,
+  type WikiNote,
+} from './wiki-parse';
 
 marked.setOptions({ breaks: true });
 marked.use({ extensions: [calloutExtension, multiColumnExtension] });
-
-function slugifyHeading(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-');
-}
-
-// Add slug ids to rendered <h1>-<h6> headings so [[#Heading]] anchors can scroll to them.
-function addHeadingIds(html: string): string {
-  return html.replace(
-    /<(h[1-6])>([\s\S]*?)<\/\1>/g,
-    (_, tag: string, inner: string) => {
-      const text = inner.replace(/<[^>]+>/g, '');
-      return `<${tag} id="${slugifyHeading(text)}">${inner}</${tag}>`;
-    },
-  );
-}
-
-interface WikiNote {
-  id: string;
-  folder: string;
-  content: string;
-}
 
 declare global {
   interface Window {
@@ -69,35 +51,6 @@ const noteBody = document.getElementById('note-body')!;
 const rightPanel = document.getElementById('right-panel')!;
 const fileTree = document.getElementById('file-tree')!;
 
-// ── Wiki-link edges extracted from note content. Targets that don't match
-//    any note become pale "unresolved" phantom nodes, like Obsidian. ──
-function extractGraph(notes: WikiNote[]): {
-  edges: SimLink[];
-  unresolvedIds: string[];
-} {
-  const edges: SimLink[] = [];
-  const seen = new Set<string>();
-  const unresolved = new Set<string>();
-  notes.forEach((note) => {
-    const matches = note.content.matchAll(/(?<!!)\[\[([^\]]+)\]\]/g);
-    for (const m of matches) {
-      // Strip alias: [[Note|Display]] -> "Note"
-      let target = m[1].split('|')[0].trim();
-      // Skip same-note heading refs: [[#Heading]]
-      if (target.startsWith('#')) continue;
-      // Strip heading anchor: [[Note#Heading]] -> "Note"
-      target = target.split('#')[0].trim();
-      if (!target || target === note.id) continue;
-      const key = [note.id, target].sort().join('||');
-      if (seen.has(key)) continue;
-      seen.add(key);
-      if (!NOTE_BY_ID.has(target)) unresolved.add(target);
-      edges.push({ source: note.id, target });
-    }
-  });
-  return { edges, unresolvedIds: [...unresolved] };
-}
-
 // ─────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────
@@ -112,7 +65,7 @@ let suppressHashUpdate = false;
 const encodeHash = (id: string) => '#' + encodeURIComponent(id);
 const decodeHash = () => decodeURIComponent(location.hash.slice(1));
 
-const { edges, unresolvedIds } = extractGraph(NOTES);
+const { edges, unresolvedIds } = extractGraph(NOTES, NOTE_BY_ID);
 
 // ── Adjacency map + degree, used for node sizing and hover highlighting ──
 const neighbors = new Map<string, Set<string>>();
@@ -253,129 +206,13 @@ function buildTree() {
 }
 
 // ─────────────────────────────────────────
-// MATH RENDERING
-// ─────────────────────────────────────────
-// Math must be extracted BEFORE marked runs. Otherwise marked HTML-escapes `&`
-// to `&amp;` (breaking matrix column separators) and processes CommonMark
-// backslash escapes (`\\` → `\`, which kills matrix row breaks). Private-use
-// Unicode chars mark the slots since they never appear in source text and
-// marked passes them through unchanged.
-interface ExtractedMath {
-  display: boolean;
-  tex: string;
-}
-
-const MATH_OPEN = '';
-const MATH_CLOSE = '';
-const MATH_SLOT_RE = /M(\d+)/g;
-
-function extractMath(src: string): { text: string; blocks: ExtractedMath[] } {
-  const blocks: ExtractedMath[] = [];
-  const codeBlocks: string[] = [];
-
-  // Protect fenced and inline code so math-like `$..$` inside code stays literal.
-  let text = src.replace(/```[\s\S]*?```|`[^`\n]+`/g, (m) => {
-    codeBlocks.push(m);
-    return `${MATH_OPEN}C${codeBlocks.length - 1}${MATH_CLOSE}`;
-  });
-
-  text = text.replace(/\$\$([\s\S]+?)\$\$/g, (_, tex: string) => {
-    blocks.push({ display: true, tex: tex.trim() });
-    return `${MATH_OPEN}M${blocks.length - 1}${MATH_CLOSE}`;
-  });
-
-  // Inline math: $...$  (not adjacent to another $; no newlines inside)
-  text = text.replace(
-    /(?<!\$)\$(?!\$)([^\n$]+?)(?<!\$)\$(?!\$)/g,
-    (_, tex: string) => {
-      blocks.push({ display: false, tex: tex.trim() });
-      return `${MATH_OPEN}M${blocks.length - 1}${MATH_CLOSE}`;
-    },
-  );
-
-  text = text.replace(/C(\d+)/g, (_, i: string) => codeBlocks[Number(i)]);
-
-  return { text, blocks };
-}
-
-function restoreMath(html: string, blocks: ExtractedMath[]): string {
-  return html.replace(MATH_SLOT_RE, (_, i: string) => {
-    const { display, tex } = blocks[Number(i)];
-    try {
-      return katex.renderToString(tex, {
-        displayMode: display,
-        throwOnError: false,
-      });
-    } catch {
-      return `<span class="math-error">${tex}</span>`;
-    }
-  });
-}
-
-// ─────────────────────────────────────────
 // RIGHT PANEL — Note content
 // ─────────────────────────────────────────
-const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp']);
-
 function openNote(id: string) {
   const note = NOTE_BY_ID.get(id);
   if (!note) return;
 
-  // 1. Convert image embeds (![[...]]) to <img> tags, strip non-image embeds
-  let processed = note.content.replace(
-    /!\[\[([^\]]+)\]\]/g,
-    (_, inner: string) => {
-      const parts = inner.split('|');
-      const filename = parts[0].trim();
-      const width = parts[1]?.trim();
-      const ext = filename.split('.').pop()?.toLowerCase() ?? '';
-      if (IMAGE_EXTENSIONS.has(ext)) {
-        const style = width ? ` style="max-width:${width}px"` : '';
-        return `\n\n<img src="/wiki-images/${filename}" alt="${filename}"${style}>\n\n`;
-      }
-      return '';
-    },
-  );
-
-  // 2. Convert [[Note|Alias]], [[Note]], [[#Heading]], [[Note#Heading]] into clickable spans
-  processed = processed.replace(
-    /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
-    (_, target, alias) => {
-      const rawTarget = target.trim();
-      const hashIdx = rawTarget.indexOf('#');
-      const notePart =
-        hashIdx === -1 ? rawTarget : rawTarget.slice(0, hashIdx).trim();
-      const headingPart =
-        hashIdx === -1
-          ? ''
-          : rawTarget
-              .slice(hashIdx + 1)
-              .split('^')[0]
-              .trim();
-      const cleanTarget = notePart.split('^')[0].trim();
-      const display = alias
-        ? alias.trim()
-        : headingPart && !cleanTarget
-          ? headingPart
-          : rawTarget;
-
-      // Same-note heading reference: [[#Heading]]
-      if (!cleanTarget && headingPart) {
-        const slug = slugifyHeading(headingPart);
-        return `<a class="wiki-link heading-link" data-heading="${slug}" title="Jump to: ${headingPart}">${display}</a>`;
-      }
-
-      const exists = NOTE_BY_ID.has(cleanTarget);
-      const cls = exists ? 'wiki-link' : 'wiki-link unresolved';
-      const dataAttrs = exists
-        ? `data-note-id="${cleanTarget}"${headingPart ? ` data-heading="${slugifyHeading(headingPart)}"` : ''}`
-        : '';
-      const title = exists
-        ? `Go to: ${cleanTarget}${headingPart ? ' § ' + headingPart : ''}`
-        : `Note not found: ${cleanTarget}`;
-      return `<a class="${cls}" ${dataAttrs} title="${title}">${display}</a>`;
-    },
-  );
+  let processed = convertWikiSyntax(note.content, NOTE_BY_ID);
 
   noteTitle.textContent = note.id;
 
