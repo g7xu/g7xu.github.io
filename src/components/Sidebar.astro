@@ -21,37 +21,34 @@ import { socialIcon } from '../data/socialIcons';
       height="14"
       fill="currentColor"
       aria-hidden="true"
-      ><path
-        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-      ></path></svg
     >
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>
+    </svg>
     {author.location}
   </p>
   <nav class="sidebar-links" aria-label="Social links">
-    {
-      author.links.map((link) =>
-        link.url.startsWith('mailto:') ? (
-          <a
-            href="#"
-            class="sidebar-link copy-email"
-            data-email={link.url.replace('mailto:', '')}
-            role="button"
-          >
-            <span class="sidebar-link__icon" set:html={socialIcon(link.icon)} />
-            <span>{link.label}</span>
-          </a>
-        ) : (
-          <a
-            href={link.url}
-            class="sidebar-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span class="sidebar-link__icon" set:html={socialIcon(link.icon)} />
-            <span>{link.label}</span>
-          </a>
-        ),
-      )
-    }
+    {author.links.map((link) =>
+      link.url.startsWith('mailto:') ? (
+        <a
+          href="#"
+          class="sidebar-link copy-email"
+          data-email={link.url.replace('mailto:', '')}
+          role="button"
+        >
+          <span class="sidebar-link__icon" set:html={socialIcon(link.icon)} />
+          <span>{link.label}</span>
+        </a>
+      ) : (
+        <a
+          href={link.url}
+          class="sidebar-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="sidebar-link__icon" set:html={socialIcon(link.icon)} />
+          <span>{link.label}</span>
+        </a>
+      ),
+    )}
   </nav>
 </div>

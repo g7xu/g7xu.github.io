@@ -10,23 +10,19 @@ const primaryUrl = project.websiteUrl || project.githubUrl;
 ---
 
 <div class="project-item" data-url={primaryUrl} role="button" tabindex="0">
-  {
-    project.imageUrl && (
-      <img src={project.imageUrl} alt={project.title} loading="lazy" />
-    )
-  }
+  {project.imageUrl && (
+    <img src={project.imageUrl} alt={project.title} loading="lazy" />
+  )}
   <h3>{project.title}</h3>
   <p class="description">{project.description}</p>
   <div class="project-links">
     <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
       GitHub
     </a>
-    {
-      project.websiteUrl && (
-        <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
-          Website
-        </a>
-      )
-    }
+    {project.websiteUrl && (
+      <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
+        Website
+      </a>
+    )}
   </div>
 </div>

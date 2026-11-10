@@ -31,27 +31,23 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
 
 <BaseLayout title={title} description={excerpt} image={coverImage}>
   <article class="blog-post-container">
-    {
-      coverImage && (
-        <div class="blog-post-cover">
-          <img src={coverImage} alt={title} />
-        </div>
-      )
-    }
+    {coverImage && (
+      <div class="blog-post-cover">
+        <img src={coverImage} alt={title} />
+      </div>
+    )}
     <header class="blog-post-header">
       <span class="blog-post-category">{category}</span>
       <h1 class="blog-post-title">
-        {
-          titleAlt ? (
-            <Bi
-              en={titleIsChinese ? titleAlt : title}
-              zh={titleIsChinese ? title : titleAlt}
-              initial={titleIsChinese ? 'zh' : 'en'}
-            />
-          ) : (
-            title
-          )
-        }
+        {titleAlt ? (
+          <Bi
+            en={titleIsChinese ? titleAlt : title}
+            zh={titleIsChinese ? title : titleAlt}
+            initial={titleIsChinese ? 'zh' : 'en'}
+          />
+        ) : (
+          title
+        )}
       </h1>
       {excerpt && <p class="blog-post-excerpt">{excerpt}</p>}
       <div class="blog-post-meta">

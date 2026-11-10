@@ -219,13 +219,14 @@ const shopCount = pins.length;
 
   <main class="travel">
     <p class="travel-line">
-      I've worked from <em>{shopCount}</em> coffee shop{
-        shopCount === 1 ? '' : 's'
-      } across the U.S.
+      I've worked from <em>{shopCount}</em> coffee shop
+      {shopCount === 1 ? '' : 's'} across the U.S.
     </p>
 
     <div class="map-wrap">
-      <button class="map-back" id="map-back" hidden>← Zoom out</button>
+      <button class="map-back" id="map-back" hidden>
+        ← Zoom out
+      </button>
 
       <svg
         class="us-map lod-world"
@@ -236,108 +237,94 @@ const shopCount = pins.length;
       >
         <g class="zoom-layer" id="zoom-layer">
           <g class="countries">
-            {
-              countries.map((c) => (
-                <path
-                  d={c.d}
-                  class={`country${c.hasPin ? ' has-pin' : ''}`}
-                  data-name={c.name}
-                  data-bounds={c.bounds}
-                  tabindex={c.hasPin ? '0' : '-1'}
-                  role="button"
-                  aria-label={c.hasPin ? `Zoom into ${c.name}` : c.name}
-                />
-              ))
-            }
+            {countries.map((c) => (
+              <path
+                d={c.d}
+                class={`country${c.hasPin ? ' has-pin' : ''}`}
+                data-name={c.name}
+                data-bounds={c.bounds}
+                tabindex={c.hasPin ? '0' : '-1'}
+                role="button"
+                aria-label={c.hasPin ? `Zoom into ${c.name}` : c.name}
+              />
+            ))}
           </g>
 
           <g class="states">
-            {
-              states.map((s) => (
-                <path
-                  d={s.d}
-                  class={`state${s.hasPin ? ' has-pin' : ''}`}
-                  data-name={s.name}
-                  data-bounds={s.bounds}
-                  tabindex={s.hasPin ? '0' : '-1'}
-                  role="button"
-                  aria-label={s.hasPin ? `Zoom into ${s.name}` : s.name}
-                />
-              ))
-            }
+            {states.map((s) => (
+              <path
+                d={s.d}
+                class={`state${s.hasPin ? ' has-pin' : ''}`}
+                data-name={s.name}
+                data-bounds={s.bounds}
+                tabindex={s.hasPin ? '0' : '-1'}
+                role="button"
+                aria-label={s.hasPin ? `Zoom into ${s.name}` : s.name}
+              />
+            ))}
           </g>
 
           <g class="counties">
-            {
-              counties.map((c) => (
-                <path
-                  d={c.d}
-                  class={`county${c.hasPin ? ' has-pin' : ''}`}
-                  data-name={c.name}
-                  data-bounds={c.bounds}
-                  tabindex={c.hasPin ? '0' : '-1'}
-                />
-              ))
-            }
+            {counties.map((c) => (
+              <path
+                d={c.d}
+                class={`county${c.hasPin ? ' has-pin' : ''}`}
+                data-name={c.name}
+                data-bounds={c.bounds}
+                tabindex={c.hasPin ? '0' : '-1'}
+              />
+            ))}
           </g>
 
           <g class="sparkles" aria-hidden="true">
-            {
-              sparkles.map((p) => (
-                <path
-                  class="sparkle"
-                  transform={`translate(${p.x} ${p.y})`}
-                  d="M0,-7 C0.6,-2 2,-0.6 7,0 C2,0.6 0.6,2 0,7 C-0.6,2 -2,0.6 -7,0 C-2,-0.6 -0.6,-2 0,-7 Z"
-                />
-              ))
-            }
+            {sparkles.map((p) => (
+              <path
+                class="sparkle"
+                transform={`translate(${p.x} ${p.y})`}
+                d="M0,-7 C0.6,-2 2,-0.6 7,0 C2,0.6 0.6,2 0,7 C-0.6,2 -2,0.6 -7,0 C-2,-0.6 -0.6,-2 0,-7 Z"
+              />
+            ))}
           </g>
 
           <g class="pins">
-            {
-              pins.map((p, i) => (
-                <g
-                  class="pin"
-                  transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`}
-                  data-id={p.id}
-                  data-x={p.x.toFixed(2)}
-                  data-y={p.y.toFixed(2)}
-                  role="button"
-                  tabindex="0"
-                  aria-label={`${p.name}, ${p.city}`}
-                  style={`--hue:${p.hue}; --i:${i}`}
-                >
-                  <g class="pin-pop">
-                    <g class="pin-scale">
-                      <g class="pin-fan">
-                        <circle class="pin-pulse" cx="0" cy="-15" r="9" />
-                        <circle class="pin-hit" cx="0" cy="-15" r="17" />
-                        <path
-                          class="pin-teardrop"
-                          d="M0 0 C -4 -7 -9 -10 -9 -15 A 9 9 0 1 1 9 -15 C 9 -10 4 -7 0 0 Z"
-                        />
-                        <circle class="pin-center" cx="0" cy="-15" r="3.4" />
-                        <text
-                          class="pin-flag-text"
-                          y="-32"
-                          text-anchor="middle"
-                        >
-                          {p.name}
-                        </text>
-                        {/* Count badge, shown when this pin represents a
+            {pins.map((p, i) => (
+              <g
+                class="pin"
+                transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`}
+                data-id={p.id}
+                data-x={p.x.toFixed(2)}
+                data-y={p.y.toFixed(2)}
+                role="button"
+                tabindex="0"
+                aria-label={`${p.name}, ${p.city}`}
+                style={`--hue:${p.hue}; --i:${i}`}
+              >
+                <g class="pin-pop">
+                  <g class="pin-scale">
+                    <g class="pin-fan">
+                      <circle class="pin-pulse" cx="0" cy="-15" r="9" />
+                      <circle class="pin-hit" cx="0" cy="-15" r="17" />
+                      <path
+                        class="pin-teardrop"
+                        d="M0 0 C -4 -7 -9 -10 -9 -15 A 9 9 0 1 1 9 -15 C 9 -10 4 -7 0 0 Z"
+                      />
+                      <circle class="pin-center" cx="0" cy="-15" r="3.4" />
+                      <text class="pin-flag-text" y="-32" text-anchor="middle">
+                        {p.name}
+                      </text>
+                      {/* Count badge, shown when this pin represents a
                             cluster of nearby shops (set by updateDeclutter). */}
-                        <g class="pin-count" aria-hidden="true">
-                          <circle cx="8.5" cy="-25" r="6.5" />
-                          <text x="8.5" y="-21.6">
-                            2
-                          </text>
-                        </g>
+                      <g class="pin-count" aria-hidden="true">
+                        <circle cx="8.5" cy="-25" r="6.5" />
+                        <text x="8.5" y="-21.6">
+                          2
+                        </text>
                       </g>
                     </g>
                   </g>
                 </g>
-              ))
-            }
+              </g>
+            ))}
           </g>
         </g>
       </svg>
@@ -347,45 +334,43 @@ const shopCount = pins.length;
   <!-- Collage overlay (one panel per shop, toggled by JS) -->
   <div class="collage-overlay" id="collage-overlay" hidden>
     <div class="collage-backdrop" data-close></div>
-    {
-      pins.map((p) => (
-        <article class="collage" data-id={p.id} hidden style={`--hue:${p.hue}`}>
-          <button class="collage-close" data-close aria-label="Close">
-            ×
-          </button>
-          <div class="collage-head">
-            <h2 class="collage-name">{p.name}</h2>
-            <p class="collage-city">
-              📍 {p.address ?? p.city}
-              {p.date && <span> · {p.date}</span>}
-            </p>
-          </div>
-          <div class="polaroids">
-            {p.photos.map((ph, i) => (
-              <figure
-                class="polaroid"
-                style={`--tilt:${tilt(i + p.name.length)}deg`}
-              >
-                <div class="polaroid-img" style={`--hue:${p.hue}`}>
-                  {ph.url && (
-                    <img
-                      src={ph.url}
-                      alt={ph.caption ?? p.name}
-                      width="300"
-                      height="300"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  )}
-                </div>
-                {ph.caption && <figcaption>{ph.caption}</figcaption>}
-              </figure>
-            ))}
-          </div>
-          {p.note && <p class="collage-note">{p.note}</p>}
-        </article>
-      ))
-    }
+    {pins.map((p) => (
+      <article class="collage" data-id={p.id} hidden style={`--hue:${p.hue}`}>
+        <button class="collage-close" data-close aria-label="Close">
+          ×
+        </button>
+        <div class="collage-head">
+          <h2 class="collage-name">{p.name}</h2>
+          <p class="collage-city">
+            📍 {p.address ?? p.city}
+            {p.date && <span> · {p.date}</span>}
+          </p>
+        </div>
+        <div class="polaroids">
+          {p.photos.map((ph, i) => (
+            <figure
+              class="polaroid"
+              style={`--tilt:${tilt(i + p.name.length)}deg`}
+            >
+              <div class="polaroid-img" style={`--hue:${p.hue}`}>
+                {ph.url && (
+                  <img
+                    src={ph.url}
+                    alt={ph.caption ?? p.name}
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+              </div>
+              {ph.caption && <figcaption>{ph.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+        {p.note && <p class="collage-note">{p.note}</p>}
+      </article>
+    ))}
   </div>
 </BaseLayout>
 

@@ -29,20 +29,18 @@ const posts = await Promise.all(
     <div class="blog-main">
       <h1 class="blog-page__title">Blog</h1>
       <ul class="blog-list" id="blog-grid">
-        {
-          posts.map(({ post, Content }) => (
-            <BlogCard
-              title={post.data.title}
-              excerpt={post.data.excerpt}
-              format={post.data.format}
-              date={post.data.date}
-              category={post.data.category}
-              slug={post.id}
-            >
-              {Content && <Content />}
-            </BlogCard>
-          ))
-        }
+        {posts.map(({ post, Content }) => (
+          <BlogCard
+            title={post.data.title}
+            excerpt={post.data.excerpt}
+            format={post.data.format}
+            date={post.data.date}
+            category={post.data.category}
+            slug={post.id}
+          >
+            {Content && <Content />}
+          </BlogCard>
+        ))}
       </ul>
     </div>
   </div>
