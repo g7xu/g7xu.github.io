@@ -26,5 +26,7 @@ obs_notes/*
 !obs_notes/public/**
 !obs_notes/attachments/
 !obs_notes/attachments/**
+# Order matters: the vault negations re-include these otherwise.
+obs_notes/**/.DS_Store
 # Browser-automation artifacts (Playwright MCP screenshots / snapshots)
 .playwright-mcp/
