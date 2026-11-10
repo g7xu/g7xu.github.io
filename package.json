@@ -47,7 +47,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
-    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-astro": "^1.1.2",
     "topojson-client": "^3.1.0",
     "typescript": "^5.9.3",
     "us-atlas": "^3.0.1",
