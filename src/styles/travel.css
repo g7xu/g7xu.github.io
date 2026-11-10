@@ -2,12 +2,18 @@
    Playful styling is scoped to .travel and the collage overlay so it does not
    bleed into the rest of the site's restrained system. */
 
-.travel {
+/* The collage overlay is a sibling of .travel, so it needs the palette too. */
+.travel,
+.collage-overlay {
   --paper: #faf5ec;
+  --paper-bright: #fffdf8;
   --paper-edge: #e9dcc6;
   --ink: #2b2622;
+  --ink-soft: #5b4d3e;
   --rust: #c2410c;
+}
 
+.travel {
   /* Fill the viewport below the navbar — the map takes over the page. */
   flex: 1;
   min-height: 0;
@@ -15,7 +21,7 @@
   flex-direction: column;
   background: radial-gradient(
     130% 110% at 50% -10%,
-    #fffdf8 0%,
+    var(--paper-bright) 0%,
     var(--paper) 52%,
     var(--paper-edge) 100%
   );
@@ -37,7 +43,7 @@ body {
   font-family: 'Caveat', cursive;
   font-size: clamp(1.5rem, 3.2vw, 2.3rem);
   font-weight: 700;
-  color: #5b4d3e;
+  color: var(--ink-soft);
 }
 .travel-line em {
   font-style: normal;
@@ -294,7 +300,7 @@ body {
 }
 .pin-teardrop {
   fill: hsl(var(--hue) 60% 47%);
-  stroke: #fffdf8;
+  stroke: var(--paper-bright);
   stroke-width: 1.6;
 }
 .pin:hover .pin-teardrop,
@@ -302,7 +308,7 @@ body {
   fill: hsl(var(--hue) 64% 42%);
 }
 .pin-center {
-  fill: #fffdf8;
+  fill: var(--paper-bright);
 }
 
 /* Hover name flag — white outline so it reads over the map, no background box */
@@ -310,7 +316,7 @@ body {
   font-family: 'Patrick Hand', cursive;
   font-size: 13px;
   fill: var(--ink);
-  stroke: #fffdf8;
+  stroke: var(--paper-bright);
   stroke-width: 3.5px;
   paint-order: stroke fill;
   pointer-events: none;
@@ -330,8 +336,8 @@ body {
   z-index: 5;
   font-family: 'Caveat', cursive;
   font-size: 1.25rem;
-  color: #5b4d3e;
-  background: #fffdf8;
+  color: var(--ink-soft);
+  background: var(--paper-bright);
   border: 1px solid var(--paper-edge);
   border-radius: 999px;
   padding: 0.2rem 0.9rem;
@@ -374,7 +380,7 @@ body {
   max-height: 88vh;
   max-height: 88dvh;
   overflow-y: auto;
-  background: linear-gradient(180deg, #fffdf8, #fbf4e7);
+  background: linear-gradient(180deg, var(--paper-bright), #fbf4e7);
   border: 1px solid #e7d8bd;
   border-radius: 16px;
   padding: 1.5rem 1.5rem 1.75rem;
@@ -403,7 +409,7 @@ body {
   cursor: pointer;
 }
 .collage-close:hover {
-  color: var(--rust, #c2410c);
+  color: var(--rust);
 }
 .collage-head {
   margin-bottom: 1rem;
@@ -412,7 +418,7 @@ body {
   font-family: 'Patrick Hand', cursive;
   font-size: 2rem;
   margin: 0;
-  color: #2b2622;
+  color: var(--ink);
 }
 .collage-city {
   font-family: 'Caveat', cursive;

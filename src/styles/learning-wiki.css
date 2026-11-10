@@ -171,17 +171,18 @@
 
 /* Unresolved links render as pale phantom nodes, like Obsidian */
 .node.unresolved circle {
-  fill: #cbd5e1;
+  fill: var(--graph-muted);
   cursor: default;
 }
 .node.unresolved .node-label {
-  fill: #cbd5e1;
+  fill: var(--graph-muted);
 }
 
 /* Obsidian-style purple highlight for hover/selection in the graph. Scoped to
    the graph so the site's rust --accent (nav indicator) is untouched. */
 #graph-svg {
   --graph-accent: #8b5cf6;
+  --graph-muted: #cbd5e1;
 }
 
 .node.selected circle {
@@ -206,7 +207,7 @@
 }
 
 .link {
-  stroke: #cbd5e1;
+  stroke: var(--graph-muted);
   stroke-width: 1px;
   stroke-opacity: 0.45;
   transition:
@@ -591,7 +592,7 @@
 }
 
 .md-body .callout-note {
-  --callout-accent: #3b82f6;
+  --callout-accent: var(--accent-ink);
   --callout-bg: #eff6ff;
 }
 .md-body .callout-info {
@@ -627,8 +628,8 @@
   --callout-bg: #faf5ff;
 }
 .md-body .callout-quote {
-  --callout-accent: #64748b;
-  --callout-bg: #f8fafc;
+  --callout-accent: var(--fg-muted);
+  --callout-bg: var(--bg);
 }
 .md-body .callout-success {
   --callout-accent: #22c55e;

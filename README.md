@@ -49,52 +49,19 @@ A husky pre-commit hook runs `lint-staged` (eslint + prettier on staged files).
 
 ```
 ├── src/
-│   ├── components/           # Reusable Astro components
-│   │   ├── Navbar.astro
-│   │   ├── Sidebar.astro
-│   │   ├── Footer.astro
-│   │   ├── ProjectCard.astro
-│   │   ├── BlogCard.astro    # Typographic row, despite the name
-│   │   ├── BlogSidebar.astro
-│   │   └── StructuredData.astro
-│   ├── content/
-│   │   └── blog/             # Blog posts (Markdown, content collection)
-│   ├── content.config.ts     # Zod schema for the blog collection
-│   ├── data/                 # Data files for dynamic content
-│   │   ├── author.ts         # Author info, social links, site metadata
-│   │   ├── projects.ts       # All projects (single allProjects array)
-│   │   ├── coffeeShops.ts    # Coffee shops plotted on the /travel map
-│   │   └── quotes.ts         # Quotes rendered in the quote cloud
-│   ├── layouts/              # Page layouts
-│   │   ├── BaseLayout.astro
-│   │   ├── SidebarLayout.astro
-│   │   └── BlogPostLayout.astro
-│   ├── pages/                # File-based routing
-│   │   ├── index.astro
-│   │   ├── learning-wiki.astro
-│   │   ├── quotes.astro      # Zoomable typographic quote cloud
-│   │   ├── travel.astro      # Interactive coffee map (largest page)
-│   │   └── blog/
-│   ├── assets/travel/        # Coffee-shop photos (optimized at build)
-│   ├── scripts/              # Client-side TypeScript
-│   │   ├── learning-wiki.ts  # Wiki graph (d3), note rendering
-│   │   ├── wiki-callouts.ts
-│   │   ├── wiki-multi-column.ts
-│   │   └── quote-cloud.ts    # Quote cloud packing, zoom/pan, animation
-│   └── styles/               # CSS stylesheets
-│       ├── global.css        # Tokens, theme blocks, resets, typography
-│       ├── sidebar.css
-│       ├── navbar.css
-│       ├── projects.css
-│       ├── blog.css
-│       ├── learning-wiki.css
-│       ├── travel.css
-│       └── quote-cloud.css
-├── public/                   # Static assets (served as-is)
-│   ├── images/
-│   ├── files/
-│   └── wiki-images/          # Generated: copied from obs_notes/attachments/
-└── obs_notes/                # Obsidian vault; public/ is rendered at /learning-wiki/
+│   ├── assets/travel/   # Coffee-shop photos (optimized at build)
+│   ├── components/      # Reusable Astro components
+│   ├── content/blog/    # Blog posts (Markdown content collection)
+│   ├── data/            # Site content as typed data
+│   ├── layouts/         # Page shells
+│   ├── pages/           # File-based routing
+│   ├── scripts/         # Client-side TypeScript and its unit tests
+│   ├── styles/          # Design tokens and per-page stylesheets
+│   └── utils/           # Helpers shared by build and client code
+├── e2e/                 # Playwright smoke tests
+├── scripts/             # Build-time checks
+├── public/              # Static assets; wiki-images/ is generated
+└── obs_notes/           # Obsidian vault; public/ is rendered at /learning-wiki/
 ```
 
 ## Adding Content
