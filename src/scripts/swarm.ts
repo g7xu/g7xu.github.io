@@ -19,7 +19,7 @@
 import type { CursorSwarm } from 'cursor-swarm';
 import { SWARM_CREW } from '../data/swarm';
 
-export const SWARM_SEEN_KEY = 'swarm-seen';
+const SWARM_SEEN_KEY = 'swarm-seen';
 
 /** The pan down the page, in pixels per second, bounded so a short page is
  * not over in a blink and a long phone page does not take a minute. */
