@@ -10,6 +10,7 @@
     "preview": "astro preview",
     "clean": "rm -rf dist",
     "check": "astro check",
+    "test": "vitest run --dir src",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{astro,ts,css,md}\"",
@@ -48,6 +49,7 @@
     "topojson-client": "^3.1.0",
     "typescript": "^5.9.3",
     "us-atlas": "^3.0.1",
+    "vitest": "^5.1.0",
     "world-atlas": "^2.0.2"
   }
 }
