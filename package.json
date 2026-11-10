@@ -3,9 +3,10 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "copy:wiki-images": "mkdir -p public/wiki-images && cp -r obs_notes/attachments/* public/wiki-images/ 2>/dev/null || true",
+    "copy:wiki-images": "mkdir -p public/wiki-images && cp -R obs_notes/attachments/. public/wiki-images/",
+    "check:wiki": "node scripts/check-wiki.mjs",
     "dev": "npm run copy:wiki-images && astro dev",
-    "build": "npm run copy:wiki-images && astro build",
+    "build": "npm run check:wiki && npm run copy:wiki-images && astro build",
     "preview": "astro preview",
     "clean": "rm -rf dist",
     "check": "astro check",
