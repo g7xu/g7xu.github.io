@@ -13,6 +13,9 @@ export interface WikiEdge {
 
 type NoteLookup = { has(id: string): boolean };
 
+/** Inside a Markdown table, Obsidian writes the alias pipe as `\|`. */
+const cleanLinkTarget = (target: string) => target.trim().replace(/\\$/, '');
+
 export function slugifyHeading(text: string): string {
   return text
     .toLowerCase()
@@ -48,7 +51,7 @@ export function extractGraph(
     const matches = note.content.matchAll(/(?<!!)\[\[([^\]]+)\]\]/g);
     for (const m of matches) {
       // Strip alias: [[Note|Display]] -> "Note"
-      let target = m[1].split('|')[0].trim();
+      let target = cleanLinkTarget(m[1].split('|')[0]);
       // Skip same-note heading refs: [[#Heading]]
       if (target.startsWith('#')) continue;
       // Strip heading anchor: [[Note#Heading]] -> "Note"
@@ -131,7 +134,7 @@ export function convertWikiSyntax(content: string, notes: NoteLookup): string {
   // 1. Convert image embeds (![[...]]) to <img> tags, strip non-image embeds
   let processed = content.replace(/!\[\[([^\]]+)\]\]/g, (_, inner: string) => {
     const parts = inner.split('|');
-    const filename = parts[0].trim();
+    const filename = cleanLinkTarget(parts[0]);
     const width = parts[1]?.trim();
     const ext = filename.split('.').pop()?.toLowerCase() ?? '';
     if (IMAGE_EXTENSIONS.has(ext)) {
@@ -145,7 +148,7 @@ export function convertWikiSyntax(content: string, notes: NoteLookup): string {
   processed = processed.replace(
     /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
     (_, target, alias) => {
-      const rawTarget = target.trim();
+      const rawTarget = cleanLinkTarget(target);
       const hashIdx = rawTarget.indexOf('#');
       const notePart =
         hashIdx === -1 ? rawTarget : rawTarget.slice(0, hashIdx).trim();

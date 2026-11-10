@@ -11,6 +11,8 @@ const NOTES_DIR = 'obs_notes/public';
 const ATTACHMENTS_DIR = 'obs_notes/attachments';
 const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp']);
 
+const cleanLinkTarget = (target) => target.trim().replace(/\\$/, '');
+
 /** Paths are `/`-separated and relative to `root`; throws if `root` is missing. */
 function listFiles(root) {
   return readdirSync(root, { recursive: true, withFileTypes: true })
@@ -41,7 +43,7 @@ for (const file of notePaths) {
   const content = readFileSync(path.join(NOTES_DIR, file), 'utf-8');
 
   for (const [, inner] of content.matchAll(/!\[\[([^\]]+)\]\]/g)) {
-    const filename = inner.split('|')[0].trim();
+    const filename = cleanLinkTarget(inner.split('|')[0]);
     const extension = filename.split('.').pop().toLowerCase();
     if (IMAGE_EXTENSIONS.has(extension) && !attachments.has(filename)) {
       errors.push(`${file}: missing image ${filename}`);
@@ -49,7 +51,10 @@ for (const file of notePaths) {
   }
 
   for (const [, inner] of content.matchAll(/(?<!!)\[\[([^\]]+)\]\]/g)) {
-    const target = inner.split('|')[0].split('#')[0].split('^')[0].trim();
+    const target = cleanLinkTarget(inner.split('|')[0])
+      .split('#')[0]
+      .split('^')[0]
+      .trim();
     if (target && target !== id && !noteIds.has(target)) {
       danglingSources.set(target, danglingSources.get(target) ?? id);
     }

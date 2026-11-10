@@ -38,6 +38,15 @@ describe('extractGraph', () => {
     expect(edges).toEqual([{ source: 'A', target: 'B' }]);
   });
 
+  it('reads a table-escaped alias pipe as an alias', () => {
+    const { edges, unresolvedIds } = extractGraph(
+      [note('A', '| [[B\\|shown]] |'), note('B', '')],
+      known,
+    );
+    expect(edges).toEqual([{ source: 'A', target: 'B' }]);
+    expect(unresolvedIds).toEqual([]);
+  });
+
   it('counts a pair of notes once, in either direction', () => {
     const { edges } = extractGraph(
       [note('A', '[[B]] [[B#h]]'), note('B', '[[A]]')],
@@ -139,6 +148,15 @@ describe('convertWikiSyntax', () => {
   it('links a same-note heading by its text', () => {
     expect(convert('[[#My Head]]')).toBe(
       '<a class="wiki-link heading-link" data-heading="my-head" title="Jump to: My Head">My Head</a>',
+    );
+  });
+
+  it('reads a table-escaped alias pipe on links and embeds', () => {
+    expect(convert('[[Note\\|Shown]]')).toBe(
+      '<a class="wiki-link" data-note-id="Note" title="Go to: Note">Shown</a>',
+    );
+    expect(convert('![[a.svg\\|300]]')).toContain(
+      '<img src="/wiki-images/a.svg" alt="a.svg" style="max-width:300px">',
     );
   });
 
