@@ -29,40 +29,38 @@ const quotesJson = JSON.stringify(quotes);
     }
   </style>
 
-  {
-    quotes.length === 0 ? (
-      <div class="qc-empty">
-        <p>
-          No quotes yet. Add entries to <code>src/data/quotes.ts</code> to
-          populate the cloud.
-        </p>
+  {quotes.length === 0 ? (
+    <div class="qc-empty">
+      <p>
+        No quotes yet. Add entries to <code>src/data/quotes.ts</code> to
+        populate the cloud.
+      </p>
+    </div>
+  ) : (
+    <>
+      <div id="qc-stage">
+        <div id="qc-world" />
       </div>
-    ) : (
-      <>
-        <div id="qc-stage">
-          <div id="qc-world" />
-        </div>
-        <div id="qc-measure" />
+      <div id="qc-measure" />
 
-        <div class="qc-zoom-ui">
-          <button id="qc-zoom-in" title="Zoom in" aria-label="Zoom in">
-            +
-          </button>
-          <button id="qc-zoom-out" title="Zoom out" aria-label="Zoom out">
-            −
-          </button>
-          <button
-            id="qc-zoom-reset"
-            title="Fit all"
-            aria-label="Fit all"
-            style="font-size: 13px"
-          >
-            ⤢
-          </button>
-        </div>
-      </>
-    )
-  }
+      <div class="qc-zoom-ui">
+        <button id="qc-zoom-in" title="Zoom in" aria-label="Zoom in">
+          +
+        </button>
+        <button id="qc-zoom-out" title="Zoom out" aria-label="Zoom out">
+          −
+        </button>
+        <button
+          id="qc-zoom-reset"
+          title="Fit all"
+          aria-label="Fit all"
+          style="font-size: 13px"
+        >
+          ⤢
+        </button>
+      </div>
+    </>
+  )}
 
   <script define:vars={{ quotesJson }}>
     window.__QUOTES__ = JSON.parse(quotesJson);

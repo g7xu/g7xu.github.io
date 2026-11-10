@@ -17,60 +17,60 @@ const currentPath = Astro.url.pathname;
 
 <header class="navbar">
   <div class="navbar-inner">
-    <a href="/" class="navbar-brand">Home</a>
+    <a href="/" class="navbar-brand">
+      Home
+    </a>
     <nav class="navbar-nav" aria-label="Main navigation">
-      {
-        navItems.map((item) => (
-          <a
-            href={item.href}
-            class={`navbar-link navbar-link--icon${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class={`navbar-link navbar-link--icon${currentPath.startsWith(item.href) ? ' navbar-link--active' : ''}`}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="21"
+            height="21"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
           >
-            <svg
-              viewBox="0 0 24 24"
-              width="21"
-              height="21"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              {item.icon === 'blog' && (
-                <>
-                  <path d="M4 20l.9-3.6L15 6.3a1.8 1.8 0 0 1 2.5 0l.3.3a1.8 1.8 0 0 1 0 2.5L7.6 19.1 4 20Z" />
-                  <path d="M13.4 7.9l2.7 2.7" />
-                </>
-              )}
-              {item.icon === 'wiki' && (
-                <>
-                  <circle cx="6" cy="7.5" r="2" />
-                  <circle cx="18" cy="6.5" r="2" />
-                  <circle cx="12.5" cy="17.5" r="2" />
-                  <path d="M7.9 8.2 16.2 6.9" />
-                  <path d="M6.8 9.4 11.4 15.7" />
-                  <path d="M16.9 8.2 13.6 15.7" />
-                </>
-              )}
-              {item.icon === 'coffee' && (
-                <>
-                  <path d="M4 9h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z" />
-                  <path d="M16 10.5h2a2.5 2.5 0 0 1 0 5h-2" />
-                  <path d="M7.5 3.5c0 .9-.8 1.2-.8 2.2M11 3.5c0 .9-.8 1.2-.8 2.2" />
-                </>
-              )}
-              {item.icon === 'book' && (
-                <>
-                  <path d="M12 6.5C10.5 5.6 8.6 5 6.5 5 5.2 5 4.4 5.2 4 5.4v12.2c.4-.2 1.2-.4 2.5-.4 2.1 0 4 .6 5.5 1.5" />
-                  <path d="M12 6.5C13.5 5.6 15.4 5 17.5 5c1.3 0 2.1.2 2.5.4v12.2c-.4-.2-1.2-.4-2.5-.4-2.1 0-4 .6-5.5 1.5" />
-                  <path d="M12 6.5v12.7" />
-                </>
-              )}
-            </svg>
-            <span class="navbar-label">{item.label}</span>
-          </a>
-        ))
-      }
+            {item.icon === 'blog' && (
+              <>
+                <path d="M4 20l.9-3.6L15 6.3a1.8 1.8 0 0 1 2.5 0l.3.3a1.8 1.8 0 0 1 0 2.5L7.6 19.1 4 20Z" />
+                <path d="M13.4 7.9l2.7 2.7" />
+              </>
+            )}
+            {item.icon === 'wiki' && (
+              <>
+                <circle cx="6" cy="7.5" r="2" />
+                <circle cx="18" cy="6.5" r="2" />
+                <circle cx="12.5" cy="17.5" r="2" />
+                <path d="M7.9 8.2 16.2 6.9" />
+                <path d="M6.8 9.4 11.4 15.7" />
+                <path d="M16.9 8.2 13.6 15.7" />
+              </>
+            )}
+            {item.icon === 'coffee' && (
+              <>
+                <path d="M4 9h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z" />
+                <path d="M16 10.5h2a2.5 2.5 0 0 1 0 5h-2" />
+                <path d="M7.5 3.5c0 .9-.8 1.2-.8 2.2M11 3.5c0 .9-.8 1.2-.8 2.2" />
+              </>
+            )}
+            {item.icon === 'book' && (
+              <>
+                <path d="M12 6.5C10.5 5.6 8.6 5 6.5 5 5.2 5 4.4 5.2 4 5.4v12.2c.4-.2 1.2-.4 2.5-.4 2.1 0 4 .6 5.5 1.5" />
+                <path d="M12 6.5C13.5 5.6 15.4 5 17.5 5c1.3 0 2.1.2 2.5.4v12.2c-.4-.2-1.2-.4-2.5-.4-2.1 0-4 .6-5.5 1.5" />
+                <path d="M12 6.5v12.7" />
+              </>
+            )}
+          </svg>
+          <span class="navbar-label">{item.label}</span>
+        </a>
+      ))}
     </nav>
   </div>
 </header>

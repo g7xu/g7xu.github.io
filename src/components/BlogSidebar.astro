@@ -24,35 +24,31 @@ const formatLabels = {
         All writing
       </a>
     </li>
-    {
-      formats.map((format) => (
-        <li>
-          <a
-            href={`/blog/?format=${format}`}
-            class="blog-sidebar__item"
-            data-filter-format={format}
-          >
-            {formatLabels[format]}
-          </a>
-        </li>
-      ))
-    }
+    {formats.map((format) => (
+      <li>
+        <a
+          href={`/blog/?format=${format}`}
+          class="blog-sidebar__item"
+          data-filter-format={format}
+        >
+          {formatLabels[format]}
+        </a>
+      </li>
+    ))}
   </ul>
 
   <h3 class="blog-sidebar__heading blog-sidebar__heading--secondary">Topics</h3>
   <ul class="blog-sidebar__list">
-    {
-      categories.map((cat) => (
-        <li>
-          <a
-            href={`/blog/?category=${encodeURIComponent(cat)}`}
-            class="blog-sidebar__item"
-            data-filter-category={cat}
-          >
-            {cat}
-          </a>
-        </li>
-      ))
-    }
+    {categories.map((cat) => (
+      <li>
+        <a
+          href={`/blog/?category=${encodeURIComponent(cat)}`}
+          class="blog-sidebar__item"
+          data-filter-category={cat}
+        >
+          {cat}
+        </a>
+      </li>
+    ))}
   </ul>
 </aside>

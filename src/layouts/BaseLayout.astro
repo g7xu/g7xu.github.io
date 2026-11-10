@@ -92,20 +92,18 @@ const pageTitle =
     {swarm && <script is:inline set:html={SWARM_GATE} />}
   </head>
   <body data-theme={theme}>
-    <Shell {...swarm ? pageSwarm : {}}>
-      <HeaderShell {...swarm ? headerSwarm : {}}>
+    <Shell {...(swarm ? pageSwarm : {})}>
+      <HeaderShell {...(swarm ? headerSwarm : {})}>
         <Navbar />
       </HeaderShell>
       <slot />
       <Footer />
     </Shell>
-    {
-      swarm && (
-        <button class="swarm-skip" type="button">
-          Skip the intro
-        </button>
-      )
-    }
+    {swarm && (
+      <button class="swarm-skip" type="button">
+        Skip the intro
+      </button>
+    )}
     <script>
       import '../scripts/bilingual.ts';
 

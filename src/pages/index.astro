@@ -38,7 +38,8 @@ const projectSections = [
   <section class="home-hero">
     <p class="home-hero__lead">
       Hi, I am Jason. I love programming, doing ML stuff, shipping product,
-      drinking coffee<a
+      drinking coffee
+      <a
         class="home-hero__icon home-hero__coffee"
         href="/travel/"
         aria-label="See my coffee map"
@@ -55,11 +56,14 @@ const projectSections = [
         >
           <path
             class="home-hero__steam"
-            d="M7.5 3.5c0 .9-.8 1.2-.8 2.2M11 3.5c0 .9-.8 1.2-.8 2.2"></path>
+            d="M7.5 3.5c0 .9-.8 1.2-.8 2.2M11 3.5c0 .9-.8 1.2-.8 2.2"
+          ></path>
           <path d="M4 9h12v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z"></path>
           <path d="M16 10.5h2a2.5 2.5 0 0 1 0 5h-2"></path>
         </svg>
-      </a>, and reading<a
+      </a>
+      , and reading
+      <a
         class="home-hero__icon home-hero__book"
         href="/quotes/"
         aria-label="See my quotes"
@@ -74,16 +78,15 @@ const projectSections = [
           stroke-linejoin="round"
           aria-hidden="true"
         >
-          <path
-            d="M12 6.5C10.5 5.6 8.6 5 6.5 5 5.2 5 4.4 5.2 4 5.4v12.2c.4-.2 1.2-.4 2.5-.4 2.1 0 4 .6 5.5 1.5"
-          ></path>
+          <path d="M12 6.5C10.5 5.6 8.6 5 6.5 5 5.2 5 4.4 5.2 4 5.4v12.2c.4-.2 1.2-.4 2.5-.4 2.1 0 4 .6 5.5 1.5"></path>
           <path
             class="home-hero__page"
             d="M12 6.5C13.5 5.6 15.4 5 17.5 5c1.3 0 2.1.2 2.5.4v12.2c-.4-.2-1.2-.4-2.5-.4-2.1 0-4 .6-5.5 1.5"
           ></path>
           <path d="M12 6.5v12.7"></path>
         </svg>
-      </a>.
+      </a>
+      .
     </p>
     <p class="home-hero__body">
       I am currently doing Master of Computer Science at Stanford. Let's
@@ -111,40 +114,38 @@ const projectSections = [
   </a>
 
   <div class="home-projects" id="projects" slot="full-width">
-    {
-      projectSections.map(({ heading, projects, collapsible }, i) => (
-        <section class="project-section" style={`--i: ${i}`}>
-          {collapsible ? (
-            // "skip": the toggle paints nothing of its own, so a cursor
-            // dragging a box around it would be drawing an invisible frame.
-            // Its heading gets typed instead.
-            <button
-              class="accordion-toggle"
-              aria-expanded="false"
-              data-swarm="skip"
-            >
-              <span class="accordion-arrow" />
-              <h2>{heading}</h2>
-            </button>
-          ) : (
-            <>
-              <h2>{heading}</h2>
-              <hr />
-            </>
-          )}
-          <div
-            class={collapsible ? 'accordion-content' : undefined}
-            data-swarm-ignore={collapsible || undefined}
+    {projectSections.map(({ heading, projects, collapsible }, i) => (
+      <section class="project-section" style={`--i: ${i}`}>
+        {collapsible ? (
+          // "skip": the toggle paints nothing of its own, so a cursor
+          // dragging a box around it would be drawing an invisible frame.
+          // Its heading gets typed instead.
+          <button
+            class="accordion-toggle"
+            aria-expanded="false"
+            data-swarm="skip"
           >
-            <div class="projects-grid">
-              {projects.map((project) => (
-                <ProjectCard project={project} />
-              ))}
-            </div>
+            <span class="accordion-arrow" />
+            <h2>{heading}</h2>
+          </button>
+        ) : (
+          <>
+            <h2>{heading}</h2>
+            <hr />
+          </>
+        )}
+        <div
+          class={collapsible ? 'accordion-content' : undefined}
+          data-swarm-ignore={collapsible || undefined}
+        >
+          <div class="projects-grid">
+            {projects.map((project) => (
+              <ProjectCard project={project} />
+            ))}
           </div>
-        </section>
-      ))
-    }
+        </div>
+      </section>
+    ))}
   </div>
 </SidebarLayout>
 
