@@ -32,14 +32,8 @@ function walkMarkdown(root: string, dir: string, collected: WikiNote[]) {
 }
 
 // Every .md under obs_notes/public/ is inlined into the page at build time.
-try {
-  const publicDir = path.resolve('obs_notes/public');
-  if (fs.existsSync(publicDir)) {
-    walkMarkdown(publicDir, publicDir, notes);
-  }
-} catch {
-  // Graceful degradation — page renders with empty state
-}
+const publicDir = path.resolve('obs_notes/public');
+walkMarkdown(publicDir, publicDir, notes);
 
 const notesJson = JSON.stringify(notes);
 ---
