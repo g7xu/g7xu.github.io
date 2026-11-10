@@ -38,5 +38,14 @@ jobs:
       - name: Type check
         run: npm run check
 
+      - name: Unit tests
+        run: npm test
+
       - name: Build with Astro
         run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests
+        run: npm run test:e2e

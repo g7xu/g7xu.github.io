@@ -10,6 +10,8 @@
     "preview": "astro preview",
     "clean": "rm -rf dist",
     "check": "astro check",
+    "test": "vitest run --dir src",
+    "test:e2e": "playwright test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{astro,ts,css,md}\"",
@@ -34,6 +36,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@playwright/test": "^1.65.0",
     "@types/d3": "^7.4.3",
     "@types/node": "^26.6.5",
     "@types/topojson-client": "^3.1.5",
@@ -48,6 +51,7 @@
     "topojson-client": "^3.1.0",
     "typescript": "^5.9.3",
     "us-atlas": "^3.0.1",
+    "vitest": "^5.1.0",
     "world-atlas": "^2.0.2"
   }
 }
