@@ -39,6 +39,8 @@ CI runs these before build — a locally-passing `npm run build` can still fail 
 npm run format:check   # prettier
 npm run lint           # eslint
 npm run check          # astro check (types)
+npm test               # vitest (wiki parsing)
+npm run test:e2e       # playwright page smoke tests; PR checks only, needs a build first
 ```
 
 A husky pre-commit hook runs `lint-staged` (eslint + prettier on staged files).

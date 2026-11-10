@@ -30,3 +30,5 @@ obs_notes/*
 obs_notes/**/.DS_Store
 # Browser-automation artifacts (Playwright MCP screenshots / snapshots)
 .playwright-mcp/
+test-results/
+playwright-report/

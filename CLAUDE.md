@@ -10,7 +10,7 @@ An **Astro** static site at [g7xu.github.io](https://g7xu.github.io). File layou
 
 Scripts are listed in `package.json` and `README.md`. Three things they don't say:
 
-- The deploy workflow runs `format:check`, `lint`, and `check` before `build`, so run all three before pushing.
+- The deploy workflow runs `format:check`, `lint`, `check`, and `test` before `build`, so run all four before pushing.
 - `dev` and `build` first run `copy:wiki-images`, which copies `obs_notes/attachments/` into the gitignored `public/wiki-images/`.
 - `build` first runs `check:wiki`, which fails on an empty vault or a missing image embed and only warns on dangling wiki-links.
 
